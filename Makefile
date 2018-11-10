@@ -1,4 +1,4 @@
-PAPER = acmart-sigplanproc-template
+PAPER = main
 
 TEX = $(wildcard *.tex)
 

@@ -7,7 +7,7 @@ digraph instr_supprt {
     //SYS         [style=dashed; label="System & Legacy String\n293"] 
     //CRYPTO      [style=dashed; label="Crypto\n35"] 
     //X87MMX         [style=dashed; label="X87 \& MMX\n 335 (= 155 + 180)"] 
-    REM         [ label="User-Level \nX86-64 Instruction Set\n3186\n"]
+    REM         [ label="User-Level \nx86-64 Instruction Set\n3186\n"]
   
   //T -> SYS  
   //T -> CRYPTO  

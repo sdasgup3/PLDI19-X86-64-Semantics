@@ -5,11 +5,11 @@ user-level instructions. Section~\ref{sec:IC} details the scope of our work. Sec
 
 \subsection{Scope of the Work}\label{sec:IC}
 We support all but a few non-deprecated user-level instructions, amounting to \currentIS{} total variants of the Haswell \ISA ISA (representing \currentIntel{} out of \totalIntel{} 
-unique mnemonics). The entire implementation took 8 man-months (not including extensive time spent on projects related to binary decompilation that gave the lead author relevant experience and strong familiarity with the X86-64 architecture and documentation).  Below is a summary of the instruction categories that we support:
+unique mnemonics). The entire implementation took 8 man-months (not including extensive time spent on projects related to binary decompilation that gave the lead author relevant experience and strong familiarity with the \ISA architecture and documentation).  Below is a summary of the instruction categories that we support:
 \begin{itemize}
     \item \textbf{General-Purpose Instructions:} These implement data-movement, arithmetic, logic, control-flow, string operations.
     
-    \item \textbf{Streaming SIMD Extensions (SSE) Instructions \&   subsequent extensions (SSS-2, SSE-3, SSE-4.1, SSE-4.2):} Instructions in this category operate on integer, string or floating-point values stored in $128$-bit xmm registers. Among other things, the category features instructions related to conversions between integer and floating-point values with selectable rounding mode, and string processing.
+    \item \textbf{Streaming SIMD Extensions (SSE) Instructions \&   subsequent extensions (SSE-2, SSE-3, SSE-4.1, SSE-4.2):} Instructions in this category operate on integer, string or floating-point values stored in $128$-bit xmm registers. Among other things, the category features instructions related to conversions between integer and floating-point values with selectable rounding mode, and string processing.
     
     \item \textbf{Advanced Vector Extensions (or AVX) \& subsequent extensions (Fused-Multiply-Add (or FMA) \& AVX2):} These instructions operate on integer or floating-point values stored in $256$-bit ymm registers; a majority of which are promoted from SSE instruction sets. Additionally, the category features enhanced functionalities specific to AVX \& AVX2, like  broadcast/permute, vector shift, and non-contiguous data fetch operations on data elements. 
     \item \textbf{$\textbf{16}$-bit Floating Point Conversion (or F16C):} These instructions implement conversions between single-precision ($32$-bit) and half-precision ($16$-bit) floating-point values. 
@@ -28,7 +28,7 @@ operations respectively and are deprecated by SSE;
 
 Briefly, our approach is as follows.
 %
-We first defined the machine configuration and underlying infrastructure in the \K framework, in order to define, execute and test the X86 semantics.
+We first defined the machine configuration and underlying infrastructure in the \K framework, in order to define, execute and test the \ISA semantics.
 %
 To leverage previous work as much as possible, we took the semantic rules for about 60\% of the instructions in scope from the formal semantics in Strata, in the form of SMT formulas.
 %
@@ -44,7 +44,7 @@ We attempted to extend the stratification approach in Strata to define additiona
 
 We then manually added \K rules for the remaining 40\% of the target instructions by reading the Intel manual and translating into \K rules, in some cases cross-referencing against semantics available in Stoke.
 %
-The outcome was a complete formal specification of user-level X86-64 in \K.
+The outcome was a complete formal specification of user-level \ISA in \K.
 
 We validated this semantics in three ways, as described in Section~\ref{sec:Eval}.
 %

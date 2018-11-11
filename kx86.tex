@@ -1,4 +1,4 @@
-% \section{Defining Semantics of X86-64 ISA in K}\label{sec:x86sema}
+% \section{Defining Semantics of \ISA ISA in K}\label{sec:x86sema}
 
 % This section is about defining the semantics of individual instructions in \K along with  execution environment, which is used to execute instructions using \K framework. \cmt{We describe the different components of our definition and give a number of example of the semantics.}
 
@@ -71,7 +71,7 @@ rule <k> fetch (*$\Rightarrow$*) exec(OpC OpR) (*$\kra$*) fetch ... </k>
  The symbol $\kra$ is used to separate the computations in the \s{k} cell. The rule reads the instruction, pointed to by the instruction pointer register \reg{rip}, from memory and puts it at the head of the \s{k} cell along with the ``fetch'' computation to be executed in order and updates the value of \reg{rip}. The execution will be terminated when there is no instruction stored in the memory at the address pointed to by \reg{rip}.\footnote{While initializing the stack section of memory, we store an invalid address just before the entry-point function as return address. When the entry point function returned, the invalid return address is popped out of the stack and stored in \reg{rip} leading to program termination.} 
 
 \subsection{Semantics of Individual Instructions}
-Here we explain how we define the semantics of an instruction in \K using a running example of logical-and-not \instr{andnq -4(\%rsp), \%rbx, \%rax}, which performs a bitwise logical AND of inverted source register operand (\reg{rbx}) with the source memory operand -4(\%rsp) and writes the result to destination register \reg{rax}. Additionally the instruction affects all the $6$ status flags.
+Here we explain how we define the semantics of an instruction in \K using a running example of logical-and-not \instr{andnq -4(\%rsp), \%rbx, \%rax}, which performs a bitwise logical AND of inverted source register operand (\reg{rbx}) with the source memory operand (\mem{-4}{rsp}) and writes the result to destination register \reg{rax}. Additionally the instruction affects all the $6$ status flags.
 
 
 %\input{figures/andnl}
@@ -79,7 +79,7 @@ Here we explain how we define the semantics of an instruction in \K using a runn
 The semantics of most of the instructions can be modeled broadly in $3$ phases: (1) read the data from source operand(s), which could be a register, memory or constant value; (2) operate on the data based on the mnemonic; and (3) write the result(s) to destination operand(s), which could be a register or memory. An instruction may exercise some or all of the above phases. 
    
 \paragraph{Read from Source Operand(s)}
-Instruction in the running example reads from  register (\reg{rbx}) and memory (-4(\%rsp)) operands. A read from register is modeled as a lookup with register name in the \s{regstate} map and subsequent read of the mapped value or,
+Instruction in the running example reads from  register (\reg{rbx}) and memory (\mem{-4}{rsp}) operands. A read from register is modeled as a lookup with register name in the \s{regstate} map and subsequent read of the mapped value or,
 for a sub-register, a portion of it. The semantics of register read can be defined as:  
 \begin{lstlisting}[style=KRULE]
 rule <k> getRegisterVal(R:R64) (*$\Rightarrow$*) BV(*$_\s{r}$*) ...</k>
@@ -172,7 +172,7 @@ Below we describe the issues we found in \Strata.%, and how we fixed them  as fo
 % \emph{Logical And Not} instruction \instr{andnq}, the semantic of which is
 % mentioned as a side comment. The following instruction \instr{jz target}, makes a conditional jump to \TS{target} if the result of the previous operation is $0$ (which is manifested by a $0$ value in the \reg{zf} flag), otherwise the
 % control-flow  will reach the following instruction. 
-% \begin{lstlisting}[style=Bash, caption={A code snippet in X86-64 Assembly Language },label={lst:CS1}]
+% \begin{lstlisting}[style=Bash, caption={A code snippet in \ISA Assembly Language },label={lst:CS1}]
 % andnq %rax, %rbx, %rcx  
 %         # %rcx = (~(%rbx) bitwiseAnd %rax)
 %         # %sf, %zf: Updated based 
@@ -199,7 +199,7 @@ Below we describe the issues we found in \Strata.%, and how we fixed them  as fo
 %     shows a correct modeling of the \reg{zf} flag for \instr{andq \%rax, \%rbx,
 %       \%rcx} (in  SMT-LIB 2.0\cite{smtlib}).
 
-% \begin{lstlisting}[style=SMTLIB, caption={A code snippet in X86-64 Assembly Language },label={lst:CS2}]
+% \begin{lstlisting}[style=SMTLIB, caption={A code snippet in \ISA Assembly Language },label={lst:CS2}]
 % /* 
 % ** If the value of ~(%rbx) and %rax is 0, 
 % **  return bit 1 or bit 0 

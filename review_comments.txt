@@ -1,0 +1,626 @@
+ASPLOS '19 Paper #5 Reviews and Comments
+===========================================================================
+Paper #5 A Complete Formal Semantics of X86-64 User-Level Instruction Set
+Architecture
+
+
+Review #5A
+===========================================================================
+
+Overall merit
+-------------
+2. Weak reject
+
+Reviewer expertise
+------------------
+1. No familiarity
+
+Reviewer confidence
+-------------------
+1. Low
+
+Paper summary
+-------------
+The paper develops a formal semantics for X86-64, excluding system level semantics and concurrency semantics.  The work builds on a prior effort to develop a semantics in the Strata framework, tuning it and extending it to handle all user-level instructions.  The work translated the semantics into the K framework enabling automated reasoning.  The paper evaluates the semantics, studying a set of test cases, assessing correctness of existing specifications, and applying the semantics to program analysis tasks.
+
+Strengths
+---------
++Commitment to completeness and formal, detailed modeling
++Semantic understanding at the binary level avoids the need for verified compilation
+
+Weaknesses
+----------
+-Without detailed background understanding of K, it was often unclear exactly what must, can, and actually is specified in the model
+-Felt light on practical implications for a systems conference audience (although I appreciate the connection between PL theory and architecture in the task itself)
+
+Comments for author
+-------------------
+This paper takes on a heroic task -- to provide a low-level semantics model of the behavior of binary programs compiled to X86-64.  The authors provide the context for the work up front, describing recent efforts at this problem and their varying degree of success.  A path toward software reliability that eliminates the need to trust complex, always-changing compilers is an appealing one.
+
+There were several issues with the paper:
+
+*I did not have a clear idea of the scalability of the technique as the size of programs being analyzed scales up.  A technique that relies heavily on a complex model and heavy-weight theorem-proving machinery may not support realistic workloads.
+
+*The paper described its core model in a way that I found inaccessible and difficult to understand.  It was unclear when I got to pages 3 and 4 what goes in the model, what can go in a model, and what the goal of the authors was in designing their particular model.  A picture would have helped me.
+
+*Did you determine somehow, quantitatively, that the Strata approach is infeasible?  You claim in Section 3.2 that it is a dead end, because it is impractical.  Besides the qualitative claim that "you found the effort to extract the information from the manual is the same as manually defining that instruction", is there any other support for this dismissal of prior work?
+
+* It was sometimes unclear what a "bug" was in the language of the paper.  You describe bugs in Strata, the Intel manual, and Stoke; these are all very different descriptions of the semantics.  Do they share a common notion of what a bug is?  If so, it was unclear to me what that common notion was.
+
+*I did not understand the process of aggregation at the end of Section 3.3.  What does aggregation entail for the model?  Does byte aggregation impose sequential order on bytes involved in a multi-byte access?
+
+*I was not clear how you translated from Strata to K.  The text makes the translation sound mechanical.  What is an SMT formula in Strata representing?  What are the target entities represented in K?  How complex is the translation?
+
+*In the section marked results on page 6, you say that you tested "interesting values", ending your list of different value types with "etc.".  What is the set of value types you tested?  Why?  What defines interestingness?  
+
+*At the top of page 7, you talk about deviations indicating a bug in the manual or in the model of Strata.  What about a bug in your model?  Did you exhaustively catalog all deviations and determine that their cause was not in your semantics implementation?
+
+*Section 5.3 makes an efficiency claim, but does not substantiate the claim with data.  This aspect of the paper would have made a good quantitative evaluation.
+
+Questions for authors’ response
+---------------------------------
+Does this model support large, useful programs?  If so, for which application analyses?  Is it possible to include a quantitative evaluation of the scalability?  Or even just a demonstration on a set of programs/tasks, allowing a reader to extrapolate the scaling trend?
+
+
+
+Review #5B
+===========================================================================
+
+Overall merit
+-------------
+3. Weak accept
+
+Reviewer expertise
+------------------
+3. Knowledgeable
+
+Reviewer confidence
+-------------------
+2. Medium
+
+Paper summary
+-------------
+A more complete semantics of x86-64 is developed.  The semantics captures a broader set of behavior than any prior semantics and has identified bugs in both prior semantics and the intel instruction set manual itself.
+
+Strengths
+---------
++ An incredibly useful effort that extends the semantics of x86-64 across a much broader set of instructions than accomplished before.  
+
++ The semantics are well defined (both as executable and for analysis) and the effort uncovered some issues both with prior approaches and the intel manual itself.
+
+Weaknesses
+----------
+- The title overstates things and should be changed from "complete" to "more complete" (I do note that the paper body is very clear about the parts of the machine not modeled).   Unfortunately the parts left unmodeled include some of the most interesting and error-prone parts of the machine code (e.g. exceptions, floating point, concurrency, etc.)
+
+- While the resulting semantics is comprehensive and very useful, the techniques described don't really advance the way we develop machine semantics significantly, nor does the improved instruction coverage change what we can really accomplish with the semantics (the uses demonstrated have all been demonstrated in the past).
+
+Comments for author
+-------------------
+The paper is a very well written and executed extension to the x86 semantics proposed elsewhere.  The semantics are executable and expressed in the Z framework which opens them up to be used for a variety of different tools.   On one hand this work is a great step towards the creation of a truly comprehensive resource that will serve everyone that cares about being able to execute correct code on these complex machines.  On the other hand, the approach provided here is primarily manual and does not clearly open any new specific applications of the semantics.  What we end up learning then is somewhat limited.  A couple smaller points follow bellow.
+
+One smaller thing that I appreciated was: "We found that the effort to extract such information from the manual".  It seems like a interesting new approach was considered for extracting these semantics automatically, but in the end it didn't really work.  The negative result is useful to those considering similar work and not enough negative results are included in our field in general.  It is a smaller thing in the paper but I just wanted to call it out as a positive.
+
+Later (on page 8) the authors come back to a related idea, that of  generating human readable instruction set manuals directly from the semantics.  I thought that was a wonderful idea, but sadly one that was not implemented in this paper.
+
+A couple of technical question came up:  In 3.3 where "memory state" is defined .... why is it stored that way?  Is this common in other works or something specific to this formalizm?  Is there an advantage you can quantify?  If the machine support unaligned accesses is there any reason to still do this?  Do your semantics support unaligned memory accesses?
+
+Further along those lines, if the semantics is defined at the instruction level, what happens with
+"unaligned" access to instruction memory?  A "jump" to arbitrary memory addresses can interpret instructions in different ways depending on how they are aligned (a tricky used in the security community to make binary analysis much harder to perform).  Is that handled?
+
+In the end I think the paper serves an important purpose: meaningfully extending x86-64 semantics to cover an even broader class of instructions and replicating (and even correcting) prior efforts, while describing how that was accomplished and what can be done with the new formalisms.
+
+Questions for authors’ response
+---------------------------------
+If there are some important new lessons learned about the x86 semantics, or (even better) the way that we extract, model, or reason about them, it would be very helpful if you could call that out in your rebuttal.
+
+
+
+Review #5C
+===========================================================================
+
+Overall merit
+-------------
+2. Weak reject
+
+Reviewer expertise
+------------------
+4. Expert
+
+Reviewer confidence
+-------------------
+3. High
+
+Paper summary
+-------------
+This paper describes the construction of a new formal model of the
+semantics of x86-64 instructions, using the K framework for
+operational semantics. The paper's aim is for its semantics to be the
+most complete and correct semantics for user-space instructions
+available to the general public, and the paper describes how the
+semantics were written (with primarily manual extension of a state of
+the art automatic synthesis), tested and compared with official
+documentation. Building on general capabilities of the K framework,
+the paper describes how several kinds of tools that rely on
+instruction semantics can be instantiated based on the paper's work.
+The paper compares itself with a variety of previous work in this
+area, and argues its model is more complete than the most similar one
+that allowed both execution and formal reasoning; the paper also
+mentions many works which express x86-64 semantics in terms of an
+intermediate language, but argues that these should not be considered
+formal specifications.
+
+Strengths
+---------
++ ISA semantics underlie a lot of binary analysis tools, so a complete
+and high-quality model that could be used a variety of future projects
+could be a very valuable resource.
+
++ The paper describes a significant effort in adapting previous
+partial semantics, manually specifying remaining instructions, and
+testing and validation.
+
+Weaknesses
+----------
+- There isn't much conceptual novelty in the work: the kinds of manual
+specification and testing performed are similar to previous work.
+
+- The paper's distinctions from IL-based approaches seem unclear or
+incorrect, and it dismisses other such systems without a proper
+comparison.
+
+Comments for author
+-------------------
+This paper is working in an area that is interesting and important,
+and a system like the one the paper describes has the potential to be
+quite broadly useful. However as it stands, it doesn't seem to me like
+the paper does a good job of distinguishing itself from the large
+amount of previous work that has taken on a similar specification
+task. The paper uses a framework that is more declarative, compared to
+many previous specifications that were software or used languages that
+were closer to software, but the basic specification effort seems the
+same. The paper leverages some previous work that used automatic
+synthesis, but the new specification effort was manual. The paper's
+specification testing, while also apparently a substantial effort, was
+not especially novel: it was based on manual testing and the execution
+of compiled versions of a source-level test case corpus. I like that
+the use of the K framework allows analysis tools to be extracted
+easily from the specification, but this is based one existing
+capabilities of K, and a similar kind of flexibility exists in other
+ISA specification approaches such as TSL. The capabilities of the
+extracted tools do not seem especially novel or impressive compared to
+similar ones implemented using previous approaches.
+
+The other major negative reaction I had to the paper is that it did a
+poor job of comparing with previous systems that use translation to an
+intermediate language/representation. These systems represent some of
+the most well-developed and practical similar tools, so I think that
+leaving them of comparisons like Table 1 ends to overstate this work's
+novelty, particularly with respect to completeness. I there are fair
+observations to be made about these other systems not being designed
+for formal reasoning, which may make them not complete substitutes for
+what this paper builds, but many of the specific points of comparison
+the paper draws don't make sense to me. I think it is already a
+weakness of this paper that its approach is not very clearly different
+from previous work, so it seems particularly bad if the paper itself
+can't make the best case here.
+
+For instance Valgrind/VEX and QEMU both have wide coverage of x86-64
+instructions (user-mode only for Valgrind, while QEMU also covers
+system-mode instructions), enough for instance that they routinely run
+large applications and complete OSes respectively. The paper's claims
+about completeness seem to be given a lot of emphasis, but I don't
+actually find them all that impressive given that the paper has
+defined many large categories of instructions, such as system
+instructions, x87 FP instructions, and MMX instructions, as out of
+scope. It is better in some ways to define a clear goal and then meet
+it, as opposed to having lofty goals and missing a few random
+instructions here and there. But I'm not convinced that completeness
+really sets this work apart from previous systems, at least if tools
+like Valgrind and QEMU are in scope for comparison as I would argue
+they should be.
+
+The paper's blanket dismissal of IR-based systems is that "the
+actually specified language[s] [have] abstracted away various features
+of X86-64". But this claim isn't supported with specific details for
+all of the IR-based systems the paper mentions, as it would logically
+need to be. Worse, neither of the specific examples the paper does
+mention sound correct to me. I disagree that the "VEX IR omits many
+implicit bit truncations and/or extensions that are part of many
+X86-64 instruction semantics". My best guess at what the author(s) are
+referring to here is that VEX's model of the register file is
+memory-like, in that an instruction can update a single byte within a
+register with an IR statement that looks like a byte-size store, for
+instance for an operation on %al. But this is a completely precise
+definition of what such an instruction does: it specifies that the
+other bytes of %rax are not changed. In a logical representation in
+which %rax is an atomic 64-bit value, it might be more natural to
+translate an update to %al into an update to all of %rax that leaves
+the other bytes unchanged, but this a choice of modeling convenience
+that does not leave out any semantics. The paper describes the
+RockSalt DSL as "using an infinite register file instead of the finite
+X86-64 register file". This sounds like a reference to the following
+feature described in section 2.3 of that paper: "Internally, the
+language supports a countably infinite supply of local variables that
+can be used to hold intermediate bit-vector values.". But naming
+temporary values is another modeling choice that does not change the
+semantics of instructions. For instance consider the following two
+ways of modeling an add instruction:
+
+   EAX' := EAX + MemVal;
+   ZF' := (EAX + MemVal) == 0 ? 1 : 0
+
+   t1 := EAX + MemVal;
+   EAX' := t1;
+   ZF' := tl == 0 ? 1 : 0
+
+The temporary value t1 isn't visible in the architecture: it just
+gives a name to a purely functional computation, which can avoid
+textual duplication. The semantics of these two models are the
+same. (In fact VEX also works in this way.)
+
+I can think for myself of some differences in IR-based systems that
+would make them less convenient for some formalization approaches, so
+I do think there is probably something more informative that the paper
+could say here. But it doesn't seem to me that the differences affect
+all IRs or couldn't be pretty easily worked around. Some IRs, like
+those in QEMU and Valgrind, delegate some more complex and less
+time-critical operations to "helper functions" that are written in C
+rather than in the IR. But since this would already be an obstacle to
+symbolic execution, I think it is already worked-around in IRs that
+are intended for use in symbolic execution, such as BAP or the VEX
+interface used in angr. Also, IR-based systems typically take the form
+of executable code which is executed on a concrete instruction to
+create a formula describing that instruction's semantics: creating a
+single formula describing all instructions would require enumerating a
+very large number of instructions, or doing some other kind of
+generalization (this issue is analogous to the one with 8-byte
+immediates the paper mentions in the Strata semantics.) However having
+a single formula to represent all instructions doesn't seem needed in
+most applications, including all the ones the paper mentions in
+section 5: it is sufficient (and likely more efficient) to have the
+semantics of every particular instruction that appears in a program of
+interest.
+
+Though I don't have any inside information, my expectation would have
+been that models similar to the one that this paper is building
+already exist inside Intel and AMD, given that the effort needed for
+this paper was surely a drop in the bucket compared to those
+organizations' verification budgets, and they've been doing
+verification using formal methods for decades. There is still value in
+recreating such a model in a public context, as the authors do, since
+Intel or AMD would understandably be reluctant to publish something
+that would be helpful for clone manufacturers, or that might be
+perceived as a specification that future products would be held to. My
+expectation seems like it might be contradicted by the personal
+communication cited as [10] which seems to imply that one such model
+is only now under development, but I'm not sure whether your source
+intended to should have been speaking to the point of what other
+things might have been created by Intel in the past.
+
+Some smaller points:
+
+"The X86-64 ISA ... keeps all the legacy and deprecated instructions
+for the sake of backwards compatibility": this is not precisely
+true. A few old instructions have been removed, for instance AAA is
+not available in 64-bit mode. However I'd agree with the general point
+that most legacy instructions are preserved, and that this is a
+significant source of complexity.
+
+"SSS-2": presumably "SSE-2" was meant. I also think it's more
+conventional to omit the hyphen.
+
+"with desirable rounding modes": do you mean something like "with our
+choice of rounding modes"?
+
+It wasn't clear why the experiments based on GCC tests needed to
+exclude tests that used GCC-specific extensions. The model is a model
+of instruction semantics, so normally one would expect you could use
+GCC to translate the examples into X86-64 instructions, and those
+instructions would be in the scope of your model. It seems possible
+that your testing infrastructure has an additional dependency on some
+non-GCC compiler, but that would seem like a strange choice.
+Similarly, I can only presume that assembler directives are a problem
+because some part of your infrastructure uses assembly language or an
+assembler. But ideally the semantics of an individual instruction
+should depend only on that instruction itself, not directives
+elsewhere in an assembly file. And also along similar lines, I don't
+see why K would need to be modified to support the C standard
+library. If you look in the implementation of the standard library,
+you'll see that printf and malloc are implemented as just collections
+of X86-64 instructions, all of which should already be supported by
+the semantics.
+
+It seems borderline to me to claim that prefetchnta is a system
+instruction. Certainly the most interesting aspects of its semantics
+have to do with the memory hierarchy, but it is completely normal for
+the instruction to appear in a user-mode program, as your experiment
+showed. Since the cache hierarchy is out of scope of a ISA-level
+semantics model, it seems like it would be reasonable for your
+semantics to just call it a no-op.
+
+"whith matches in all the cases": typo
+
+"formal reasoning of X86-64 programs": "about X86-64 programs"
+
+One previous example of ISA-level verification and test generation is:
+
+Model Checking to Find Vulnerabilities in an Instruction Set
+Architecture
+Chris Bradfield and Cynthia Sturton
+IEEE Symposium on Hardware Oriented Security and Trust (HOST), 2016
+https://cs.unc.edu/~csturton/papers/bradfield-host-2016.pdf
+
+This previous work was for only a small portion of a model, but it
+does find what might be described as a subtle bug, so it seems like a
+positive data point in support of the paper's claim for what ISA-level
+symbolic analysis with a full model might find. Of course it would be
+even better if the author(s) could demonstrate this.
+
+It seemed a bit ambiguous in the paper whether ellipses "..." in the K
+specifications were a K notation, or a meta-notation indicating places
+where an example was compressed to the relevant parts for presentation
+purposes. From a random sample of the materials in [6] it appears to
+be the former, but the writing could be clarified on this point.
+
+I'd be curious for a more detailed breakdown of the minute spent on
+verifying the sum-to-n example. Though still usable, it doesn't strike
+me as particularly fast.
+
+I'm not sure how the authors came to the conclusion that TSL cannot be
+used for instruction execution. A priori, it would seem to be
+adaptable to that purpose at least as well as the present paper's
+model. Page 11 of the TOPLAS paper cited as [34] says "To help out in
+this task, the TSL system provides several kinds of generic
+execution/analysis engines that can be instantiated to create finished
+analyses, including ... (ii) an instruction emulator (for dynamic
+analysis)". It also seems to me like a machine-code synthesizer would
+need the same kind of instruction semantics as formal specification
+proofs. I think this description should reflect more uncertainty.
+
+It might have been better to omit the Acknowledgements section in an
+anonymous submission, since it shouldn't affect reviewers opinions of
+the paper's merit. But this particular set of acknowledgements doesn't
+seem to significantly hurt the paper's anonymity.
+
+References [39] and [40], and [44] and [45], appear to be the same
+papers.
+
+Questions for authors’ response
+---------------------------------
+Below is a summary of some questions I raised implicitly or explicitly
+elsewhere in my review. But I'd be happy to hear the author(s)'
+response on whatever points they feel are most relevant.
+
+C1: could you clarify your claims about previous IR-based semantics?
+
+C2: why are GCC-specific C extensions an obstacle to the system?
+
+C3: why are assembly directives an obstacle to the system?
+
+C4: could the system apply to the implementation of a C library
+routine?
+
+
+
+Review #5D
+===========================================================================
+
+Overall merit
+-------------
+4. Accept
+
+Reviewer expertise
+------------------
+4. Expert
+
+Reviewer confidence
+-------------------
+3. High
+
+Paper summary
+-------------
+This paper describes a remarkably full formal semantics for x86-64 machine code, developed using the K framework. It explains how the semantics was validated against various tests, and how it can be used to support a variety of interesting formal analyses, such as symbolic evaluation, program verification, and program equivalence checking.
+
+Strengths
+---------
+- Capturing as much of the instruction set as this is an impressive achievement.
+- I liked the explanations of what this model made possible
+
+Weaknesses
+----------
+Really, only minor flaws in the English
+
+Comments for author
+-------------------
+I like this paper and its contribution a great deal. You identify your omissions carefully, and seem to treat the related work fairly.
+
+Here are some minor suggestions and criticisms:
+
+1.  It would be nice to get a sense of the scale of the semantics. On p4, it is said that the model has roughly 5200 rules. How big is each rule on average? What is the total size of the model in terms of kilobytes of text?  (Of course I could download it and see this directly, but I think the paper might provide the figures as well.)
+
+2.  I don’t think the model is usable in all formal applications (not that I think you claim this, but I think it would be helpful to identify where it won’t be useful). My suspicion is that it could not be used
+
+    -   to prove safety properties of the state of the CPU after execution of all possible programs
+    -   to link into a proof of a verified compiler such as CompCert. The language about other projects being able to leverage K-derived SMT theories is a bit vague.
+
+    It would be nice to have these suspicions addressed.
+
+3.  Though explicitly not included in the paper’s contribution (which is fair), it would be nice to have a future work section or similar that suggested how concurrency and non-determinism due to memory models might be handled. Simply saying “x86-64 ... can be incorporated” seems too glib.
+
+
+
+## Minor typo-type things
+
+- most sources refer to this ISA as x86-64, without a capital ‘X’. It also seems as if Intel’s name for it is simply Intel64. The paper’s use of “X86-64” seems wrong
+- similarly, references 39 and 40 should be fixed to capitalise “TSO”.
+- p6: “K already has a matured library support” – should be “... already has mature library support”
+- p6: though you later explain this, when you write “our current implementation of the fused-multiply-add instruction rounds the operation twice”, I think you should explain at this point that this is incorrect. (Insert “incorrectly” before “rounds the operation twice”, perhaps.)
+- p8: “Like in other deductive verifiers, the repetitive constructs” : delete “the”
+
+
+
+Review #5E
+===========================================================================
+
+Overall merit
+-------------
+2. Weak reject
+
+Reviewer expertise
+------------------
+2. Some familiarity
+
+Reviewer confidence
+-------------------
+1. Low
+
+Paper summary
+-------------
+This paper presents a formal semantics of user-level X86-64 ISA, which is more thorough and cover more instructions in comparison with prior work. The authors picked Strata as a starting point, modified the bugs and inconsistencies in it and added more instructions as the contribution of the paper. Also, validation of semantics has been tested and verified.
+
+Strengths
+---------
+This paper shows more coverage of semantics definition in comparison with prior work. Also, the authors have shown validation tests for the correctness of the proposed semantics.
+Also, bug fixing and inconsistencies finding for the previous work and Intel is commendable.
+
+Weaknesses
+----------
+* It seems that authors created these semantics and fixed bugs from the previous work. However as a paper that needs to convey novelties and ideas, this work seems to be an extension and completion of the previous work and it looks light on significantly novel ideas.
+
+Comments for author
+-------------------
+This paper represent and impressive amount of work and provides an almost complete formal implementation of x86 instructions, which is a very complex instruction set architecture.
+
+However, the paper reads like a project report and it is not clear beyond almost completion, albeit with the lack of support for C-lib, what are the novel techniques in the work.
+
+The use cases are also impressive and intriguing. I am not an expert in the area and a constructive rebuttal in terms of the new techniques is much appreciated.
+
+It is worth mentioning that although the paper claims completeness it lacks support for all the instructions.
+
+Questions for authors’ response
+---------------------------------
+What are the novel techniques in this work?
+
+
+
+Response by Daejun Park <dpark69@illinois.edu>
+---------------------------------------------------------------------------
+We thank the reviewers for their helpful and thorough feedback.
+
+We first answer the main questions (provided in "Questions for authors' response") for each reviewer, and answer the remaining questions afterwards.
+
+
+Response to Reviewer #5A
+------------------------
+
+> Does this model support large, useful programs? If so, for which application analyses? Is it possible to include a quantitative evaluation of the scalability? Or even just a demonstration on a set of programs/tasks, allowing a reader to extrapolate the scaling trend?
+
+We can use conventional, modular verification techniques to deal with large systems, where we verify its (small) sub-components and combine the verification result of the sub-components to obtain the final claim about the entire system.  Indeed, we are currently using this x86-64 semantics for translation validation of the LLVM x86-64 backend, applied to the *entire* LLVM compiler infrastructure, i.e., several millions lines of code.  We use a (conventional) bisimulation-based method to reduce the whole-program equivalence to equivalence of individual basic blocks. 
+
+
+Response to Reviewer #5B
+------------------------
+
+> If there are some important new lessons learned about the x86 semantics, or (even better) the way that we extract, model, or reason about them, it would be very helpful if you could call that out in your rebuttal.
+
+In addition to the negative result, we found a new idea of a hybrid approach, where the extra information for reducing the search space is automatically extracted from the manual.  The extra information does not need to be very precise, and we believe that such a rough information can be automatically extracted from the manual using a simple text processing.  We plan to apply this idea when we define the semantics of the unspecified instructions and/or new instructions of the next version of x86-64 ISA in the future.  We will add this in the paper.
+
+Another important message/lesson of our paper is that complete formal semantics of x86 *is* possible, and that is not only useful in itself but also to generate formal analysis tools.
+
+
+Response to Reviewer #5C
+------------------------
+
+>  C1: could you clarify your claims about previous IR-based semantics?
+
+Our claim is that the "direct" semantics is *different* from the "indirect" (i.e., IR-based) semantics, and the direct semantics has its own *value*.  For example, without the direct semantics of x86, we cannot even formulate the correctness of a translator from x86 to IR (e.g., VEX IR).  Analogously, many programming languages (C, C++, Java, etc.) have been given direct semantics, instead of indirect semantics by translation to other languages, for formal reasoning at the desired language granularity.
+
+The specific examples (i.e., explicit side-effect and infinite register file) we provided are meant to illustrate the difference between them, not to claim that the IR-based approach cannot capture the precise behavior.
+
+Regarding the comparison with previous work, we focused on comparing with other direct semantics, since a complete *direct* semantics is our goal and required for our purpose.
+
+We will clarify this in the next version of the paper.
+
+> C2: why are GCC-specific C extensions an obstacle to the system?
+> C3: why are assembly directives an obstacle to the system?
+
+These are not fundamental obstacles, but simply given a lower priority at submission time.  Currently, our semantics supports all of them and passes the omitted tests.  We will update the paper.
+
+> C4: could the system apply to the implementation of a C library routine?
+
+Yes, but currently only for the routines that don't invoke unsupported system calls.  (We are actively working on supporting system calls.)
+
+
+Response to Reviewer #5D
+------------------------
+
+> 1. It would be nice to get a sense of the scale of the semantics. On p4, it is said that the model has roughly 5200 rules. How big is each rule on average? What is the total size of the model in terms of kilobytes of text? (Of course I could download it and see this directly, but I think the paper might provide the figures as well.)
+
+Each rule is 17 LOC on average, and the total size is 15 KB of text.  We will add this in the paper.
+
+> 2. I don’t think the model is usable in all formal applications (not that I think you claim this, but I think it would be helpful to identify where it won’t be useful). My suspicion is that it could not be used 
+to prove safety properties of the state of the CPU after execution of all possible programs,
+to link into a proof of a verified compiler such as CompCert. The language about other projects being able to leverage K-derived SMT theories is a bit vague.
+> It would be nice to have these suspicions addressed.
+
+The K framework provides an interactive theorem proving capability similar to that of Coq and Isabelle.  Thus, in principle, our x86-64 semantics can be used for various formal analyses, including the two applications you mentioned, as long as they are expressible in (the underlying logic of) a typical theorem prover.
+
+> 3. Though explicitly not included in the paper’s contribution (which is fair), it would be nice to have a future work section or similar that suggested how concurrency and non-determinism due to memory models might be handled. Simply saying “x86-64 ... can be incorporated” seems too glib.
+
+We will clarify this in the next version of the paper.  In short, we designed our semantics to be parameterized by the memory model, so that we can plug-in a different memory model.  Indeed, we plugged-in the sequential memory model that was developed (and maintained) independently as part of another language semantics (LLVM).
+
+
+Response to Reviewer #5E
+------------------------
+
+> What are the novel techniques in this work?
+
+Our main novelty (and contribution) is an *engineering model*, showing how to achieve something that has not been achieved before, to our knowledge -- namely, the most complete (direct) formal semantics of x86-64 to date.  In particular, it develops a carefully chosen combination of several existing techniques that leads to our accomplishment.  We show via proofs-of-concept that the semantics can be used in many applications. (Indeed, we are currently using it for an important application. See the response to review #5A for details.)  Additionally, we also report negative results, things which do *not* work, as appreciated by reviewer #5B.
+
+
+
+
+----
+
+RESPONSE TO THE REMAINING QUESTIONS
+=================================== 
+
+
+Response to the remaining questions of Reviewer #5A
+---------------------------------------------------
+
+> Did you determine somehow, quantitatively, that the Strata approach is infeasible? You claim in Section 3.2 that it is a dead end, because it is impractical. Besides the qualitative claim that "you found the effort to extract the information from the manual is the same as manually defining that instruction", is there any other support for this dismissal of prior work?
+
+We will clarify this in the next version of the paper.  In short, we added 58 base instructions to the base set, and learned the semantics of 70 new instructions (only ~5% of the target instructions) in 20 minutes, but no more even after we kept running for two days.
+
+> It was sometimes unclear what a "bug" was in the language of the paper. You describe bugs in Strata, the Intel manual, and Stoke; these are all very different descriptions of the semantics. Do they share a common notion of what a bug is? If so, it was unclear to me what that common notion was.
+
+We found discrepancies between the behavior described in the model (i.e., Strata, Stoke, or the Intel manual) and the behavior of the actual hardware.  We reported those discrepancies to the authors of the models, and they confirmed that those are mistakes (i.e., “bug”) made in their model.
+
+> I did not understand the process of aggregation at the end of Section 3.3. What does aggregation entail for the model? Does byte aggregation impose sequential order on bytes involved in a multi-byte access?
+
+Each byte is represented by a bit-vector of width 8, and the aggregation is represented by the bit-vector concatenation.
+
+> I was not clear how you translated from Strata to K. The text makes the translation sound mechanical. What is an SMT formula in Strata representing? What are the target entities represented in K? How complex is the translation?
+
+The SMT formula represents the input/output behavior of each instruction.  The SMT-LIB language syntax is simple enough to be easily parsed, translated, and modeled in K.
+
+> In the section marked results on page 6, you say that you tested "interesting values", ending your list of different value types with "etc.". What is the set of value types you tested? Why? What defines interestingness?
+
+The domain of the constant values is the bit-vectors of the width given by each immediate instruction.  Among these, we carefully selected values to exercise different cases of the semantics rules as much as possible, including the special values like NaN, +/-Infinity, +/-0, etc.
+
+> At the top of page 7, you talk about deviations indicating a bug in the manual or in the model of Strata. What about a bug in your model? Did you exhaustively catalog all deviations and determine that their cause was not in your semantics implementation?
+
+We are firm believers in *executable* models precisely for this reason. They can be tested against the system you model.  In this case, we made sure that our semantics has the same behaviors as the actual hardware, via testing.  That being said, it may very well be the case that bugs still lurks in our semantics.  Some will be found as the semantics is used with other tools (for example, with symbolic execution, model checking, or deductive verification).  But, in general, you will never know if your formal model is free of bugs.
+
+
+Response to the remaining questions of Reviewer #5B
+---------------------------------------------------
+
+> In 3.3 where "memory state" is defined .... why is it stored that way? Is this common in other works or something specific to this formalism? Is there an advantage you can quantify? If the machine support unaligned accesses is there any reason to still do this? Do your semantics support unaligned memory accesses?
+
+The formalism is a typical way to formalize the machine memory.  One of the benefits is to specify both aligned and unaligned accesses in the same principle.  So, yes, our semantics supports the unaligned memory access.
+
+> Further along those lines, if the semantics is defined at the instruction level, what happens with "unaligned" access to instruction memory? A "jump" to arbitrary memory addresses can interpret instructions in different ways depending on how they are aligned (a tricky used in the security community to make binary analysis much harder to perform). Is that handled?
+
+Currently, our semantics is defined over the x86 assembly and do not yet specify the instruction binary decoding.  Thus, such a jump is not "defined", but at least we can catch its existence in either concrete or symbolic execution.  (we are actively working on specifying the binary encoding.)

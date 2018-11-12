@@ -20,7 +20,7 @@ The \K configuration of a running \ISA program is shown in Figure~\ref{fig:confi
 The \s{regstate} cell contains a  map from registers or flag names to values. The register names include the sixteen general purpose registers, \reg{rip}, and the sixteen SIMD registers.  The value mapped to a register name is a $64$-width bit-vector (or a 256-width one for the SIMD registers). Values for sub-register variants are derived from the register values by extracting the relevant bits. \cmt{In the \s{regstate} map, }We store individual flag names (mapped to a bit-vector value of width $1$) as opposed to a $64$-bit \s{rflags} register. Every access (read/write) of \reg{rflags} retrieves the entries in the \s{regstate} map for the individual flags.
 
 \paragraph{Memory State}
-
+\Added{Our memory model is inspired by previous efforts ~\cite{TSL:TOPLAS13, Ellison}.}
 The \s{memstate} cell is a map from $64$-bit addresses to bytes, which specifies the byte-addressable memory, but our implementation is flexible enough to use alternative memory  representations with addressing of $2$-byte or $4$-byte quantities.  Our memory layout is ``flat'', in which all available memory locations can be addressed, \cmt{without going through additional levels of addressing, such as memory segments.} but we do have logical partitions\footnote{These abstractions are useful for executing \ISA programs.} of the memory into sections like code, data and stack.  The following is an example snapshot of a memory state,  holding a $4$-bytes integer value $65535$:
 \begin{center}
     \newcommand{\bytecell}[2]{\s{byte}({#1},\;\;{#2})}
@@ -43,7 +43,7 @@ This says that the memory address $4$ stores the $0^\text{th}$ byte of the bit-v
 \subsection{Semantics of Execution Environment}
 %\input{figures/computelayer}
 
-We now give the reader a flavor of our semantics, by discussing a few of the roughly $5,200$ rules that we defined to model the entire semantics.
+We now give the reader a flavor of our semantics, by discussing a few of the roughly $5,200$ rules\footnote{\Added{Each rule is 17 LOC on average, and the total size is 15 KB of text.}} that we defined to model the entire semantics.
 %\Comment{Can you list how many of these rules came from Strata unchanged, 
 %how many had to be "fixed" in various ways, how many you wrote yourself?}
 We first explain the semantics of the execution environment, which involves all the machinery used for executing \ISA programs.

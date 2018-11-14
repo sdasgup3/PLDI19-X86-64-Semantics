@@ -61,9 +61,9 @@ The \s{k} cell contains the instruction to be processed next. We use ``\s{:T}'' 
 represents a reduction (i.e., a transition relation). A cell without the `$\Rightarrow$' symbol means that it is read but not changed by the rule. \K allows us to use ``.'' to represent an empty computation and ``...'' to represent a structural frame, that is, it matches the portions of a cell that are neither read nor written by the rule. The above rule essentially  stores each instruction in memory, which is modeled as a map, at an address \s{L} given by the \s{nextloc} cell. Subsequently, the \s{nextloc} cell gets updated to an appropriate address  used for storing the next instruction.  Once the entire program is loaded, the fetch-and-execute cycle starts, which is realized by the following rule:
 \begin{lstlisting}[style=KRULE]
 rule <k> fetch (*$\Rightarrow$*) exec(OpC OpR) (*$\kra$*) fetch ... </k>
-  <memstate>... L (*$\rightarrow$*) (OpC OpR) ...</memstate>
+  <memstate>... L (*$\mapsto$*) (OpC OpR) ...</memstate>
   <regstate>... 
-    "RIP" (*$\rightarrow$*) ( L (*$\Rightarrow$*) L + instrSize(OpC OpR))  
+    "RIP" (*$\mapsto$*) ( L (*$\Rightarrow$*) L + instrSize(OpC OpR))  
   ...</regstate>
 \end{lstlisting}
 %\Comment{It is not clear what kind of term \Code{exec(OpC OpR)} is: is it a special function defined somewhere, or a separate rule? I'm not familiar enough with K, but remember that reviewers won't be familiar either!}
@@ -83,7 +83,7 @@ Instruction in the running example reads from  register (\reg{rbx}) and memory (
 for a sub-register, a portion of it. The semantics of register read can be defined as:  
 \begin{lstlisting}[style=KRULE]
 rule <k> getRegisterVal(R:R64) (*$\Rightarrow$*) BV(*$_\s{r}$*) ...</k>
-     <regstate>... "R" (*$\mapsto$*) BV(*$_\s{r}$*) ...</regstate>
+  <regstate>... R (*$\mapsto$*) BV(*$_\s{r}$*) ...</regstate>
 \end{lstlisting}
  In the context of the running example, this rule
 is applied when the current computation (at top of the \s{k} cell) is a $64$-bit register
@@ -96,7 +96,7 @@ The following rule is applied to compute the effective address:
 rule <k> 
  Offset:Int (R:R64):Mem (*$\Rightarrow$*) ( 64'Offset + BV(*$_\s{r}$*)):Address
 ...</k>
-  <regstate> ... "R" (*$\mapsto$*) BV(*$_\s{r}$*) ... </regstate>
+  <regstate> ... R (*$\mapsto$*) BV(*$_\s{r}$*) ... </regstate>
 \end{lstlisting}
 The term to the left of $\Rightarrow$ shows the memory addressing expression at the 
 top of \s{k} cell, which gets reduced to a memory address. The effective memory address for the memory operand used in the running example is (64'-4 + \s{BV$_\s{rsp}$}) which is then used to do memory read access. 
@@ -115,16 +115,16 @@ rule <k>
   exec(andnq memVal(*$_{64}$*), BV(*$_\s{r}$*), R:R64) (*$\Rightarrow$*) (*\textbf{.}*)
 ...</k>
   <regstate>
-    "R"  (*$\rightarrow$*) _ (*$\Rightarrow$*) ((*$\sim$*)BV(*$_\s{r}$*) & MemVal(*$_{64}$*))
+    "R"  (*$\mapsto$*) _ (*$\Rightarrow$*) ((*$\sim$*)BV(*$_\s{r}$*) & MemVal(*$_{64}$*))
     // sf and zf are updated based on the result. 
-    "SF" (*$\rightarrow$*) ((*$\sim$*)BV(*$_\s{r}$*) & MemVal(*$_{64}$*))[63:63]
-    "ZF" (*$\rightarrow$*) ((*$\sim$*)BV(*$_\s{r}$*) & MemVal(*$_{64}$*)) (*$=$*) 64'0 ? 1'1:1'0
+    "SF" (*$\mapsto$*) ((*$\sim$*)BV(*$_\s{r}$*) & MemVal(*$_{64}$*))[63:63]
+    "ZF" (*$\mapsto$*) ((*$\sim$*)BV(*$_\s{r}$*) & MemVal(*$_{64}$*)) (*$=$*) 64'0 ? 1'1:1'0
     // of and cf are cleared. 
-    "OF" (*$\rightarrow$*) 1'0
-    "CF" (*$\rightarrow$*) 1'0
+    "OF" (*$\mapsto$*) 1'0
+    "CF" (*$\mapsto$*) 1'0
     // sf and zf are undefined.
-    "AF" (*$\rightarrow$*) undef
-    "PF" (*$\rightarrow$*) undef
+    "AF" (*$\mapsto$*) undef
+    "PF" (*$\mapsto$*) undef
   ...</regstate>  
 \end{lstlisting}
 The operator ``[i:j]'' extracts bits i down to j from a bit-vector of size n, yielding another  bit-vector of size i - j + 1, assuming that n $>$ i $\ge$ j $\ge$ 0. The operator ``$\&$'' implements bit-wise and operation. The rule associated with memory write is similar to that for memory read and is skipped here. 

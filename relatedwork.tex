@@ -144,16 +144,21 @@ and/or extensions that are part of many \ISA instruction semantics
 RockSalt's DSL uses an infinite register file instead of the finite
 \ISA register file.
 }
-Hasabnis \etal~\cite{Hasabnis:ASPLOS16, Hasabnis:FSE16} also implement
-lifting of \ISA to an architecture-independent intermediate language (IL).
-In contrast with the other works above,
-they use machine learning~\cite{Hasabnis:ASPLOS16} and symbolic
-execution~\cite{Hasabnis:FSE16} techniques to automatically learn mappings
-from \ISA instructions to IL snippets. They learn these mappings by extracting
-knowledge from the hard-coded translation logic found in compilers such as GCC.
-The extracted mappings cover more than 99\% of \ISA instructions. However,
-\cmt{similar to the rest of binary analysis works,}
-the resulting IL cannot stand as a formal \ISA definition because it
-abstracts away important \ISA semantic details, e.g.,
-the effect of the various instructions on CPU flags.
+
+Hasabnis \etal~\cite{Hasabnis:ASPLOS16, Hasabnis:FSE16} also present an indirect semantics of \ISA, but in contract to other indirect semantics, they use machine learning~\cite{Hasabnis:ASPLOS16} and symbolic 
+execution~\cite{Hasabnis:FSE16} to automatically learn the translation of \ISA instructions to their IR, by extracting knowledge from the hard-coded  translation logic of compilers such as GCC.
+However, as they admitted~\cite{Hasabnis:FSE16}, their semantics omits some important details of \ISA semantics (e.g., the effect of various instructions on CPU flags), and thus is not sufficient to serve as a solid foundation for rigorous formal analyses of \ISA binary.
+
+
+% implement
+% lifting of \ISA to an architecture-independent intermediate language (IL).
+% In contrast with the other works above,
+
+% They learn these mappings by extracting
+% knowledge from the hard-coded translation logic found in compilers such as GCC.
+% The extracted mappings cover more than 99\% of \ISA instructions. However,
+% \cmt{similar to the rest of binary analysis works,}
+% the resulting IL cannot stand as a formal \ISA definition because it
+% abstracts away important \ISA semantic details, e.g.,
+% the effect of the various instructions on CPU flags.
 

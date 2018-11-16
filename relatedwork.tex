@@ -112,7 +112,8 @@ for formal specification proofs, i.e., to prove whether a given x86
 program meets its specification.
 
 Our semantics, like all of the aforementioned works, uses a sequential consistency memory model, omitting weaker memory models.
-Existing efforts to specify weaker memory models for \ISA such as Owens et al.~\cite{Owens:x86-TSO} and Sarkar et al.~\cite{Sarkar:POPL09} can be incorporated into ours to reason about multi-threaded programs. \Added{Moreover, the fact that they support a small $32$-bit x86 instruction set raises the potential of the usability  of such an integration towards reasoning about real world programs.}
+Existing efforts to specify weaker memory models for \ISA such as Owens et al.~\cite{Owens:x86-TSO} and Sarkar et al.~\cite{Sarkar:POPL09}, \Added{however, suffer from their limited support for instruction semantics (i.e., they consider only a small subset of 32-bit x86 instruction set).
+We believe that integrating these two complementary efforts is a promising direction toward rigorously reasoning about real-world programs running on modern multiprocessors.}
 
 There are various binary analysis projects that target \ISA binaries
 and lift them to a higher-level representation more suitable for the

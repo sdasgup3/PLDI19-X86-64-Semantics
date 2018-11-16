@@ -239,12 +239,14 @@ The \K verifier takes a minute to verify the \m{sum-to-n} assembly code satisfie
 
 
 
-\subsection{Finding Security Vulnerabilities}\label{sec:Appl:Security}
+%\subsection{Finding Security Vulnerabilities}
+\subsection{Symbolic Execution}
+\label{sec:Appl:Security}
 
 \K automatically derives a correct-by-construction symbolic execution engine from the given semantics.
 Being instantiated with our semantics, the engine can be used to symbolically execute and explore all possible paths in the given \ISA program.
 In this section, we demonstrate how this capability can be used to find a  security vulnerability.
-In practice, this capability would be used more efficiently than exhaustive path exploration by using Dynamic Symbolic Execution~\cite{godefroid_automated_2008}.
+% In practice, this capability would be used more efficiently than exhaustive path exploration by using Dynamic Symbolic Execution~\cite{godefroid_automated_2008}.
 
 \input{figures/histarbug.tex}
 
@@ -351,7 +353,7 @@ We asked Z3 to solve the above path condition and it returned a solution (i.e., 
 
 
 
-\subsection{Translation-Validation of Optimizations}
+\subsection{Translation Validation of Optimizations}
 
 
 \begin{figure}[t]
@@ -367,12 +369,12 @@ We asked Z3 to solve the above path condition and it returned a solution (i.e., 
 \end{figure}
 
 
-\K also provides a program equivalence checker that can be used for the translation-validation of compiler optimizations.
+\K also provides a program equivalence checker that can be used for the translation validation of compiler optimizations.
 We derived an \ISA program equivalence checker from our semantics and used it to validate different optimizations.
 Figure~\ref{fig:popcnt} shows a program that we considered, \s{popcnt}, which counts the number of set bits in the given input.
 
 We compiled the program with different optimizations: the GCC compiler optimizations (-O0, -O1, -O2, and -O3), and the Stoke super-optimization.
-On top of the baseline (-O0), the -O1 optimization produces a code obtained by performing the mem2reg optimization, the -O2 optimization produces one by factoring out the common statement over different branches,\footnote{Specifically, by performing the common subexpression elimination, followed by certain statement reordering optimization, followed by the strength reduction.} and the -O3 optimization produces the same code with -O2. The Stoke super-optimization translates the assembly code into a single instruction: \instr{popcnt \%rdi, \%rax}, where \reg{rdi} and \reg{rax} correspond to the input and the return values, resp.
+On top of the baseline (-O0), the -O1 optimization produces a code obtained by performing the \s{mem2reg} optimization, the -O2 optimization produces one by factoring out the common statement over different branches,\footnote{Specifically, by performing the common subexpression elimination, followed by certain statement reordering optimization, followed by the strength reduction.} and the -O3 optimization produces the same code with -O2. The Stoke super-optimization translates the assembly code into a single instruction: \instr{popcnt \%rdi, \%rax}, where \reg{rdi} and \reg{rax} correspond to the input and the return values, respectively.
 
 We validated these optimizations by checking the equivalence between the optimized programs.
 The equivalence checker symbolically executes each program and compares their return values (i.e., the symbolic expression of the \reg{rax} register value) using Z3.

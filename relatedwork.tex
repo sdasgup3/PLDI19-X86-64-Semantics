@@ -13,8 +13,8 @@
 
 There have been many projects that host a formal semantics of \ISA either as
 their main contribution or as part of their infrastructure.
-Table~\ref{table:RW} summarizes such previous work and compares it to our formal
-semantics. We do the comparison in three directions that reflect the
+Table~\ref{table:RW} summarizes such previous work and compares it to our formal semantics.\footnote{Here we focus on comparing with other \emph{direct} semantics, since a complete \emph{direct} semantics is our goal and required for our purpose. We will discuss other \emph{indirect} semantics later in this section.}
+We do the comparison in three directions that reflect the
 primary contributions of our work: the completeness of the definition in terms
 of supported user-level instructions, the faithfulness of the definition in
 terms of whether it is executable and hence can be evaluated with real code
@@ -56,16 +56,15 @@ TSL~\cite{TSL:TOPLAS13}           & \xmark & \cmark      & \rating{50} \\
     %\emph{NJ}: Node.js 0.10.29
 }
 \end{center}
-    \caption{Projects hosting semantics of the \ISA ISA.}
-    \label{table:RW}
+\caption{Projects hosting formal semantics of the \ISA ISA.}
+\label{table:RW}
 \end{table}
 
 \Strata~\cite{Heule2016a} uses program synthesis to generate the instruction
 semantics, as SMT bit-vector formulas, by learning their input/output behavior
 through execution on an actual processor. \Strata's semantics definition for
 \ISA is incomplete as it does not include semantics of about 40\% of the
-user-level instructions in scope that
-could not be learned automatically by the algorithm for various reasons. Even then,
+user-level instructions in scope that are not straightforward to automatically learn by the presented algorithm for various reasons (see Section~\ref{sec:Approach:Overview} for details). Even then,
 the result that the formal semantics of 60\% of the target \ISA ISA can be learned automatically
 is impressive, and we leverage this result in our work as described in
 section~\ref{sec:harvestsema}.
@@ -74,8 +73,7 @@ The FP operations are represented in the SMT formulas of the definition as
 uninterpreted functions. Finally the specifications are given as SMT formulas
 but have not been demonstrated to be usable in a formal analysis setting out-of-the-box.
 
-Goel \etal~\cite{Goel:FMCAD14} use the ACL2 theorem-proving
-system~\cite{ACL2:Kaufmann2000} to model the \ISA ISA and has support for
+Goel \etal~\cite{Goel:FMCAD14} use the ACL2 theorem prover~\cite{ACL2:Kaufmann2000} to model the \ISA ISA and has support for
 \goelPerc{} of all user level instructions~\cite{GoelList}. They have specifications of a selection
 of user-level instructions, some system-level instructions, paging, and
 segmentation. This list is far from a complete semantic definition of \ISA,
@@ -87,8 +85,7 @@ point towards completeness.
 
 The CompCert verified compiler~\cite{Leroy:2009} includes semantics
 definitions for all intermediate and target languages used within the compiler,
-including a definition for x86 assembly. The definition is specified in
-the language of the Coq~\cite{Coq} proof assistant, and has been used in a formal
+including a definition for x86 assembly. The definition is specified in Coq~\cite{Coq}, and has been used in a formal
 setting for proving the correctness of the CompCert's compilation step to assembly,
 as well as outside CompCert, e.g., in proofs relating to the certified concurrent
 OS kernel CeriKOS~\cite{Gu:2016}. However, this definition focuses on the
@@ -96,7 +93,7 @@ OS kernel CeriKOS~\cite{Gu:2016}. However, this definition focuses on the
 set.
 Moreover, it is part of the trust base for CompCert and it is not clear
 whether or how it has been tested against an actual processor, whereas
-\Strata and ours have been tested extensively.
+\Strata and ours have been extensively tested.
 
 Remill~\cite{McSema:Recon14} is a static binary translator from \ISA to LLVM
 IR~\cite{LLVM:CGO04}. The translator contains specifications for \ISA instructions
@@ -107,28 +104,31 @@ in formal analysis.
 TSL~\cite{TSL:TOPLAS13} is a system that can auto-generate tools for
 various machine code analyses given a semantics definition of the machine
 language written in the TSL specification. Such a semantics
-definition of the integer subset of the $32$-bit x86 instruction set is given
+definition for the integer instructions (i.e., no floating-point instructions) of the $32$-bit x86 instruction set is given
 as part of the project. It is used for the generation of
 various tools, including a machine code synthesizer~\cite{Srinivasan2015}.
 This definition, to the best of our knowledge, have not been used
 for formal specification proofs, i.e., to prove whether a given x86
 program meets its specification.
 
-Our semantics, similar to all the works mentioned above, use a sequential
-consistency memory model and omit a more appropriate weak memory model
-that would be better suited for most of today's multiprocessors.
-Works on
-weaker memory models for \ISA such as
-Owens et al.~\cite{Owens:x86-TSO} and Sarkar et al.~\cite{Sarkar:POPL09} can be
-incorporated into ours to provide a more realistic memory model.
+Our semantics, like all of the aforementioned works, uses a sequential consistency memory model, omitting weaker memory models.
+Existing efforts to specify weaker memory models for \ISA such as Owens et al.~\cite{Owens:x86-TSO} and Sarkar et al.~\cite{Sarkar:POPL09} can be incorporated into ours to reason about multi-threaded programs.
 
 There are various binary analysis projects that target \ISA binaries
 and lift them to a higher-level representation more suitable for the
 specific analysis. These include Angr~\cite{Angr} using the VEX IR of Valgrind~\cite{Valgrind:ENTCS03}, the QEMU~\cite{QEMU:USENIX05} emulator
 using the TCG IR, the software fault isolation tool RockSalt~\cite{Roclsalt:PLDI12} using its own RTL DSL, the disassembler and binary analyzer Radare2~\cite{Radare2} using the ESIL IR~\cite{ESIL}, and the binary analysis
-tool BAP~\cite{BAP:CAV11} that uses BIL IR.
-We refer these semantics as \emph{indirect} because in all these
-cases the lifted IR, that is being analyzed, is rigorously defined as opposed to providing \emph{direct} semantics to the binary. Even though tools like BAP and Angr can do some formal reasoning owing to their capability of symbolically executing the IR semantics, but they are not designed with the goal of full-fledged formal reasoning. Our claim is that the ``direct'' semantics is useful in itself, for example, without the direct semantics of x86, we cannot even formulate the correctness of a translator from x86 to IR (e.g., VEX IR).  Analogously, many programming languages (C, C++, Java, etc.) have been given direct semantics, instead of indirect semantics by translation to other languages, for formal reasoning at the desired language granularity. 
+tool BAP~\cite{BAP:CAV11} using the BIL IR.
+We refer these semantics as \emph{indirect} as they give the semantics of the \ISA binary via the translation to their IR, as opposed to the \emph{direct} semantics such as ours.
+% because in all these cases the lifted IR, that is being analyzed, is rigorously defined as opposed to providing \emph{direct} semantics to the binary.
+Note that the direct semantics has its own value.
+For example, without the direct semantics of \ISA, we cannot even formulate the correctness of a translator from \ISA to the IR.
+Analogously, many programming languages (C, C++, Java, etc.) have been given direct semantics, instead of indirect semantics by translation to other languages, for formal reasoning at the desired language granularity. 
+
+% Even though tools like BAP and Angr can do some formal reasoning owing to their capability of symbolically executing the IR semantics, but they are not designed with the goal of full-fledged formal reasoning.
+
+
+
 
 \cmt{ 
 Regarding the comparison with previous work, we focused on comparing with other direct semantics, since a complete *direct* semantics is our goal and required for our purpose.

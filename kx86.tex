@@ -326,7 +326,7 @@ For the other instructions, we obtained the memory and immediate variants by gen
 \paragraph{Immediate Instruction Variants}
 
 There are 118 immediate instruction variants (over the 8-bit constants) that do not have corresponding register instructions.
-For those immediate instructions, Strata provides the instruction semantics for each individual constant, resulting in 30,208 (= $118 \times 256$)\footnote{Indeed, Strata provides explicitly only 19,783 formulae by randomly sampling $\sim$168 constants out of 256, in average, for each immediate instruction, assuming that the remaining 10,425 formulae can be inferred.} formulae for the immediate instructions' semantics.
+For those immediate instructions, Strata provides the instruction semantics for each individual constant, resulting in 30,208 (= $118 \times 256$)\footnote{Indeed, Strata explicitly provides only 19,783 formulae by randomly sampling $\sim$168 constants out of 256, in average, for each immediate instruction, assuming that the remaining 10,425 formulae can be inferred.} formulae for the immediate instructions' semantics.
 We generalized the set of formulae for each immediate instruction into a single semantic rule.
 We validated our generalization by cross-checking the generalized semantics with the original using the SMT solver.
 

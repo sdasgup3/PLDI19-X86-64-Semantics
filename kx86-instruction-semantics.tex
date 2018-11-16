@@ -18,8 +18,7 @@ unique mnemonics). The entire implementation took 8 man-months (not including ex
 Instructions which are \emph{not included} in the current scope of work are: 
 (1) System-level instructions, which are related to the operating system, 
 protection levels, I/O, cache lines, and other supervisor instructions; 
-(2) x87 \& MMX instructions, which deal with floating-point and vector 
-operations respectively and are deprecated by SSE; 
+(2) x87 \& MMX instructions, consisting of legacy floating-point and vector operations, respectively, which are now deprecated by SSE; 
 (3) Concurrency-related operations, including atomic operations and fences; and 
 (4) Cryptography instructions, which support cryptographic processing specified by Advanced Encryption Standard (AES).
 
@@ -38,12 +37,12 @@ We then translated these SMT formulas from Strata into \K rules using a script, 
 %
 These steps give us a validated initial set of semantic rules in \K for about 60\% of the target instructions (our ``baseline'' set).
 
-We attempted to extend the stratification approach in Strata to define additional rules automatically, in two ways: (i) augmenting their base set \s{B}, and (ii) constraining the search space manually using knowledge of instruction behaviors.  Both these attempts failed: Both (i) and (ii) work well for a few instructions, but in the general case, we found them to be impractical. Specifically, we added $58$ base instructions to the base set, and learned the semantics of $70$ new instructions, which are variants of the added  instructions, in $20$ minutes, but no more even after we kept running for two days. Also, we tried constraining the search space by manually populating it with relevant instructions. The lesson we learned from these experiments is, getting the right set of base instructions or a constrained search space for a complex instruction need an insight about the semantics of that instruction itself. We found that the effort to extract such information from the manual is about the same  as manually defining that instruction.
+We attempted to extend the stratification approach in Strata to define additional rules automatically, in two ways: (i) augmenting their base set \s{B}, and (ii) constraining the search space manually using knowledge of instruction behaviors.  Both these attempts failed; they worked only for a few instructions, but in general, we found them to be impractical. Specifically, we added $58$ base instructions to the base set, and learned the semantics of $70$ new instructions, which are variants of the added  instructions, in $20$ minutes, but no more even after we kept running for two days. Also, we tried constraining the search space by manually populating it with relevant instructions. The lesson we learned from these experiments is, getting the right set of base instructions or a constrained search space for a complex instruction need an insight about the semantics of that instruction itself. We found that the effort to extract such information from the manual is about the same  as manually defining that instruction.
  
 
 %\Comment{SANDEEP: Please check this last sentence and fix / improve.}
 
-We then manually added \K rules for the remaining 40\% of the target instructions by reading the Intel manual and translating into \K rules, in some cases cross-referencing against semantics available in Stoke.
+We then manually added \K rules for the remaining 40\% of the target instructions by systematically translating their description of the Intel manual into \K rules, in some cases cross-referencing against semantics available in Stoke.
 %
 The outcome was a complete formal specification of user-level \ISA in \K.
 
@@ -53,7 +52,7 @@ First, we use the \K interpreter to execute the semantics of each instruction fo
 %
 Second, we repeated this experiment using the applicable programs in the GCC torture tests.  % (\TortureInclude{} out of \TortureTotal{} tests).
 %
-Third, we compared against the semantics defined in the Stoke project for about 330 instructions that were not also defined in the Strata project (and so not included in our baseline), using an SMT solver.
+Third, we compared against the semantics defined in the Stoke project for about 330 instructions that were omitted in Strata (thus not included in our baseline), using an SMT solver.
 
 These validation experiments uncovered bugs in the Intel manual, in Strata's simplification rules, and in the Stoke semantics.  All these bugs were reported to the authors, and most have been acknowledged and some have been fixed.  The details are in Section~\ref{sec:Eval}.
 

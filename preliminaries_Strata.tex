@@ -1,7 +1,6 @@
 \subsection{Strata Project}\label{sec:prelimstrata}
 %% Support Count 
-\Strata~\cite{Heule2016a} automatically synthesized formal semantics of the
-input/output behavior of \strataWithDupIS{} instructions variants (representing \strataIntel{} unique mnemonics) of the \ISA Haswell ISA. 
+\Strata~\cite{Heule2016a} automatically synthesized formal semantics of \strataWithDupIS{} instruction variants (representing \strataIntel{} unique mnemonics) of the \ISA Haswell ISA. 
 %% Set of test input 
 The algorithm to learn the formal semantics of an instruction, say \s{IS}, starts with a small set of instructions, called base set \s{B}, whose semantics are known and trusted; a set of test inputs \s{T}, and the output behavior of \s{IS} obtained by executing \s{IS} on \s{T}. Then \Stoke~\cite{Stoke2013} is used  to synthesize  instruction sequences which contain instructions from \s{B} and match the behavior of \s{IS} for all test cases in \s{T}. Given two such generated instruction sequences \s{IS} and \s{IS}$^\prime$, their equivalence is decided  using an SMT solver and the trusted and known  semantics from the base set. If the two sequences are
 semantically distinct, then the model produced by the SMT solver is used  to obtain

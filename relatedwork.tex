@@ -39,7 +39,7 @@ Strata~\cite{Heule2016a}          & \xmark & \rating{50} & \xmark      \\
 Goel et. al.~\cite{Goel:FMCAD14}  & \xmark & \cmark      & \cmark      \\
 CompCert~\cite{Leroy:2009}        & \xmark & \xmark      & \cmark      \\
 Remill~\cite{Remill}              & \xmark & \cmark      & \xmark      \\
-TSL~\cite{TSL:TOPLAS13}           & \xmark & \xmark      & \rating{50} \\
+TSL~\cite{TSL:TOPLAS13}           & \xmark & \cmark      & \rating{50} \\
 \hline
 \textbf{Our Semantics}            & \cmark & \cmark      & \cmark      \\
 \hline
@@ -87,12 +87,12 @@ point towards completeness.
 
 The CompCert verified compiler~\cite{Leroy:2009} includes semantics
 definitions for all intermediate and target languages used within the compiler,
-including a definition for X86 assembly. The definition is specified in
+including a definition for x86 assembly. The definition is specified in
 the language of the Coq~\cite{Coq} proof assistant, and has been used in a formal
 setting for proving the correctness of the CompCert's compilation step to assembly,
 as well as outside CompCert, e.g., in proofs relating to the certified concurrent
 OS kernel CeriKOS~\cite{Gu:2016}. However, this definition focuses on the
-32-bit X86 instruction set, which is a small subset of the \ISA instruction 
+32-bit x86 instruction set, which is a small subset of the \ISA instruction 
 set.
 Moreover, it is part of the trust base for CompCert and it is not clear
 whether or how it has been tested against an actual processor, whereas
@@ -106,12 +106,12 @@ in formal analysis.
 
 TSL~\cite{TSL:TOPLAS13} is a system that can auto-generate tools for
 various machine code analyses given a semantics definition of the machine
-language written in the TSL language. Such a semantics
+language written in the TSL specification. Such a semantics
 definition of the integer subset of the $32$-bit x86 instruction set is given
-as part of this project. It is used for the generation of
+as part of the project. It is used for the generation of
 various tools, including a machine code synthesizer~\cite{Srinivasan2015}.
-This definition is not executable and to the best of our knowledge cannot be
-used for formal specification proofs, i.e., to prove whether a given x86
+This definition, to the best of our knowledge, have not been used
+for formal specification proofs, i.e., to prove whether a given x86
 program meets its specification.
 
 Our semantics, similar to all the works mentioned above, use a sequential
@@ -131,6 +131,12 @@ RockSalt~\cite{Roclsalt:PLDI12} that uses its own RTL DSL, the disassembler and
 binary analyzer Radare2~\cite{Radare2} that uses the ESIL IR~\cite{ESIL},
 and the binary analysis
 tool BAP~\cite{BAP:CAV11} that also uses its own intermediate language.
+We call these semantics \emph{indirect} because in all these
+cases the lifted IR, that is being analyzed, is rigorously defined as opposed to providing \emph{direct} semantics to the binary. Our claim is that the ``direct'' semantics is useful in itself, for example, without the direct semantics of x86, we cannot even formulate the correctness of a translator from x86 to IR (e.g., VEX IR).  Analogously, many programming languages (C, C++, Java, etc.) have been given direct semantics, instead of indirect semantics by translation to other languages, for formal reasoning at the desired language granularity. 
+
+\cmt{ 
+Regarding the comparison with previous work, we focused on comparing with other direct semantics, since a complete *direct* semantics is our goal and required for our purpose.
+
 In all these
 cases the IR that is being analyzed is rigorously defined, but we refrain from
 considering these as formal specifications of \ISA because the
@@ -141,7 +147,7 @@ and/or extensions that are part of many \ISA instruction semantics
 (i.e., these have to be emulated separately by the program), while
 RockSalt's DSL uses an infinite register file instead of the finite
 \ISA register file.
-
+}
 Hasabnis \etal~\cite{Hasabnis:ASPLOS16, Hasabnis:FSE16} also implement
 lifting of \ISA to an architecture-independent intermediate language (IL).
 In contrast with the other works above,
@@ -150,7 +156,7 @@ execution~\cite{Hasabnis:FSE16} techniques to automatically learn mappings
 from \ISA instructions to IL snippets. They learn these mappings by extracting
 knowledge from the hard-coded translation logic found in compilers such as GCC.
 The extracted mappings cover more than 99\% of \ISA instructions. However,
-similar to the rest of binary analysis works,
+\cmt{similar to the rest of binary analysis works,}
 the resulting IL cannot stand as a formal \ISA definition because it
 abstracts away important \ISA semantic details, e.g.,
 the effect of the various instructions on CPU flags.

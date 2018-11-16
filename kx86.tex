@@ -17,7 +17,7 @@ The \K configuration of a running \ISA program is shown in Figure~\ref{fig:confi
 
 \paragraph{Register State}
 
-The \s{regstate} cell contains a  map from registers or flag names to values. The register names include the sixteen general purpose registers, \reg{rip}, and the sixteen SIMD registers.  The value mapped to a register name is a $64$-width bit-vector (or a 256-width one for the SIMD registers). Values for sub-register variants are derived from the register values by extracting the relevant bits. \cmt{In the \s{regstate} map, }We store individual flag names (mapped to a bit-vector value of width $1$) as opposed to a $64$-bit \s{rflags} register. Every access (read/write) of \reg{rflags} retrieves the entries in the \s{regstate} map for the individual flags.
+The \s{regstate} cell contains a  map from registers or flag names to values. The register names include the sixteen general purpose registers, \reg{rip}, and the sixteen SIMD registers.  The value mapped to a register name is a $64$-width bit-vector (or a $256$-width one for the SIMD registers). Values for sub-register variants are derived from the register values by extracting the relevant bits. \cmt{In the \s{regstate} map, }We store individual flag names (mapped to a bit-vector value of width $1$) as opposed to a $64$-bit \s{rflags} register. Every access (read/write) of \reg{rflags} retrieves the entries in the \s{regstate} map for the individual flags.
 
 \paragraph{Memory State}
 \Added{Our memory model is inspired by previous efforts ~\cite{TSL:TOPLAS13, Ellison}.}

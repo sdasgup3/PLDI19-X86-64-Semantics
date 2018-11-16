@@ -1,10 +1,7 @@
 \section{Future Work}
 \label{sec:Future}
-The lesson that we learned from our failed effort in extending \Strata
-intrigues us to a new idea of a hybrid approach, where the extra information
-for reducing the search space is automatically extracted from the manual.  The
-extra information does not need to be very precise, and we believe that such a
-rough information can be automatically extracted from the manual using a simple
-text processing.  We plan to apply this idea when we define the semantics of
-the unspecified instructions and/or new instructions of the next version of
-x86-64 ISA in the future.
+
+As mentioned in Section~\ref{sec:Approach:Overview}, we found our ideas of extending \Strata do not scale because we need information about the instruction, whose semantics we want to learn, in order to constraint the search space. This lesson intrigued us to a new idea, where the information needed to reduce the search space can be automatically extracted from the manual. This
+ information does not need to be precise, and we believe that such a
+rough information can be automatically extracted from the manual using text processing.  We plan to explore this idea while defining the semantics of
+ unspecified and/or new instructions.

@@ -42,7 +42,7 @@ The instruction semantics in our model is either based on the Strata project (fo
 
 \subparagraph{Inconsistencies Found in the Intel Manual} Here are inconsistencies found during development and testing. \cmt{This is unsurprising given that fact that there are over $3,800$ pages of technical content and the vast majority of which is not machine-checked.} 
 \begin{itemize}
-    \item According to the manual, the semantics of \instr{vpsravd \%xmm3, \%xmm2, \%xmm1} seems to depend on the lower $100$ bits of \reg{xmm3}, whereas the actual hardware execution suggest that it should depend on the lower $128$ bits. Similar inconsistencies are found in instructions with mnemonics \instr{vpsllvd}, \instr{vpsllvq}, \instr{vpsravd}.
+    \item According to the manual, the semantics of \instr{vpsravd} \instr{\%xmm3, \%xmm2, \%xmm1} seems to depend on the lower $100$ bits of \reg{xmm3}, whereas the actual hardware execution suggest that it should depend on the lower $128$ bits. Similar inconsistencies are found in instructions with mnemonics \instr{vpsllvd}, \instr{vpsllvq}, \instr{vpsravd}.
     
     \item We found misleading typos related to instructions with opcodes \instr{vpsravw}, \instr{vpsravd}, \instr{vpsravq}, \instr{packsswb}.    
 \end{itemize}

@@ -37,7 +37,7 @@ related works.
 \\ [-10pt]
 Strata~\cite{Heule2016a}          & \xmark & \rating{50} & \xmark      \\
 Goel et. al.~\cite{Goel:FMCAD14}  & \xmark & \cmark      & \cmark      \\
-CompCert~\cite{Leroy:2009}        & \xmark & \xmark      & \cmark      \\
+CompCert~\cite{Leroy:2009}        & \xmark & \cmark      & \cmark      \\
 Remill~\cite{Remill}              & \xmark & \cmark      & \xmark      \\
 TSL~\cite{TSL:TOPLAS13}           & \xmark & \cmark      & \rating{50} \\
 \hline
@@ -100,7 +100,7 @@ whether or how it has been tested against an actual processor, whereas
 
 Remill~\cite{McSema:Recon14} is a static binary translator from \ISA to LLVM
 IR~\cite{LLVM:CGO04}. The translator contains specifications for \ISA instructions
-in the form of equivalent LLVM IR programs to assist the translation. This
+in the form of equivalent C\cmt{LLVM IR} programs to assist the translation. This
 specification is neither complete nor formal and cannot be easily used
 in formal analysis.
 
@@ -122,17 +122,13 @@ weaker memory models for \ISA such as
 Owens et al.~\cite{Owens:x86-TSO} and Sarkar et al.~\cite{Sarkar:POPL09} can be
 incorporated into ours to provide a more realistic memory model.
 
-Finally, there are various binary analysis projects that target \ISA binaries
+There are various binary analysis projects that target \ISA binaries
 and lift them to a higher-level representation more suitable for the
-specific analysis. These include Valgrind~\cite{Valgrind:ENTCS03} and
-Angr~\cite{Angr} that use the VEX IR, the QEMU~\cite{QEMU:USENIX05} emulator
-that uses the TCG IR, the software fault isolation tool
-RockSalt~\cite{Roclsalt:PLDI12} that uses its own RTL DSL, the disassembler and
-binary analyzer Radare2~\cite{Radare2} that uses the ESIL IR~\cite{ESIL},
-and the binary analysis
-tool BAP~\cite{BAP:CAV11} that also uses its own intermediate language.
-We call these semantics \emph{indirect} because in all these
-cases the lifted IR, that is being analyzed, is rigorously defined as opposed to providing \emph{direct} semantics to the binary. Our claim is that the ``direct'' semantics is useful in itself, for example, without the direct semantics of x86, we cannot even formulate the correctness of a translator from x86 to IR (e.g., VEX IR).  Analogously, many programming languages (C, C++, Java, etc.) have been given direct semantics, instead of indirect semantics by translation to other languages, for formal reasoning at the desired language granularity. 
+specific analysis. These include Angr~\cite{Angr} using the VEX IR of Valgrind~\cite{Valgrind:ENTCS03}, the QEMU~\cite{QEMU:USENIX05} emulator
+using the TCG IR, the software fault isolation tool RockSalt~\cite{Roclsalt:PLDI12} using its own RTL DSL, the disassembler and binary analyzer Radare2~\cite{Radare2} using the ESIL IR~\cite{ESIL}, and the binary analysis
+tool BAP~\cite{BAP:CAV11} that uses BIL IR.
+We refer these semantics as \emph{indirect} because in all these
+cases the lifted IR, that is being analyzed, is rigorously defined as opposed to providing \emph{direct} semantics to the binary. Even though tools like BAP and Angr can do some formal reasoning owing to their capability of symbolically executing the IR semantics, but they are not designed with the goal of full-fledged formal reasoning. Our claim is that the ``direct'' semantics is useful in itself, for example, without the direct semantics of x86, we cannot even formulate the correctness of a translator from x86 to IR (e.g., VEX IR).  Analogously, many programming languages (C, C++, Java, etc.) have been given direct semantics, instead of indirect semantics by translation to other languages, for formal reasoning at the desired language granularity. 
 
 \cmt{ 
 Regarding the comparison with previous work, we focused on comparing with other direct semantics, since a complete *direct* semantics is our goal and required for our purpose.

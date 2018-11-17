@@ -64,7 +64,7 @@ TSL~\cite{TSL:TOPLAS13}           & \xmark & \cmark      & \rating{50} \\
 semantics, as SMT bit-vector formulas, by learning their input/output behavior
 through execution on an actual processor. \Strata's semantics definition for
 \ISA is incomplete as it does not include semantics of about 40\% of the
-user-level instructions in scope that are not straightforward to automatically learn by the presented algorithm for various reasons (see Section~\ref{sec:Approach:Overview} for details). Even then,
+user-level instructions in scope that are not straightforward to automatically learn by the presented algorithm for reasons mainly due to limitations of underlying synthesis engine. Even then,
 the result that the formal semantics of 60\% of the target \ISA ISA can be learned automatically
 is impressive, and we leverage this result in our work as described in
 section~\ref{sec:harvestsema}.
@@ -89,7 +89,7 @@ including a definition for x86 assembly. The definition is specified in Coq~\cit
 setting for proving the correctness of the CompCert's compilation step to assembly,
 as well as outside CompCert, e.g., in proofs relating to the certified concurrent
 OS kernel CeriKOS~\cite{Gu:2016}. However, this definition focuses on the
-32-bit x86 instruction set, which is a small subset of the \ISA instruction 
+32-bit x86 instruction set, which is a subset of the \ISA instruction 
 set.
 Moreover, it is part of the trust base for CompCert and it is not clear
 whether or how it has been tested against an actual processor, whereas
@@ -112,8 +112,8 @@ for formal specification proofs, i.e., to prove whether a given x86
 program meets its specification.
 
 Our semantics, like all of the aforementioned works, uses a sequential consistency memory model, omitting weaker memory models.
-Existing efforts to specify weaker memory models for \ISA such as Owens et al.~\cite{Owens:x86-TSO} and Sarkar et al.~\cite{Sarkar:POPL09}, \Added{however, suffer from their limited support for instruction semantics (i.e., they consider only a small subset of 32-bit x86 instruction set).
-We believe that integrating these two complementary efforts is a promising direction toward rigorously reasoning about real-world programs running on modern multiprocessors.}
+Existing efforts to specify weaker memory models for \ISA such as Owens et al.~\cite{Owens:x86-TSO} and Sarkar et al.~\cite{Sarkar:POPL09}, however, suffer from their limited support for instruction semantics (i.e., they consider only a small subset of 32-bit x86 instruction set).
+We believe that integrating these two complementary efforts is a promising direction toward rigorously reasoning about real-world programs running on modern multiprocessors.
 
 There are various binary analysis projects that target \ISA binaries
 and lift them to a higher-level representation more suitable for the

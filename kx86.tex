@@ -74,7 +74,7 @@ rule <k> fetch (*$\Rightarrow$*) exec(OpC OpR) (*$\kra$*) fetch ... </k>
  The instruction is then put at the head of the \s{k} cell to be computed next, using a rule \s{exec} for execution (defined later), along with the \s{fetch} computation to be executed in order and updates the value of \reg{rip}. The execution will be terminated when there is no instruction stored in the memory at the address pointed to by \reg{rip}.\footnote{While initializing the stack section of memory, we store an invalid address just before the entry-point function as return address. When the entry point function returned, the invalid return address is popped out of the stack and stored in \reg{rip} leading to program termination.} 
 
 \subsection{Semantics of Individual Instructions}
-Here we explain how we define the semantics of an instruction in \K using a running example of logical-and-not \instr{andnq -4(\%rsp), \%rbx, \%rax}, which performs a bitwise logical AND of inverted source register operand (\reg{rbx}) with the source memory operand (\mem{-4}{rsp}) and writes the result to destination register \reg{rax}. Additionally the instruction affects all the $6$ status flags.
+Here we explain how we define the semantics of an instruction in \K using a running example of logical-and-not \instr{andnq -4(\%rsp), \%rbx, \%rax}, which performs a bitwise logical AND of inverted source register operand (\reg{rbx}) with the source memory operand (\mem{-4}{rsp}) and writes the result to destination register \reg{rax}. Additionally the instruction affects all the $6$ status flags (\reg{sf}, \reg{zf}, \reg{of}, \reg{cf}, \reg{af} and \reg{pf}).
 
 
 %\input{figures/andnl}
@@ -125,7 +125,7 @@ rule <k>
     // of and cf are cleared. 
     "OF" (*$\mapsto$*) 1'0
     "CF" (*$\mapsto$*) 1'0
-    // sf and zf are undefined.
+    // af and pf are undefined.
     "AF" (*$\mapsto$*) undef
     "PF" (*$\mapsto$*) undef
   ...</regstate>  
@@ -297,7 +297,7 @@ However, we faithfully specified the semantics of all the status flags in the \r
 
 \paragraph{Instruction Variants}
 
-\Strata essentially provides the semantics of the register instructions, assuming that the semantics of the memory and immediate instruction variants can be obtained by generalizing the register instructions.
+\Strata essentially provides the semantics of the register instructions, assuming that the semantics of the memory and immediate instruction variants can be obtained by generalizing the register instructions\footnote{Generalization is based on a hypothesis that the memory or immediate variants will behave identically, on their operands, with corresponding register variant.}.
 However, we found that certain memory instructions cannot be inferred by simply generalizing their corresponding register instructions.
 %
 For example, for \instr{movsd}, one of the 128-bit SSE instructions, its register variant has quite different semantics from the memory variant.

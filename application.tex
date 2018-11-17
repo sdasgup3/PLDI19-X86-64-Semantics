@@ -70,9 +70,9 @@ However, given an existing semantics, a far more valuable strategy would be to \
 %
 A basic version of this strategy is likely quite feasible today, and much more sophisticated versions that synthesize illustrative examples and even explanatory text automatically could be possible soon, given recent advances in concolic test generation, program synthesis, and natural language processing.
 
-In recognition of the many benefits of an executable formal specification, Intel has an internal project to develop such a specification of the \ISA ISA semantics.
+\cmt{In recognition of the many benefits of an executable formal specification, Intel has an internal project to develop such a specification of the \ISA ISA semantics.}
 %
-We have communicated with the team developing this specification, and we hope to contribute to or assist in their efforts~\cite{Intel:PC2}.
+We are in communication with a team in Intel interested in such a specification, and plan to contribute in future~\cite{Intel:PC2}.
 
 %----------------------------------------------------------------------------------------------------------
 \subsection{Program Verification}
@@ -125,7 +125,7 @@ The specification has two parts: the top-level specification and the loop invari
 
 % Note that the program behaves incorrectly/unexpectedly if arithmetic overflow occurs during its execution. One challenge in verifying this program is to identify the conditions under which overflow does not occur. 
 
-\begin{figure}[t]
+\begin{figure}[ht]
 \begin{lstlisting}[style=KRULE]
 <regstate>... 
     "RDI" (*$\mapsto$*) 64'N

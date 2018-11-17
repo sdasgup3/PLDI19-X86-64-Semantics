@@ -7,7 +7,7 @@ user-level instructions. Section~\ref{sec:IC} details the scope of our work. Sec
 We support all but a few non-deprecated user-level instructions, amounting to \currentIS{} total variants of the Haswell \ISA ISA (representing \currentIntel{} out of \totalIntel{} 
 unique mnemonics). The entire implementation took 8 man-months (not including extensive time spent on projects related to binary decompilation that gave the lead author relevant experience and strong familiarity with the \ISA architecture and documentation).  Below is a summary of the instruction categories that we support:
 \begin{itemize}
-    \item \textbf{General-Purpose Instructions:} These implement data-movement, arithmetic, logic, control-flow, string operations.
+    \item \textbf{General-Purpose Instructions:} These implement data-movement, arithmetic, logic, control-flow, string operations (including repeated- and fast- string operations).
     
     \item \textbf{Streaming SIMD Extensions (SSE) Instructions \&   subsequent extensions (SSE-2, SSE-3, SSE-4.1, SSE-4.2):} Instructions in this category operate on integer, string or floating-point values stored in $128$-bit xmm registers. Among other things, the category features instructions related to conversions between integer and floating-point values with selectable rounding mode, and string processing.
     
@@ -18,7 +18,7 @@ unique mnemonics). The entire implementation took 8 man-months (not including ex
 Instructions which are \emph{not included} in the current scope of work are: 
 (1) System-level instructions, which are related to the operating system, 
 protection levels, I/O, cache lines, and other supervisor instructions; 
-(2) x87 \& MMX instructions, consisting of legacy floating-point and vector operations, respectively, which are now deprecated by SSE; 
+(2) x87 \& MMX instructions, consisting of legacy floating-point and vector operations, respectively, which are now superseded by SSE; 
 (3) Concurrency-related operations, including atomic operations and fences; and 
 (4) Cryptography instructions, which support cryptographic processing specified by Advanced Encryption Standard (AES).
 

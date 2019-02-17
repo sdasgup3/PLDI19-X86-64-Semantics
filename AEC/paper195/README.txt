@@ -39,9 +39,13 @@ our semantics can be used for formal reasoning of x86-64
 programs for a wide variety of purposes. Here, we present the artifacts for
 the applications presented in Sections 5.2, 5.3 and 5.4
 
+Installation
+============
+TO DO
 
-5.2. Program Verification: In this sub-section, we prove the
-functional correctness of the sum-to-n program.
+5.2. Program Verification
+=========================
+In this sub-section, we prove the functional correctness of the sum-to-n program.
 
 Working Directory: x86-semantics/program-veriifcation/sum_to_n_32_bit
 
@@ -63,7 +67,9 @@ At the end of the section, we mentioned the time taken by the verifier to be
 runlog.txt file.
 
 
-5.3. Symbolic Execution: In this section we  demonstrate how the symbolic execution
+5.3. Symbolic Execution
+=======================
+In this section we  demonstrate how the symbolic execution
 capability can be used to find a security vulnerability.
 
 

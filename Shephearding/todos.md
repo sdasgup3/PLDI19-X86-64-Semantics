@@ -12,21 +12,21 @@ improve the presentation and results.
 
 Reviewer A
 ==========
-l121: "that is, 3155 instructions..." -> Unclear here whether these are the number of formalised ones or excluded ones; by cross-checking we understand that this is the number of formalised one. Maybe clarify this by giving the number of deprecated, crypto and concurrency ones respectively.
+l121: ~~"that is, 3155 instructions..." -> Unclear here whether these are the number of formalised ones or excluded ones; by cross-checking we understand that this is the number of formalised one. Maybe clarify this by giving the number of deprecated, crypto and concurrency ones respectively.~~
 
-l143: "It consists of 996 mnemonics" -> again, you just talked about all the deprecated instructions, but you refer here to the total; maybe you can make this clearer by giving the number of deprecated ones.
+l143: ~~"It consists of 996 mnemonics" -> again, you just talked about all the deprecated instructions, but you refer here to the total; maybe you can make this clearer by giving the number of deprecated ones.~~
 
-l273: "We support all but a few non-deprecated user-level instructions, amounting to 3155" -> again, the "amounting" is confusing here as it comes just after the "few non-deprecated..."
+l273: ~~"We support all but a few non-deprecated user-level instructions, amounting to 3155" -> again, the "amounting" is confusing here as it comes just after the "few non-deprecated..."~~
 
-l308: "Instructions which are not included" -> you cite 4 categories here, where the intro only lists the 3 last ones; the first category (system-level instructions) is excluded by the fact that you say "user-level instructions" in the intro, but the connection could be made more explicit and more importantly it would be good to justify this choice and explain whether it can be covered later or is an intrinsic restriction of the approach. Exclusion of other categories is somehow justified (exclusion of deprecated code makes some sense; the concurrency part is somehow justified by having relaxed memory as orthogonal and future work; the crypto seems very specific). But I am missing a justification for excluding system-level instructions and the impact on the applicability of the approach.
+l308: ~~"Instructions which are not included" -> you cite 4 categories here, where the intro only lists the 3 last ones; the first category (system-level instructions) is excluded by the fact that you say "user-level instructions" in the intro, but the connection could be made more explicit and more importantly it would be good to justify this choice and explain whether it can be covered later or is an intrinsic restriction of the approach. Exclusion of other categories is somehow justified (exclusion of deprecated code makes some sense; the concurrency part is somehow justified by having relaxed memory as orthogonal and future work; the crypto seems very specific). But I am missing a justification for excluding system-level instructions and the impact on the applicability of the approach.~~
 
-l324: "we took the semantic rules for about 60% of the instructions in scope from the formal semantics in Strata"-> does this mean that all of the Strata instructions represent 60% of the ones you target? Or is there more in Strata which you don't reuse?
+l324: ~~"we took the semantic rules for about 60% of the instructions in scope from the formal semantics in Strata"-> does this mean that all of the Strata instructions represent 60% of the ones you target? Or is there more in Strata which you don't reuse?~~
 
 l416: thanks for the example, this is helpful.
 
-section 3.4: the syntax of rules is not explained well; for instance, why do we have 3 parts, one for k, one for memstate and one for nextloc; where do they come from? The configuration had memstate last and had regstate as second, not nextloc...
+~~section 3.4: the syntax of rules is not explained well; for instance, why do we have 3 parts, one for k, one for memstate and one for nextloc; where do they come from? The configuration had memstate last and had regstate as second, not nextloc...
 
-l462: I don't quite understand how the fetch instruction gets into the computation. The initialisation seems to "delete" all the instructions in <k> and store them in memory. But the fetch-and-execute rule seems to assume that then <k> is a sequence of fetch instructions. I suggest to clarify this.
+~~l462: I don't quite understand how the fetch instruction gets into the computation. The initialisation seems to "delete" all the instructions in <k> and store them in memory. But the fetch-and-execute rule seems to assume that then <k> is a sequence of fetch instructions. I suggest to clarify this.
 
 l629: In "(= 118 × 256)^7" the "7" is a footnote but could be interpreted as a power ;)
 
@@ -36,12 +36,12 @@ l790: this is the first time we have a reference for the GCC torture tests but i
 
 l817: "a large fraction (81%) of which 817 is also supported by Strata." -> the distinction and relationship between Strata and Stroke is not explained well. **2.2 Strata Project**
 
-l1037: "The K verifier takes a minute to verify the sum-to-n" -> a minute sounds a lot for such a simple program!
+~~l1037: "The K verifier takes a minute to verify the sum-to-n" -> a minute sounds a lot for such a simple program!
 
 Questions for Authors
-have you tried bigger examples than the ones presented here? how well does/would the work scale to bigger examples? **??**
+**have you tried bigger examples than the ones presented here? how well does/would the work scale to bigger examples? **
 
-can you handle system-level (and crypto) instructions with your approach or is it an intrinsic limitation? If it's a limitation, what's the impact of not supporting it for the applicability of the work?
+~~can you handle system-level (and crypto) instructions with your approach or is it an intrinsic limitation? If it's a limitation, what's the impact of not supporting it for the applicability of the work?
 
 
 Reviewer B

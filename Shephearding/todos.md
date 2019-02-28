@@ -58,3 +58,24 @@ Questions for Authors
 Is instruction decoding formalized? It seems that it is not. If it is not, then I think it is misleading to talk about "machine programs" and the x86-64 ISA, since then you are really talking about "assembly programs" and assembly instructions of x86-64.
 
 By testing on only one hardware platform, how do you know that you have arrived at an architecture-level model as opposed to an implementation-level model? Could your test easily be run on another x86-64 implementation? (If yes, why hasn't it been done?)
+
+
+Reviewer C
+==========
+Subsection 5.1 seems fairly speculative and unlike other subsections in 5. Maybe move it into its own "future work" section?
+
+~~It was not initially clear that each instruction was validated against 7,000+ test vectors: at first I thought only 7,000 tests total were run.
+
+Questions for Authors
+How difficult would it be to translate your semantics to inductive definitions in HOL, Coq, Agda, or similar?
+
+Could Stoke be extended to use your x86 semantics by translating them through SMT or some similar approach?
+
+
+Reviewer D
+==========
+ the absence of exception modeling, how does your model apply to invalid programs, such as those with addressing or alignment issues?
+Is alignment considered in memory instructions?
+What is the "coverage" of the specification itself? I.e. how much fraction of the specification is tested to have parity with hardware? The 7000 inputs for each instruction may overlook some specific input configurations for instructions, especially when the instruction has undefined output for a subset of bits.
+The authors mention that the model can be used for validating translation optimizations. However, they only use the model to check one specific input program. It will be good to instead have a methodology to validate that a given optimization always preserves program equivalence (for any program input). Checking a single program equivalence does not imply that a given optimization is valid for all programs.
+The addressing mode seems to be always 64-bit. Having this configurable may be helpful to validate, e.g., applications that run in real-mode (e.g. bootloaders).

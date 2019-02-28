@@ -74,8 +74,12 @@ Could Stoke be extended to use your x86 semantics by translating them through SM
 
 Reviewer D
 ==========
- the absence of exception modeling, how does your model apply to invalid programs, such as those with addressing or alignment issues?
-Is alignment considered in memory instructions?
-What is the "coverage" of the specification itself? I.e. how much fraction of the specification is tested to have parity with hardware? The 7000 inputs for each instruction may overlook some specific input configurations for instructions, especially when the instruction has undefined output for a subset of bits.
-The authors mention that the model can be used for validating translation optimizations. However, they only use the model to check one specific input program. It will be good to instead have a methodology to validate that a given optimization always preserves program equivalence (for any program input). Checking a single program equivalence does not imply that a given optimization is valid for all programs.
-The addressing mode seems to be always 64-bit. Having this configurable may be helpful to validate, e.g., applications that run in real-mode (e.g. bootloaders).
+1. the absence of exception modeling, how does your model apply to invalid programs, such as those with addressing or alignment issues?
+
+2.Is alignment considered in memory instructions?
+
+3.What is the "coverage" of the specification itself? I.e. how much fraction of the specification is tested to have parity with hardware? The 7000 inputs for each instruction may overlook some specific input configurations for instructions, especially when the instruction has undefined output for a subset of bits.
+
+4.The authors mention that the model can be used for validating translation optimizations. However, they only use the model to check one specific input program. It will be good to instead have a methodology to validate that a given optimization always preserves program equivalence (for any program input). Checking a single program equivalence does not imply that a given optimization is valid for all programs.
+
+5.The addressing mode seems to be always 64-bit. Having this configurable may be helpful to validate, e.g., applications that run in real-mode (e.g. bootloaders).

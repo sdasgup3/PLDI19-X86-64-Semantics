@@ -1,0 +1,79 @@
+Dear June,
+
+     While we are looking into your suggestion, we chalked out a plan to
+     address those.  We will appreciate if you can have a look at the plans and
+     bless it with your feedback.
+
+     Following are our plans on two suggested topics.
+
+     Adding comparison to Sail
+     =========================
+
+     We plan the comparison to target three dimensions.
+
+     1. Comparison w.r.t the instruction coverage in the Sail and K framework (Our current work).
+
+     In a previous version of Sail, a modest fragment of 32-bit user-mode X86
+     core instructions are specified which are sufficient for litmus tests
+     and some user-mode concurrent algorithms. However, to the best of our
+     knowledge, that x86 model is not yet ported to the revised Sail.  On the
+     other hand, the current work supports most of the the 64-bit X86
+     instruction set including the floating point instructions.
+
+     2. Comparison w.r.t frameworks
+
+     We believe that the frameworks are build with different goals in mind.
+     Sail framework provides a custom language, SAIL, for describing the
+     instruction-set architecture (ISA) semantics of processors.  Sail aims to
+     provide a engineer-friendly, vendor-pseudocode-like language for
+     describing instruction semantics.  On the other hand, K's goal is to be
+     generic enough to subsume  defining the semantics of higher level
+     languages ( like C, JavaScript, Java) as well.
+
+     3. Usability of the frameworks in describing ISA semantics
+
+     There is an impressive amount of work in targeting the Sail specification
+     towards a variety of use-cases including sequential and concurrent ISA
+     semantics, and generating usable theorem prover definitions for multiple
+     provers, including Isabelle, HOL4, and Coq.  We strongly believe that
+     including our X86-64 specification in Sail will help the community
+     leverage a single framework for all the vendor and research ISAs and enjoy
+     the use-cases developed years of engineering effort.
+
+     The paper [1] already describes such an effort where the vendor ported the
+     full ARM v8-A specification from their internal specification language,
+     ASL, to Sail. We believe that similar effort with our semantics will prove
+     to be a significant contribution to the overall vision of Sail.
+
+     Better explain the novelty
+     ==========================
+
+     1. Our main novelty (and contribution) is an *engineering model*, showing
+how to achieve something that has not been achieved before, to our knowledge --
+namely, a complete (direct, user-level) formal semantics of x86-64. Moreover,
+  we demonstrated the portability of X86-64 semantics from one framework (like
+      Strata) to a more feature-rich framework (like K). The paper [1] show
+  similar effort in porting ARM v8-A specification from ASL to the Sail
+  framework. Such demonstration of semantics portability across frameworks,
+  strengthens the vision towards having a unified framework.
+
+     2. While we are manually adding the semantics of instruction unsupported
+     in Strata, we make sure to add those in the Strata framework as well, so
+     that their customers can leverage our effort. The effort also include
+     augmenting capabilities of the their framework. (For example, mitigating
+         the lack of Strata support for generating  bit-vector formulas that
+         write to memory)
+
+     3. In Section 3.2, we presented the negative results while extending the
+     Strata approach. We believe that such results help the community to think
+     on top of our leanings. In addition to the negative result, we found a
+     new idea of a hybrid approach, where the extra information for reducing
+     the search space is automatically extracted from the manual.  The extra
+     information does not need to be very precise, and we believe that such a
+     rough information can be extracted from the manual using a simple text
+     processing. We plan to include this idea, as future directions, to help
+     define the semantics of the unspecified instructions and/or new
+     instructions of the next version of x86-64 ISA.
+
+
+[1] ISA Semantics for ARMv8-A, RISC-V, and CHERI-MIPS. Alasdair Armstrong, Thomas Bauereiss, Brian Campbell, Alastair Reid, Kathryn E. Gray, Robert M. Norton, Prashanth Mundkur, Mark Wassell, Jon French, Christopher Pulte, Shaked Flur, Ian Stark, Neel Krishnaswami, and Peter Sewell. In POPL 2019, Proc. ACM Program. Lang. 3, POPL, Article 71.

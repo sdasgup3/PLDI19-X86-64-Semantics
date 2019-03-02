@@ -47,15 +47,21 @@ Questions for Authors
 Reviewer B
 =========
 1. ~~ACL proof assistant" --> "ACL2 proof assistant" (the "2" is part of the name; it's not a version number)~~
+
 2. ~~"may sound a daunting" --> "may sound like a daunting"~~
+
 3. ~~is the value of undef non-deterministically chosen each time, or is it the case that every undef of a specific type is always the same value of that type? (my guess is the former, but it would be nice if the text said so)~~
-4. it bugs me that the definition of the Value type is not shown in the paper, or at least thoroughly described
+
+4. ~~it bugs me that the definition of the Value type is not shown in the paper, or at least thoroughly described~~
+
 5. ~~for most part, I think I understand the K syntax. However, on page 5, a rule takes as input Offset of type int and on the right-hand-side it uses 64'Offset -- I guess the notation "64'" makes a 64-bit word of it. I'm also confused by the ":Mem" type annotation. What exactly is of type "Mem" here?~~
-6. when you first mention the fault in the semantics of FMA, you do not explain why there is such a problem -- my guess is that it is inherited from some defect in a floating-point library of K -- please explain where the error comes from.
-~~7. I note that there is a paper titled "Formally Verified Big Step Semantics out of x86-64 Binaries" accepted for CPP'19, which might be relevant related work.~~
+
+6. ~~when you first mention the fault in the semantics of FMA, you do not explain why there is such a problem -- my guess is that it is inherited from some defect in a floating-point library of K -- please explain where the error comes from.~~
+
+7. ~~I note that there is a paper titled "Formally Verified Big Step Semantics out of x86-64 Binaries" accepted for CPP'19, which might be relevant related work.~~
 
 Questions for Authors
-Is instruction decoding formalized? It seems that it is not. If it is not, then I think it is misleading to talk about "machine programs" and the x86-64 ISA, since then you are really talking about "assembly programs" and assembly instructions of x86-64.
+~~Is instruction decoding formalized? It seems that it is not. If it is not, then I think it is misleading to talk about "machine programs" and the x86-64 ISA, since then you are really talking about "assembly programs" and assembly instructions of x86-64.~~
 
 ~~By testing on only one hardware platform, how do you know that you have arrived at an architecture-level model as opposed to an implementation-level model? Could your test easily be run on another x86-64 implementation? (If yes, why hasn't it been done?)~~
 
@@ -64,7 +70,7 @@ Reviewer C
 ==========
 Subsection 5.1 seems fairly speculative and unlike other subsections in 5. Maybe move it into its own "future work" section?
 
-~~It was not initially clear that each instruction was validated against 7,000+ test vectors: at first I thought only 7,000 tests total were run.
+~~It was not initially clear that each instruction was validated against 7,000+ test vectors: at first I thought only 7,000 tests total were run.~~
 
 Questions for Authors
 How difficult would it be to translate your semantics to inductive definitions in HOL, Coq, Agda, or similar?
@@ -76,9 +82,9 @@ Reviewer D
 ==========
 1. the absence of exception modeling, how does your model apply to invalid programs, such as those with addressing or alignment issues?
 
-2. Is alignment considered in memory instructions?
+~~2. Is alignment considered in memory instructions?~~
 
-3. What is the "coverage" of the specification itself? I.e. how much fraction of the specification is tested to have parity with hardware? The 7000 inputs for each instruction may overlook some specific input configurations for instructions, especially when the instruction has undefined output for a subset of bits.
+~~3. What is the "coverage" of the specification itself? I.e. how much fraction of the specification is tested to have parity with hardware? The 7000 inputs for each instruction may overlook some specific input configurations for instructions, especially when the instruction has undefined output for a subset of bits.~~
 
 4. The authors mention that the model can be used for validating translation optimizations. However, they only use the model to check one specific input program. It will be good to instead have a methodology to validate that a given optimization always preserves program equivalence (for any program input). Checking a single program equivalence does not imply that a given optimization is valid for all programs.
 

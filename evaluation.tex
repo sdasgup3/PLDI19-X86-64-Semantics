@@ -7,7 +7,8 @@ A formal semantics is of limited use if one cannot generate confidence in its co
 
 
 \subsection{Co-Simulations against Hardware}
-Empowered by the fact that we can directly execute the semantics using the \K framework,  we validated our model by  co-simulating  it against a real machine. During co-simulation, we execute a machine program on the processor as well as on our \K model and compare the execution results after every instruction. We performed all experiments on an Intel Xeon E5-2640 machine with 20 physical cores, running at 2.4 GHz. We first describe our test-infrastructure and then talk about individual validation experiments and results.
+Empowered by the fact that we can directly execute the semantics using the \K framework,  we validated our model by  co-simulating  it against a real machine. During co-simulation, we execute a machine program on the processor as well as on our \K model and compare the execution results after every instruction. Currently, we co-simulated our model against two Intel implementations (that were available to the authors at the time of writing): ``Intel Xeon CPU E3-1505M v6'' and ``Intel Xeon CPU E5-2640 v4'' and we believe it is straightforward to test the model against other hardwares (like AMD). We first describe our test-infrastructure and then talk about individual validation experiments and results.
+
 
 \paragraph{Test Harness}
 
@@ -30,12 +31,15 @@ A test input is a CPU state which includes values for all registers, flags and m
     \item We used the (${\sim}100$) test-inputs offered by Remill~\cite{Remill}.
     \item We manually implemented a regression test-suite worth of around $200$ test-inputs which we accumulated over the course of the project. 
 \end{itemize}  
+Note that, each instruction semantics consists of one or more semantic rules, where those rules cover different cases of the instruction behaviors (including the undefined ones). We ensure that our test inputs are sufficient enough to trigger all of the semantic rules, achieving 100\% ``semantic-rule'' coverage.
+
 \cmt{The extended test-inputs are tried with different combinations to test individual instructions and we ensured that all the instruction are tested with test inputs unique to the combination of its operands.}   
 
 \subparagraph{Results}
 For each immediate instruction with a constant operand of size $8$-bits, we tested all the $256$ variants of the instruction using the above set of test inputs. There are $62$ immediate instructions  with a constant operand width larger than $8$-bits.  Testing with all possible values of the constant (which could be $2^{32}$ for a $32$-bit constant) is impractical, so we limited the constant operand to the first $256$ values and other interesting values like  all ones, setting or resetting the bits at the byte/word/quad-word boundaries etc.  
 
-Our current implementation of the fused-multiply-add operation\footnote{According to the standard IEEE-754-2008~\cite{FP} (Definition 2.1.28), the operation \s{fused-multiply-add(x, y, z)} computes $\s{x} \times \s{y} + \s{z}$ as if with unbounded range and precision, rounding only once to the destination format.} incorrectly rounds the operation twice (after multiplication and addition) as opposed to once. As a result, we encountered floating point precision issues while testing instructions implementing those operations (e.g. \instr{vfmadd132pd}). \cmt{We plan to fix this by including the fma capabilities of GNU MPFR library~\cite{GNUMPFR} in \K's library support~\cite{MPFRJAVA}. } 
+Our current implementation of the fused-multiply-add operation\footnote{According to the standard IEEE-754-2008~\cite{FP} (Definition 2.1.28), the operation \s{fused-multiply-add(x, y, z)} computes $\s{x} \times \s{y} + \s{z}$ as if with unbounded range and precision, rounding only once to the destination format.} incorrectly rounds the operation twice (after multiplication and addition) as opposed to once. As a result, we encountered floating point precision issues while testing instructions implementing those operations (e.g. \instr{vfmadd132pd}). Refer to Section~\ref{sec:limit} for more details about this limitation of our floating point library support in \K. 
+ 
  
 While performing the validation tests, we encountered various cases where the output state obtained by executing the semantics on our model does not agree with that of the hardware execution. 
 The instruction semantics in our model is either based on the Strata project (for the part we borrowed) or on the Intel manual. A difference in the output state could mean a bug in Strata's instruction semantics or in our interpretation of the Intel manual or in the Intel manual itself. We found many bugs in our interpretation which we fixed, but in other cases, we found issues  in Intel manual and Strata project.
@@ -58,7 +62,7 @@ All the instruction sequences are testing as part of the their algorithm, but th
   \begin{itemize}
       \item The simplification rule \s{add\_double(A, 0) == A} does not hold for \s{A = $-0.0$}. Same for \s{add\_single}. These were reported~\cite{PC1}.
        
-      \item The simplification rule \s{sub\_double(A, B) == 0} does not hold for \s{A = $NaN$}.  Same is true for \s{sub\_single}. We found this bug in the  branch of Stoke which is used in \Strata. But this has been already fixed in the latest \Stoke branch.
+      \item The simplification rule \s{sub\_double(A, A) == 0} does not hold for \s{A = $NaN$}.  Same is true for \s{sub\_single}. We found this bug in the  branch of Stoke which is used in \Strata. But this has been already fixed in the latest \Stoke branch.
   \end{itemize}
 
 \paragraph{Program Level Validation}
@@ -67,7 +71,7 @@ There are originally \TortureTotal{} tests, which we compiled using the GCC swit
 
 
 \subsection{Comparing with \Stoke}
-\Stoke~\cite{Stoke2013} contains manually written semantics for \stokeIS{} x86-64 instruction variants, a large fraction ($81\%$) of which is also supported by \Strata. The remaining fraction is exclusive to Stoke. Comparing with \Stoke provides an additional crosscheck on our model.  Moreover, these manually written formulas are based on a similar model of the CPU state to ours, which makes it easier to compare them against ours by using an SMT solver. While doing so we found inconsistencies between the two formalisms in a total of 16 mnemonics (42 instruction variants), and after careful analysis, identified these as errors in the \Stoke specification of instruction semantics:
+\Stoke~\cite{Stoke2013}\footnote{Recall that \Stoke is an independent project leveraged by the Strata for stochastic search.} contains manually written semantics for \stokeIS{} x86-64 instruction variants, a large fraction ($81\%$) of which is also supported by \Strata. The remaining fraction is exclusive to Stoke. Comparing with \Stoke provides an additional crosscheck on our model.  Moreover, these manually written formulas are based on a similar model of the CPU state to ours, which makes it easier to compare them against ours by using an SMT solver. While doing so we found inconsistencies between the two formalisms in a total of 16 mnemonics (42 instruction variants), and after careful analysis, identified these as errors in the \Stoke specification of instruction semantics:
 \begin{enumerate}
     \item For instructions like \instr{addsubpd \%xmm1, \%xmm2} , the order of addition and subtraction specified by \Stoke is opposite to the one specified in the Intel Manual. Same is true with the mnemonic \instr{addsubps}. (Found in $12$ instruction variants.)
     

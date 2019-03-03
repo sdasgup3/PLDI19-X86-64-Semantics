@@ -13,15 +13,15 @@
 
 Defining a language semantics in \K requires defining the program configuration, the semantics of how programs are evaluated (i.e., the execution environment), and the semantics of the statements or instructions.  We begin with the configuration.
 
-The \K configuration of a running \ISA program is shown in Figure~\ref{fig:config}. The cells are represented using angle brackets. The outer $\top$ cell contains the cells used during program evaluation. The inner \s{k} cell contains a list of computations to be executed. Below we describe the two other inner cells.
+The \K configuration of a running \ISA program is shown in Figure~\ref{fig:config}. The cells are represented using angle brackets. The outer $\top$ cell contains the cells used during program evaluation. While this figure only shows $3$ cells used mostly during the presentation of our semantics, but we use over $60$ in the full semantics. The inner \s{k} cell contains a list of computations to be executed. Below we describe the two other inner cells.
 
 \paragraph{Register State}
 
-The \s{regstate} cell contains a  map from registers or flag names to values. The register names include the sixteen general purpose registers, \reg{rip}, and the sixteen SIMD registers.  The value mapped to a register name is a $64$-width bit-vector (or a $256$-width one for the SIMD registers). Values for sub-register variants are derived from the register values by extracting the relevant bits. \cmt{In the \s{regstate} map, }We store individual flag names (mapped to a bit-vector value of width $1$) as opposed to a $64$-bit \s{rflags} register. Every access (read/write) of \reg{rflags} retrieves the entries in the \s{regstate} map for the individual flags.
+The \s{regstate} cell contains a  map from registers or flag names to values. Note that, all the values or addresses, stored in register, memory (described next) or flag, are represented as bit-vectors which are depicted in this paper  as \bv{W}{V}, and interpreted as a bit-vector of size \s{W} and value \s{V}. The register names include the sixteen general purpose registers, \reg{rip}, and the sixteen SIMD registers.  The value mapped to a register name is a $64$-width bit-vector (or a $256$-width one for the SIMD registers). Values for sub-register variants are derived from the register values by extracting the relevant bits. \cmt{In the \s{regstate} map, }We store individual flag names (mapped to a bit-vector value of width $1$) as opposed to a $64$-bit \s{rflags} register. Every access (read/write) of \reg{rflags} retrieves the entries in the \s{regstate} map for the individual flags.
 
 \paragraph{Memory State}
 Our memory model is inspired by previous efforts ~\cite{TSL:TOPLAS13, Ellison}.
-The \s{memstate} cell is a map from $64$-bit addresses to bytes, which specifies the byte-addressable memory, but our implementation is flexible enough to use alternative memory  representations with addressing of $2$-byte or $4$-byte quantities.  Our memory layout is ``flat'', in which all available memory locations can be addressed, \cmt{without going through additional levels of addressing, such as memory segments.} but we do have logical partitions\footnote{These abstractions are useful for executing \ISA programs.} of the memory into sections like code, data and stack.  The following is an example snapshot of a memory state,  holding a $4$-bytes integer value $65535$:
+The \s{memstate} cell is a map from $64$-bit addresses to bytes, which specifies the byte-addressable memory\footnote{Byte-addressability allows the model to specify both aligned and unaligned accesses in the same principle.}, but our implementation is flexible enough to use alternative memory  representations with addressing of $2$-byte or $4$-byte quantities.  Our memory layout is ``flat'', in which all available memory locations can be addressed, but we do have logical partitions\footnote{These abstractions are useful for executing \ISA programs.} of the memory into sections like code, data and stack.  The following is an example snapshot of a memory state,  holding a $4$-bytes integer value $65535$:
 \begin{center}
     \newcommand{\bytecell}[2]{\s{byte}({#1},\;\;{#2})}
     $
@@ -36,7 +36,7 @@ The \s{memstate} cell is a map from $64$-bit addresses to bytes, which specifies
     }
     $
 \end{center}
-This says that the memory address $4$ stores the $0^\text{th}$ byte of the bit-vector \bv{32}{65535}\footnote{All the values and address are represented as bit-vectors which are depicted in this paper  as \bv{W}{V}, and interpreted as a bit-vector of size $W$ and value $V$.}, the address 5 stores the $1^\text{st}$ byte, and so on. While memory read, requested bytes are aggregated according to the size of the memory access.
+This says that the memory address $4$ stores the $0^\text{th}$ byte of the bit-vector \bv{32}{65535}, the address 5 stores the $1^\text{st}$ byte, and so on. While memory read, requested bytes are aggregated according to the size of the memory access.
 
 
 
@@ -49,16 +49,21 @@ We now give the reader a flavor of our semantics, by discussing a few of the rou
 We first explain the semantics of the execution environment, which involves all the machinery used for executing \ISA programs.
 We will explain the semantics of individual instructions in the next section.
 
-The semantics of execution of an \ISA program involves initializing the memory with program instructions and then  fetching the instructions from the memory one at a time and executing it. The instruction to be executed next is pointed to by the instruction pointer register \reg{rip}.  
+The execution of an \ISA program begins with initialization of the \s{k} cell with the following computations
+\begin{lstlisting}[style=KRULE]
+rule  <k> $PGM:Instructions (*$\kra$*) fetch </k>
+\end{lstlisting}
 
-The following rule is applied to initialize memory with instructions one at a time: 
+The semantics of execution of an \ISA program involves reading the program instructions, \s{\$PGM:Instructions}, one at a time, initializing the memory with that until all the instructions are loaded in memory. Then the instructions are fetched from the memory, using the \s{fetch} computation, one at a time and gets executed. The instruction to be executed next is pointed to by the instruction pointer register \reg{rip}.  
+
+The following rule\footnote{\label{nextloc}For brevity, the cell \s{nextloc} is omitted from the program configuration ( Figure~\ref{fig:config}). It is used to compute the next memory location to store an instruction. } is applied to initialize memory with instructions one at a time: 
 \begin{lstlisting}[style=KRULE]
 rule  <k> OpC:Mnemonic OpR:Operands (*$\Rightarrow$*) (*\textbf{.}*) ...</k>
  <memstate> M:Map (*$\Rightarrow$*) M[L (*$\leftarrow$*) (OpC OpR)] </memstate>
  <nextloc> L:Address (*$\Rightarrow$*) L + instrSize(OpC OpR) </nextloc>
 \end{lstlisting}
 The \s{k} cell contains the instruction to be processed next. We use ``\s{:T}'' to represent the type of a term used in a rule. For example, \s{Mnemonic} and \s{Operands} denote the types of the terms used to represent an instruction.  The `$\Rightarrow$' symbol
-represents a reduction (i.e., a transition relation). A cell without the `$\Rightarrow$' symbol means that it is read but not changed by the rule. \K allows us to use ``.'' to represent an empty computation and ``...'' to match the portions of a cell that are neither read nor written by the rule. The above rule essentially  stores each instruction in memory, which is modeled as a map, at an address \s{L} given by the \s{nextloc} cell. Subsequently, the \s{nextloc} cell gets updated to an appropriate address  used for storing the next instruction.  Once the entire program is loaded, the fetch-and-execute cycle starts, which is realized by the following rule:
+represents a reduction (i.e., a transition relation). A cell without the `$\Rightarrow$' symbol means that it is read but not changed by the rule. \K allows us to use ``.'' to represent an empty computation and ``...'' to match the portions of a cell that are neither read nor written by the rule. The above rule essentially  stores each instruction in memory, which is modeled as a map, at an address \s{L} given by the \s{nextloc}\textsuperscript{\ref{nextloc}} cell. Subsequently, the \s{nextloc} cell gets updated to an appropriate address  used for storing the next instruction.  Once the entire program is loaded, the fetch-and-execute cycle starts, which is realized by the following rule:
 \begin{lstlisting}[style=KRULE]
 rule <k> fetch (*$\Rightarrow$*) exec(OpC OpR) (*$\kra$*) fetch ... </k>
   <memstate>... L (*$\mapsto$*) (OpC OpR) ...</memstate>
@@ -97,11 +102,11 @@ A read from memory involves computing the effective address in the memory, looki
 The following rule is applied to compute the effective address:
 \begin{lstlisting}[style=KRULE]
 rule <k> 
- Offset:Int (R:R64):Mem (*$\Rightarrow$*) ( 64'Offset + BV(*$_\s{r}$*)):Address
+ (Offset:Int (R:R64)):Mem (*$\Rightarrow$*) ( 64'Offset + BV(*$_\s{r}$*)):Address
 ...</k>
   <regstate> ... R (*$\mapsto$*) BV(*$_\s{r}$*) ... </regstate>
 \end{lstlisting}
-The term to the left of $\Rightarrow$ shows the memory addressing expression at the 
+The term to the left of $\Rightarrow$ shows the memory addressing expression, of type \s{Mem}, at the 
 top of \s{k} cell, which gets reduced to a memory address. The effective memory address for the memory operand used in the running example is (64'-4 + \s{BV$_\s{rsp}$}) which is then used to do memory read access. 
 The rules associated with memory read is responsible to read a memory value of requested number of bits ($64$-bits for the current example) starting from the effective memory address. 
  
@@ -326,7 +331,7 @@ For the other instructions, we obtained the memory and immediate variants by gen
 \paragraph{Immediate Instruction Variants}
 
 There are 118 immediate instruction variants (over the 8-bit constants) that do not have corresponding register instructions.
-For those immediate instructions, Strata provides the instruction semantics for each individual constant, resulting in 30,208 (= $118 \times 256$)\footnote{Indeed, Strata explicitly provides only 19,783 formulae by randomly sampling $\sim$168 constants out of 256, in average, for each immediate instruction, assuming that the remaining 10,425 formulae can be inferred.} formulae for the immediate instructions' semantics.
+For those immediate instructions, Strata provides the instruction semantics for each individual constant, resulting in 30,208 (= $118 \times 256$) formulae\footnote{Indeed, Strata explicitly provides only 19,783 formulae by randomly sampling $\sim$168 constants out of 256, in average, for each immediate instruction, assuming that the remaining 10,425 formulae can be inferred.} for the immediate instructions' semantics.
 We generalized the set of formulae for each immediate instruction into a single semantic rule.
 We validated our generalization by cross-checking the generalized semantics with the original using the SMT solver.
 

@@ -1,9 +1,22 @@
+Please find the changes in terms of the levels described in the shepherding process.
+## The set of things, if any, the PC determined must be changed for the paper to be accepted.
+
+### Spepherd Comments
+1. Add a comparison to Sail;
+2. better explain the novelty.
+
+### Modification description
+
+## The smallish set of things the PC strongly recommends changing to improve the presentation and results.
+
+### Spepherd Comments
+Add the various clarifications, suggestions and explanations discussed in the reviews and rebuttal
+
+### Modification description
+The following is the description of our changes in terms of the reviewrs actual comments and our modifications in the reviced paper
+
 |Suggestion ( Line numbers are from submitted paper ) | Comments | Corrected line  |
 |-|-|-|
-| **Shepherd Comments** |      | |
-|Add a comparison to Sail|||
-|Better explain the novelty |||
-|Add the various clarifications, suggestions and explanations discussed in the reviews and rebuttal | Please refer below where we addressed the pre/post rebuttal suggestions| - |
 | **Reviewer A: Overall Comments** |      | |
 |l121: "that is, 3155 instructions..." -> Unclear here whether these are the number of formalised ones or excluded ones; by cross-checking we understand that this is the number of formalised one. Maybe clarify this by giving the number of deprecated, crypto and concurrency ones respectively. |  Added the individual numbers |121-127 |
 |l143: "It consists of 996 mnemonics" -> again, you just talked about all the deprecated instructions, but you refer here to the total; maybe you can make this clearer by giving the number of deprecated ones.| Provided an approximation of legacy and deprecated instructions |  152-153  |

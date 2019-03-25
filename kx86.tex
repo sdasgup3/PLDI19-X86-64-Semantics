@@ -81,6 +81,8 @@ rule <k> fetch (*$\Rightarrow$*) exec(OpC OpR) (*$\kra$*) fetch ... </k>
  The mapped instruction is then put at the head of the \s{k} cell to be computed next, using a rule \s{exec} for execution (defined later), along with the \s{fetch} computation to be executed in order. The rule also updates the value of \reg{rip} to point to the following instruction. The execution will be terminated when there is no instruction stored in the memory at the address pointed to by \reg{rip}.\footnote{While initializing the stack section of memory, we store an invalid address just before the entry-point function as return address. When the entry point function returned, the invalid return address is popped out of the stack and stored in \reg{rip} leading to program termination.} 
 
 \subsection{Semantics of Individual Instructions}
+\label{sec:semantics-of-individual-instructions}
+
 Here we explain how we define the semantics of an instruction in \K using a running example of logical-and-not \instr{andnq -4(\%rsp), \%rbx, \%rax}, which performs a bitwise logical AND of inverted source register operand (\reg{rbx}) with the source memory operand (\mem{-4}{rsp}) and writes the result to destination register \reg{rax}. Additionally the instruction affects all the $6$ status flags (\reg{sf}, \reg{zf}, \reg{of}, \reg{cf}, \reg{af} and \reg{pf}).
 
 

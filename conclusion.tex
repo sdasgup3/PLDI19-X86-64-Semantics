@@ -10,9 +10,9 @@ leverage for their own purposes.
 
 As mentioned in Section~\ref{sec:Approach:Overview}, we found that our ideas of extending \Strata do not scale because we need information about the instructions, whose semantics we want to learn, in order to constraint the search space. This lesson intrigued us to a new idea: the information needed to reduce the search space can be automatically extracted from the manual. This  information does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
 
-We plan to test our model against various x86-64 implementations (like AMD), which could uncover flaws in those implementations and/or additional imperfections in the manual.
+\SC{We plan to test our model against various x86-64 implementations (like AMD), which could uncover flaws in those implementations and/or additional imperfections in the manual.}
 
-Also, we aim to use our semantics for translation validation of the entire LLVM compiler back-end for X86-64, i.e., hundreds of thousands of lines of C++ code. Scalability is achieved by the modularity of the translation validation technique, where the verification of (small) sub-components are verified individually (hence can be massively parallelized) and their results are combined to obtain the final claim about the entire system.
+\SC{Also, we aim to use our semantics for translation validation of the entire LLVM compiler back-end for X86-64, i.e., hundreds of thousands of lines of C++ code. Scalability is achieved by the modularity of the translation validation technique, where the verification of (small) sub-components are verified individually (hence can be massively parallelized) and their results are combined to obtain the final claim about the entire system.}
 
  
 

@@ -73,7 +73,7 @@ The FP operations are represented in the SMT formulas of the definition as
 uninterpreted functions. Finally the specifications are given as SMT formulas
 but have not been demonstrated to be usable in a formal analysis setting out-of-the-box.
 
-A contemporary work by Roessle \etal~\cite{Roessle:CPP19} presents a method to extract the big step semantics of a sequential binary program using the small step instruction semantics extracted mostly from Strata\footnote{There are some minor omissions on immediate instructions with $8$-bit operands for which Strata learns $256$ brute force formulas.} plus some manually drafted support for branching and stack operating instructions. Like Strata, their specification is executable only for the non-floating point instructions. However, the work does not aim for completeness of semantics, which is one of our primary goals. 
+\SC{A contemporary work by Roessle \etal~\cite{Roessle:CPP19} presents a method to extract the big step semantics of a sequential binary program using the small step instruction semantics extracted mostly from Strata\footnote{There are some minor omissions on immediate instructions with $8$-bit operands for which Strata learns $256$ brute force formulas.} plus some manually drafted support for branching and stack operating instructions. Like Strata, their specification is executable only for the non-floating point instructions. However, the work does not aim for completeness of semantics, which is one of our primary goals.} 
 
 Goel \etal~\cite{Goel:FMCAD14} use the ACL2 theorem prover~\cite{ACL2:Kaufmann2000} to model the \ISA ISA and has support for
 \goelPerc{} of all user level instructions~\cite{GoelList}. They have specifications of a selection

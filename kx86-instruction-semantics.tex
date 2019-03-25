@@ -4,8 +4,8 @@ This section presents how we get the complete semantics of all the
 user-level instructions. Section~\ref{sec:IC} details the scope of our work. Section~\ref{sec:Approach} mentions how we leverage the information available in \Strata, our baseline semantics. Section~\ref{sec:x86sema} explains how we formalize our model in \K.
 
 \subsection{Scope of the Work}\label{sec:IC}
-We support all but a few non-deprecated user-level instructions. The support includes  \currentIS{} total variants of the Haswell \ISA ISA (representing \currentIntel{} out of \totalIntel{} 
-unique mnemonics). The entire implementation took 8 man-months (not including extensive time spent on projects related to binary decompilation that gave the lead author relevant experience and strong familiarity with the \ISA architecture and documentation).  Below is a summary of the instruction categories that we support:
+\SC{We support all but a few non-deprecated user-level instructions. The support includes  \currentIS{} total variants of the Haswell \ISA ISA (representing \currentIntel{} out of \totalIntel{} 
+unique mnemonics)}. The entire implementation took 8 man-months (not including extensive time spent on projects related to binary decompilation that gave the lead author relevant experience and strong familiarity with the \ISA architecture and documentation).  Below is a summary of the instruction categories that we support:
 \begin{itemize}
     \item \textbf{General-Purpose Instructions:} These implement data-movement, arithmetic, logic, control-flow, string operations (including repeated- and fast- string operations).
     
@@ -20,7 +20,7 @@ Instructions which are \emph{not included} in the current scope of work are:
 protection levels, I/O, cache lines, and other supervisor instructions; 
 (2) x87 \& MMX instructions, consisting of legacy floating-point and vector operations, respectively, which are now superseded by SSE; 
 (3) Concurrency-related operations, including atomic operations and fences; and 
-(4) Cryptography instructions, which support cryptographic processing specified by Advanced Encryption Standard (AES). Note that, there is no inherent limitation in supporting system-level and cryptography instructions with our approach. However, the system-level instructions require to formulate an abstraction of different architectures and operating systems, which is an orthogonal, significant effort that we think should be deserved as an independent work, and we wanted to separate it from the presented effort of formulating the user-level instructions. Nevertheless, K framework makes it easy to add additional state components without modifying rules for operations that do not require those components. We expect our approach to work equally well compared with existing approaches, such as ~\cite{Goel:ProCoS17}, which implements a subset of system-level instructions. On the other hand, the cryptography instructions are omitted mainly because they are not given a high priority.
+(4) Cryptography instructions, which support cryptographic processing specified by Advanced Encryption Standard (AES). \SC{Note that, there is no inherent limitation in supporting system-level and cryptography instructions with our approach. However, the system-level instructions require to formulate an abstraction of different architectures and operating systems, which is an orthogonal, significant effort that we think should be deserved as an independent work, and we wanted to separate it from the presented effort of formulating the user-level instructions. Nevertheless, K framework makes it easy to add additional state components without modifying rules for operations that do not require those components. We expect our approach to work equally well compared with existing approaches, such as ~\cite{Goel:ProCoS17}, which implements a subset of system-level instructions. On the other hand, the cryptography instructions are omitted mainly because they are not given a high priority.}
 
 \subsection{Overview of the Approach}
 \label{sec:Approach:Overview}
@@ -29,7 +29,7 @@ Briefly, our approach is as follows.
 %
 We first defined the machine configuration and underlying infrastructure in the \K framework, in order to define, execute and test the \ISA semantics.
 %
-To leverage previous work as much as possible, we took the semantic rules of all the instructions supported in Strata, which amounts to about 60\% of the instructions in scope, in the form of SMT formulas.
+\SC{To leverage previous work as much as possible, we took the semantic rules of all the instructions supported in Strata, which amounts to about 60\% of the instructions in scope, in the form of SMT formulas.}
 %
 We corrected, improved or simplified many of the baseline rules.
 %
@@ -50,7 +50,7 @@ We validated this semantics in three ways, as described in Section~\ref{sec:Eval
 %
 First, we use the \K interpreter to execute the semantics of \emph{each} instruction for 7,000+ test inputs (each input is a processor state configuration) and compared the output directly with the hardware behavior for the same instruction.
 %
-Second, we repeated this experiment using the applicable programs in the GCC C-torture tests~\cite{CTORTURE}.  % (\TortureInclude{} out of \TortureTotal{} tests).
+Second, we repeated this experiment using the applicable programs in the \SC{GCC C-torture tests~\cite{CTORTURE}}.  % (\TortureInclude{} out of \TortureTotal{} tests).
 %
 Third, we compared against the semantics defined in the Stoke project for about 330 instructions that were omitted in Strata (thus not included in our baseline), using an SMT solver.
 

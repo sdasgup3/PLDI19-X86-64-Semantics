@@ -117,10 +117,11 @@ top of \s{k} cell, which gets reduced to an effective memory address (or EA).} T
 The rules for operating on operands will be different for each instruction based on the mnemonic. For example, the mnemonic \instr{andnq} requires logical-and-not operation to be computed on the operands.
 
 \paragraph{Write to Destination Operand(s)}
-The example instruction writes the result to a destination register \reg{rax}. Also, the flags \s{sf} and \s{zf} are updated based on the result; \s{of} and \s{cf}  are cleared, and \s{af} and \s{pf} are undefined. The following rule realizes the destination write operation, where \s{memVal$_{64}$} and \s{BV$_\s{r}$} represents the $64$-bit data values evaluated using the respective rules for reading register and memory operands (mentioned above).
+The example instruction writes the result to a destination register \reg{rax}. Also, the flags \s{sf} and \s{zf} are updated based on the result; \s{of} and \s{cf}  are cleared, and \s{af} and \s{pf} are undefined. The rule shown in Figure~\ref{fig:andn-semantics} realizes the destination write operation, where \s{memVal$_{64}$} and \s{BV$_\s{r}$} represents the $64$-bit data values evaluated using the respective rules for reading register and memory operands (mentioned above).
 %
 %\Comment{Should "R" be "Dest" below in the first regstate rule?}
 %
+\begin{figure}[t]
 \begin{lstlisting}[style=KRULE]
 rule <k>
   exec(andnq memVal(*$_{64}$*), BV(*$_\s{r}$*), R:R64) (*$\Rightarrow$*) (*\textbf{.}*)
@@ -138,6 +139,9 @@ rule <k>
     "PF" (*$\mapsto$*) undef
   ...</regstate>  
 \end{lstlisting}
+\caption{Example instruction semantics of \instr{andn}}
+\label{fig:andn-semantics}
+\end{figure}
 The operator ``[i:j]'' extracts bits i down to j from a bit-vector of size n, yielding another  bit-vector of size i - j + 1, assuming that n $>$ i $\ge$ j $\ge$ 0. The operator ``$\&$'' implements bit-wise ``and'' operation. The rule associated with memory write is similar to that for memory read and is skipped here. 
 
 A \ISA program is modeled as a list of instructions and its semantics is  given by composing the semantics of its constituents. The reader is encouraged to take a look at the instruction semantics (made available as supplemental material~\cite{Suppl}).

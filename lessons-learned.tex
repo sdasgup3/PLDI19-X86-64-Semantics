@@ -33,7 +33,7 @@ Like many other programming languages, the x86-64 ISA standard admits implementa
 There are two natural, faithful ways of specifying the implementation-dependent behaviors.
 One is to parameterize the semantics over the implementation dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
 Another is to introduce non-determinism in the semantics.
-We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized (Section~\ref{sec:semantics-of-individual-instructions}).
+We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized (e.g., as shown in Figure~\ref{fig:andn-semantics}).
 
 However, the non-determinism makes it non-trivial to execute (and validate) the semantics.
 For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.

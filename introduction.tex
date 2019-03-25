@@ -101,11 +101,14 @@ the AES cryptography extensions (\crypto{} instructions), and the system \& conc
 Being executable, the semantics of \emph{each} instruction has been thoroughly tested against 7,000+ test cases using the co-simulation method (Section~\ref{sec:Eval}).
 We found errors in both the \ISA standard document and other existing semantics including the baseline semantics (Section~\ref{sec:Eval}). Note that, the testing of floating point instructions is facilitated by the fact K already has matured library support for floating point theories which we augmented to support modeling such instructions. In Section~\ref{sec:limit}, we reported a precision issue with our floating point library support.
 \item
-\emph{Generality.}
+\emph{Usability \& portability.}
 We demonstrate that our semantics can be used for various formal analyses, such as symbolic execution, deductive program verification, and program equivalence checking (Section~\ref{sec:Appl}).
 The \K framework also enables to represent our semantics as SMT theories,
 % that can be handled by various SMT solvers,
 which allows others to easily reuse our semantics for their own purposes.
+\item
+\emph{Semantics development practice.}
+Reflecting our x86 semantics development effort, we identify certain important aspects to be considered and/or ensured when specifying a large instruction set architecture semantics, which we believe can be also applied to other kinds of large language semantics to certain extent (Section~\ref{sec:lesson-learned}).
 \end{itemize}
 %
 % \paragraph{Artifacts}

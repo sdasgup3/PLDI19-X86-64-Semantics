@@ -1,0 +1,25 @@
+\section{Discussion}
+
+\subsection{Lesson learned}
+\label{sec:lesson-learned}
+
+Here we present lesson we learned during our semantics development, identifying important aspects to be considered, and clarifying a good practice for developing a large ISA semantics.
+
+\paragraph{Hybrid synthesis approach}
+
+As mentioned in Section~\ref{}, we empirically showed the negative result that a fully automatic synthesis of the complete x86 semantics is not practically feasible. As an alternative, we suggest a hybrid synthesis approach that we believe is practically promising, in particular for a complex instruction set computer (CISC) such as x86. In a CISC architecture, many instructions can be grouped together where those instructions of each group are similar to each other except for a few differences. While it is labor-intensive and error-prone to manually specify all the instruction variants, the automatic synthesis technique is shown to be effective to synthesize such instruction variants' semantics, provided that the semantics of its representative instruction is given in advance. Thus, in a hybrid approach, the semantics of representative instructions are manually written, and their variants are automatically synthesized. We believe that this hybrid approach is in a sweet spot, where the machine's search power and the human reasoning are effectively combined. We plan to apply and evaluate this idea when we specify the semantics of new instruction that will be introduced in the next version of x86-64 ISA.
+
+Another important step of the semantics synthesis is post-processing. The generated semantics is often verbose and not necessarily human-readable. The post-processing step is desired to simplify the generated semantics to be succinct, which helps to increase the human-readability as well as to improve the efficiency when being employed in other applications (e.g., the size of SMT formula encoding can be reduced, which can reduce the burden of SMT solvers). For our semantics development, we have written dozens of simplification rules that are fed to the K framework to simplify the synthesized semantics further (Section~\ref{}).
+
+\paragraph{Modeling and executing implementation-dependent behaviors.}
+
+Like many other programming languages, the x86-64 ISA standard admits implementation-dependent behaviors, that is, each processor implementation can freely choose specific behaviors (Section~\ref{}). One of the most natural, faithful way of specifying the implementation-dependent behaviors is to introduce non-determinism in the semantics (Section~\ref{}). However, the non-determinism makes it non-trivial to execute (and validate) the semantics. For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor. There are various approaches to mitigate this issue. One is to parameterize the semantics over the implementation-dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest. Another approach is to (partially) symbolically execute the semantics where the non-deterministic behaviors are represented symbolically, so that the output captures all possible behaviors. We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized. (Section~\ref{}).
+
+\paragraph{Employing multiple semantic engineering frameworks}
+
+We found that employing multiple semantic frameworks is helpful. Specifically, we employed the two semantic frameworks, K and Stoke, where we enjoyed all of their (executive) benefits that make it easier for us to write and validate the semantics, and utilize the semantics in various applications. For example, we wrote the semantics of certain complicated instructions (e.g., \instr{pcmpestri}, \instr{pcmpestrm}, and \instr{pclmulqdq}) in K, as K provides an easy way to specify behaviors with multiple cases, while Stoke would have required us to write a big nested if-then-else expression which is not amenable. For another example, we utilized Stoke to validate most of our instruction semantics as Stoke provides a infrastructure for the hardware co-simulation, whereas we employed K to validate the semantics of floating-point instructions as Stoke does not support executing floating-point operations while K does.
+
+In order to use the two frameworks interchangeably, we had to develop a translator that translates the semantics in one framework to another. To convince the correctness of the translation, we employed translation validation, where we verified equivalence between the original and the translated semantics for each instruction using the Z3 SMT solver.
+
+
+\input{limitation.tex}

@@ -8,9 +8,9 @@
 ### Authors' Comments
 We worked on both the items and the details can be found as follows:
 - Add a comparison to Sail.
-  - Section 8 $:$ Related Work $-$$>$ Last paragraph
+  - Section 8:Related Work :arrow_right: Last paragraph
 - better explain the novelty.
-  - Section 6 $:$ Lessons Learned
+  - Section 6:Lessons Learned
 
 
 ## Shepherd instruction II: The smallish set of things the PC strongly recommends changing to improve the presentation and results.

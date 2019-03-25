@@ -1,6 +1,8 @@
 \section{Lessons Learned}
 \label{sec:lesson-learned}
 
+{\color{blue}
+
 Here we present lessons we learned during our semantics development, identifying important aspects to be considered, and clarifying a good practice for developing a large ISA semantics.
 
 \paragraph{Hybrid synthesis approach}
@@ -18,3 +20,5 @@ Like many other programming languages, the x86-64 ISA standard admits implementa
 We found that employing multiple semantic frameworks is helpful. Specifically, we employed the two semantic frameworks, \K and Stoke, where we enjoyed all of their (executive) benefits that make it easier for us to write and validate the semantics, and utilize the semantics in various applications. For example, we wrote the semantics of certain complicated instructions (e.g., \instr{pcmpestri}, \instr{pcmpestrm}, and \instr{pclmulqdq}) in \K, as \K provides an easy way to specify behaviors with multiple cases, while Stoke would have required us to write a big nested if-then-else expression which is not amenable. For another example, we utilized Stoke to validate most of our instruction semantics as Stoke provides a infrastructure for the hardware co-simulation, whereas we employed \K to validate the semantics of floating-point instructions as Stoke does not support executing floating-point operations while \K does.
 
 In order to use the two frameworks interchangeably, we had to develop a translator that translates the semantics in one framework to another. To convince the correctness of the translation, we employed translation validation, where we verified equivalence between the original and the translated semantics for each instruction using the Z3 SMT solver.
+
+}

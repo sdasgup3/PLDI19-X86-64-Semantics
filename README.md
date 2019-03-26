@@ -10,7 +10,7 @@ Please find the location of the revised paper with the "highlighted" edits as po
 - Add a comparison to Sail.
   - Page 14 ( Under Section 8:Related Work ) &#10148; First column &#10148; Last but one paragraph
 - Better explain the novelty.
-  - Section 6:Lessons Learned
+  - Section 6: Lessons Learned
 
 
 ## Shepherd instruction II: The smallish set of things the PC strongly recommends changing to improve the presentation and results.

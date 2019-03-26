@@ -12,7 +12,11 @@ Defining a language semantics in \K requires defining the program configuration,
 
 \input{figures/configuration.tex}
 
-The \K configuration of a running \ISA program is shown in Figure~\ref{fig:config}. The cells are represented using angle brackets. The outer $\top$ cell contains the cells used during program evaluation. \SC{While this figure only shows $3$ cells used mostly during the presentation of our semantics, we use over $60$ in the full semantics.} The inner \s{k} cell contains a list of computations to be executed. Below we describe the two other inner cells.
+The \K configuration of a running \ISA program is shown in Figure~\ref{fig:config}. The cells are represented using angle brackets. The outer $\top$ cell contains the cells used during program evaluation.
+%\SC{While this figure only shows $3$ cells used mostly during the presentation of our semantics, we use over $60$ in the full semantics.}
+The inner \s{k} cell contains a list of computations to be executed. Below we describe the two other inner cells.\footnote{%
+\SC{We omit other auxiliary cells (marked by ``$\cdots$'') for the simplicity of the presentation.}
+}
 
 \paragraph{Register State}
 
@@ -65,7 +69,7 @@ rule  <k> OpC:Mnemonic OpR:Operands (*$\Rightarrow$*) (*\textbf{.}*) ...</k>
 \end{lstlisting}
 The \s{k} cell contains the instruction to be processed next.  \s{Mnemonic} and \s{Operands} denote the types of the terms used to represent an instruction.  The `$\Rightarrow$' symbol
 represents a reduction (i.e., a transition relation). A cell without the `$\Rightarrow$' symbol means that it is read but not changed by the rule. \K allows us to use ``.'' to represent an empty computation and ``...'' to match the portions of a cell that are neither read nor written by the rule. The above rule essentially  stores each instruction in memory, which is modeled as a map, at an address \s{L} given by the %\s{nextloc}\textsuperscript{\ref{nextloc}} cell. Subsequently, 
-\SC{\s{nextloc}}    \footnote{\label{nextloc}\SC{For brevity, the cell \s{nextloc} is omitted from the program configuration (described in Figure~\ref{fig:config}). It is used to hold the next memory location to store an instruction.} } cell. Subsequently,
+\SC{\s{nextloc}}\footnote{\label{nextloc}\SC{The \s{nextloc} cell is a auxiliary cell that holds the next memory location to store an instruction, which we omit in the program configuration (Figure~\ref{fig:config}) for the sake of simplicity.}} cell. Subsequently,
 the \s{nextloc} cell gets updated to an appropriate address  used for storing the next instruction.  Once the entire program is loaded, the fetch-and-execute cycle starts, which is realized by the following rule:
 \begin{lstlisting}[style=KRULE]
 rule <k> fetch (*$\Rightarrow$*) exec(OpC OpR) (*$\kra$*) fetch ... </k>

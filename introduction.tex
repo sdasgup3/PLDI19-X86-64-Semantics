@@ -99,7 +99,8 @@ the AES cryptography extensions (\crypto{} instructions), and the system \& conc
 \item
 \emph{Faithfulness.}
 Being executable, the semantics of \SC{\emph{each}} instruction has been thoroughly tested against 7,000+ test cases using the co-simulation method (Section~\ref{sec:Eval}).
-We found errors in both the \ISA standard document and other existing semantics including the baseline semantics (Section~\ref{sec:Eval}). \SC{Note that, the testing of floating point instructions is facilitated by the fact K already has matured library support for floating point theories which we augmented to support modeling such instructions. In Section~\ref{sec:limit}, we reported a precision issue with our floating point library support.}
+We found errors in both the \ISA standard document and other existing semantics including the baseline semantics (Section~\ref{sec:Eval}).
+%\SC{Note that, the testing of floating point instructions is facilitated by the fact K already has matured library support for floating point theories which we augmented to support modeling such instructions. In Section~\ref{sec:limit}, we reported a precision issue with our floating point library support.}
 \item
 \emph{Usability \& portability.}
 We demonstrate that our semantics can be used for various formal analyses, such as symbolic execution, deductive program verification, and program equivalence checking (Section~\ref{sec:Appl}).

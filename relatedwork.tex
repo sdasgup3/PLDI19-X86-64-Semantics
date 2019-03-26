@@ -115,7 +115,13 @@ program meets its specification.
 
 Our semantics, like all of the aforementioned works, uses a sequential consistency memory model, omitting weaker memory models.
 Existing efforts to specify weaker memory models for \ISA such as Owens et al.~\cite{Owens:x86-TSO} and Sarkar et al.~\cite{Sarkar:POPL09}, however, suffer from their limited support for instruction semantics (i.e., they consider only a small subset of 32-bit x86 instruction set).
-We believe that integrating these two complementary efforts is a promising direction toward rigorously reasoning about real-world programs running on modern multiprocessors.
+We believe that integrating these two complementary efforts is a promising direction toward rigorously reasoning about real-world programs running on modern multiprocessors (e.g., using the Sail framework as we will describe below).
+
+\SC{%
+Sail is another language semantics framework, tailored for describing an instruction-set architecture semantics.  Sail has been used to specify the semantics of ARMv8-A, RISC-V, and CHERI-MIPS~\cite{sail-popl2019}, as well as the semantics of a small subset of x86~\cite{sail-x86}.  Sail is similar to the K framework we employed, but K is for more general-purpose than Sail.  Also, the Sail x86 semantics is very limited than ours.  It describes the semantics of a fragment of 32-bit user-mode x86 instructions, while ours covers also the 64-bit counterpart as well as the floating-point instructions.
+%
+Sail, however, allows us to integrate a semantic definition with their relaxed memory models~\cite{rmem, Pulte:2017} for concurrency semantics.  We believe that (automatically) translating our semantics into Sail\footnote{Indeed, the Sail ARMv8-A semantics is automatically generated from the ARM-internal specification of ARMv8-A~\cite{Reid2017} written in the ARM's architecture specification language, ASL~\cite{asl}, by using the ASL-to-Sail translator~\cite{sail-popl2019}.} is a promising direction to obtain concurrency semantics and thus enable concurrency reasoning for x86 programs, which we leave as future work.
+}
 
 There are various binary analysis projects that target \ISA binaries
 and lift them to a higher-level representation more suitable for the
@@ -166,8 +172,4 @@ However, as they admitted~\cite{Hasabnis:FSE16}, their semantics omits some impo
 % the effect of the various instructions on CPU flags.
 
 
-\SC{%
-Sail is another language semantics framework, tailored for describing an instruction-set architecture semantics.  Sail has been used to specify the semantics of ARMv8-A, RISC-V, and CHERI-MIPS~\cite{sail-popl2019}, as well as the semantics of a small subset of x86~\cite{sail-x86}.  Sail is similar to the K framework we employed, but K is for more general-purpose than Sail.  Also, the Sail x86 semantics is very limited than ours.  It describes the semantics of a fragment of 32-bit user-mode x86 instructions, while ours covers also the 64-bit counterpart as well as the floating-point instructions.
-%
-Sail, however, allows us to integrate a semantic definition with their relaxed memory models~\cite{rmem, Pulte:2017} for concurrency semantics.  We believe that (automatically) translating our semantics into Sail\footnote{Indeed, the Sail ARMv8-A semantics is automatically generated from the ARM-internal specification of ARMv8-A~\cite{Reid2017} written in the ARM's architecture specification language, ASL~\cite{asl}, by using the ASL-to-Sail translator~\cite{sail-popl2019}.} is a promising direction to obtain concurrency semantics and thus enable concurrency reasoning for x86 programs, which we leave as future work.
-}
+

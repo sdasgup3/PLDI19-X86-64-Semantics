@@ -7,7 +7,9 @@ A formal semantics is of limited use if one cannot generate confidence in its co
 
 
 \subsection{Co-Simulations against Hardware}
-Empowered by the fact that we can directly execute the semantics using the \K framework,  we validated our model by  co-simulating  it against a real machine. During co-simulation, we execute a machine program on the processor as well as on our \K model and compare the execution results after every instruction. \SC{Currently, we co-simulated our model against two Intel implementations (that were available to the authors at the time of writing): ``Intel Xeon CPU E3-1505M v6'' and ``Intel Xeon CPU E5-2640 v4'' and we believe it is straightforward to test the model against other hardwares (like AMD)}. We first describe our test-infrastructure and then talk about individual validation experiments and results.
+Empowered by the fact that we can directly execute the semantics using the \K framework,  we validated our model by  co-simulating  it against a real machine. During co-simulation, we execute a machine program on the processor as well as on our \K model and compare the execution results after every instruction. \SC{In this work, we co-simulated our model against two Intel implementations that were available to the authors at the time of writing: ``Intel Xeon CPU E3-1505M v6'' and ``Intel Xeon CPU E5-2640 v4''. We admit that testing the model against other hardwares (such as AMD) would contribute to more thorough validation of our model, having the potential of revealing flaws in those implementations and/or additional imperfections in the manual as well, which we leave as future work.}
+
+We first describe our test-infrastructure and then talk about individual validation experiments and results.
 
 
 \paragraph{Test Harness}
@@ -31,7 +33,7 @@ A test input is a CPU state which includes values for all registers, flags and m
     \item We used the (${\sim}100$) test-inputs offered by Remill~\cite{Remill}.
     \item We manually implemented a regression test-suite worth of around $200$ test-inputs which we accumulated over the course of the project. 
 \end{itemize}  
-\SC{Note that, each instruction semantics consists of one or more semantic rules, where those rules cover different cases of the instruction behaviors (including the undefined ones). We ensure that our test inputs are sufficient enough to trigger all of the semantic rules, achieving 100\% ``semantic-rule'' coverage.}
+\SC{Note that, each instruction semantics consists of one or more semantic rules, where those rules cover different cases of the instruction behaviors (including the undefined ones). We ensure that our test inputs are sufficient enough to trigger all of the semantic rules, achieving the full ``semantic-rule'' coverage.}
 
 \cmt{The extended test-inputs are tried with different combinations to test individual instructions and we ensured that all the instruction are tested with test inputs unique to the combination of its operands.}   
 

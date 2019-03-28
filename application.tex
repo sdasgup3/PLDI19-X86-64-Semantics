@@ -262,7 +262,7 @@ The access is denied if an overflow occurs.
 A bug in the overflow detection might be exploited by an attacker to gain an access to a memory region beyond the control of the running process.}
 A suggested fix~\cite{Cadar:2008} is to change the conditional expression from \m{r < a} to \m{r < a || r < b}.
 
-Using the symbolic execution engine derived from our semantics, we could find (in approx. 85 secs) that, in the assembly code as shown in Figure~\ref{fig:histar}(b), there exists a path that reaches \m{L2} (i.e., the else branch) even if the addition overflow occurs.
+Using the symbolic execution engine derived from our semantics, we could find (in approx. $85$ secs) that, in the assembly code as shown in Figure~\ref{fig:histar}(b), there exists a path that reaches \m{L2} (i.e., the else branch) even if the addition overflow occurs.
 The (simplified) path condition provided by the symbolic execution engine is:
 \[
 \m{a} + \m{b} \ge 2^{32}

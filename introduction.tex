@@ -42,7 +42,7 @@ Completely formalizing the semantics of \ISA, however, is challenging especially
 
 \paragraph{Existing Semantics for \ISA:}
 %
-To date, to the best of our knowledge, despite several explicit attempts~\cite{Heule2016a,Goel:FMCAD14,Goel:ProCoS17,Goel:VTTE13:ACP:2958657.2958669} and other related systems~\cite{Leroy:2009,Remill,TSL:TOPLAS13,Hasabnis:ASPLOS16,Hasabnis:FSE16},
+To date, to the best of our knowledge, despite several explicit attempts~\cite{Heule2016a,Goel:FMCAD14,Goel:ProCoS17} and other related systems~\cite{Leroy:2009,Remill,TSL:TOPLAS13,Hasabnis:ASPLOS16,Hasabnis:FSE16},
 no \emph{complete} formal semantics of \ISA exists that can be used for formal reasoning about x86 binary programs.
 %
 Heule~\etal \cite{Heule2016a} presented a formal semantics of \ISA, but it covers only a fragment ($\sim$\strataPerc{}) of all instructions; as the authors of \cite{Heule2016a} candidly admitted, their synthesis methodology proved insufficient to add the remaining instructions primarily due to limitations of the underlying synthesis engine. 
@@ -55,7 +55,7 @@ Moreover, their semantics misses certain essential details (Section~\ref{sec:App
 % it is not clear how to lift their semantics to the full-fledged theorem prover to be able to reason about the full functional correctness of the \ISA binary.
 % Although it can provide the semantics in the form of the SMT formulae, the SMT solver 
 %
-Goel~\etal~\cite{Goel:FMCAD14,Goel:ProCoS17,Goel:VTTE13:ACP:2958657.2958669}, on the other hand, specified a formal semantics in the \SC{ACL2} proof assistant~\cite{ACL2:Kaufmann2000}, allowing to reason about functional correctness, but their semantics covers only a small fragment ($\sim$\goelPerc{}) of all user-level instructions.
+Goel~\etal~\cite{Goel:FMCAD14,Goel:ProCoS17}, on the other hand, specified a formal semantics in the \SC{ACL2} proof assistant~\cite{ACL2:Kaufmann2000}, allowing to reason about functional correctness, but their semantics covers only a small fragment ($\sim$\goelPerc{}) of all user-level instructions.
 %\Comment{Section 2 says they had only 191 unique opcodes, which is only about 20\%, and even less if you include system instructions. Which is correct?}
 %
 There also have been several attempts~\cite{Angr1,BAP:CAV11,Radare2,Hasabnis:FSE16} to \emph{indirectly} describe the \ISA semantics, where they define an intermediate language (IL), specify the IL semantics, and translate \ISA to the IL.
@@ -188,8 +188,26 @@ We found, e.g., that Remill~\cite{Remill} updates the flag with 0, whereas Radar
 %
 Identifying and faithfully specifying all of the undefined behaviors, thus, are desirable but challenging.
 
-\SC{In our semantics, we faithfully modeled the undefined value as a unique symbol (called \s{undef}) whose value is nondeterministically decided each time within the proper range.}
-These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future, standard-conforming processor).
+\SC{
+There are two natural, faithful ways of specifying the implementation-dependent behaviors.
+One is to parameterize the semantics over the implementation dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
+Another is to introduce non-determinism in the semantics.
+We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized. \cmt{(e.g., as shown in Figure~\ref{fig:andn-semantics})} Specifically, we modeled the undefined value as a unique symbol (called \s{undef}) whose value is nondeterministically decided each time within the proper range.
+%These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future, standard-conforming processor)
+
+However, the non-determinism makes it non-trivial to execute (and validate) the semantics.
+For example, in the hardware co-simulation (Section~\ref{sec:Eval}), the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
+To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (i.e., an instance of) the symbolic output. 
+
+Like our work, many existing projects providing \emph{direct} \ISA semantics, detail similar trade-offs, in order to specify the undefined behavior faithfully. For example, Goel \etal~\cite{Goel:ProCoS17} choses to model undefined behavior, using a constraint function which is guaranteed to be unique and non-deterministic. For concrete execution, they used the profiling approach mentioned above. TSL~\cite{TSL:TOPLAS13} recommends different choices for concrete and abstract semantics, for example, keeping the value unchanged, setting to a particular value, or introducing non-determinism.  
+}
+    
+%    In our semantics, we faithfully modeled the undefined value as a unique symbol (called \s{undef}) whose value is nondeterministically decided each time within the proper range.}
+%These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future, standard-conforming processor).
+
+
+
+
 % Regarding the instruction-level testing (Section~\ref{sec:Eval}), we consider the \s{undef} symbol to be matched with any concrete value provided by the hardware, so that we can test the instructions modulo the undefined behaviors.
 
 

@@ -43,7 +43,7 @@ However, the non-determinism makes it non-trivial to execute (and validate) the 
 For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
 To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (i.e., an instance of) the symbolic output. 
 
-Like our work, many existing projects providing \emph{direct} \ISA semantics, detail similar trade-offs, in order to specify the undefined behavior faithfully. For example, Goel \etal~\cite{Goel:ProCoS17} choses to model undefined behavior, using a constraint function which is guaranteed to be unique and non-deterministic. For concrete execution, they used the profiling approach mentioned above. TSL~\cite{TSL:TOPLAS13} recommends different choices for concrete and abstract semantics, for example, keeping the value unchanged, setting to a particular value, or introducing non-determinism.  
+Like our work, many existing projects providing \emph{direct} \ISA semantics, detail similar trade-offs, in order to specify the undefined behavior faithfully. For example, Goel \etal~\cite{Goel:ProCoS17} chooses to model undefined behavior, using a constraint function which is guaranteed to be unique and non-deterministic. For concrete execution, they used the profiling approach mentioned above. TSL~\cite{TSL:TOPLAS13} recommends different choices for concrete and abstract semantics, for example, keeping the value unchanged, setting to a particular value, or introducing non-determinism.  
 
 \paragraph{Employing multiple semantic engineering frameworks}
 
@@ -51,6 +51,11 @@ We found that employing multiple semantic frameworks is helpful. Specifically, w
 
 In order to use the two frameworks interchangeably, we had to develop a translator that translates the semantics in one framework to another. To convince the correctness of the translation, we employed translation validation, where we verified equivalence between the original and the translated semantics for each instruction using the Z3 SMT solver. 
 
-We note that employing \Strata enables us to explore the near-completeness of its formalism, whereas \K framework provides many out-of-the-box formal analysis tools. The fact that we can use both the frameworks  interchangeably paid us off towards completeness and generality (in terms of using the semantics for formal analyses) of the formalism. On the other hand, other approaches (~\cite{Goel:FMCAD14, TSL:TOPLAS13, Leroy:2009,sail-x86})  did not explore this mutual benefit to its full potential\footnote{That, for some of these projects,  could be attributed to the fact getting a complete formal semantics is not the primary goal.}.
+Employing multiple frameworks enable us to scale to completeness, faithfulness and applicability to formal analysis using exclusive features to formalize (for example, using user-friendly specification syntax, out-of-the-box formal analysis tools) and validate (by using testing infrastructure) the semantics.
+%, not to mention the benefit of using exclusive formal analysis tools.}
+Whereas, other approaches (~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86,Heule2016a}) did not explore this mutual benefit to its full potential.
 
+\cmt{
+We note that employing \Strata enables us to explore the near-completeness of its formalism, whereas \K framework provides many out-of-the-box formal analysis tools. The fact that we can use both the frameworks  interchangeably paid us off towards completeness and generality (in terms of using the semantics for formal analyses) of the formalism. On the other hand, other approaches (~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86})  did not explore this mutual benefit to its full potential\footnote{That, for some of these projects,  could be attributed to the fact getting a complete formal semantics is not the primary goal.}.
+}
 }

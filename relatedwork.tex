@@ -127,7 +127,7 @@ Sail is another language semantics framework, tailored for describing an instruc
 Sail, however, allows us to integrate a semantic definition with their relaxed memory models~\cite{rmem, Pulte:2017} for concurrency semantics.  We believe that (automatically) translating our semantics into Sail\footnote{Indeed, the Sail ARMv8-A semantics is automatically generated from the ARM-internal specification of ARMv8-A~\cite{Reid2017} written in the ARM's architecture specification language, ASL~\cite{asl}, by using the ASL-to-Sail translator~\cite{sail-popl2019}.} is a promising direction to obtain concurrency semantics and thus enable concurrency reasoning for x86 programs, which we leave as future work.
 }
 
-\SC{On the other hand, the key differentiator of our effort compared to the above mentioned existing work is that it combines (A) completeness of supported  user-level instructions, (B) faithfulness, and (C) applicability to formal reasoning analyses, at the same time. In Section~\ref{sec:lesson-learned}, we will share the key takeaways from our work, which paid us off towards achieving the unique combination.}
+\SC{On the other hand, the key differentiator of our effort compared to the aforementioned existing work is that our semantics achieves (A) completeness of supported  user-level instructions, (B) faithfulness, and (C) applicability to formal reasoning analyses, at the same time. In Section~\ref{sec:lesson-learned}, we will elaborate our novel approaches that allow us to achieve the unique combination.}
 
 There are various binary analysis projects that target \ISA binaries
 and lift them to a higher-level representation more suitable for the

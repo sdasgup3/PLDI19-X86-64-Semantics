@@ -188,22 +188,8 @@ We found, e.g., that Remill~\cite{Remill} updates the flag with 0, whereas Radar
 %
 Identifying and faithfully specifying all of the undefined behaviors, thus, are desirable but challenging.
 
-\SC{
-There are two natural, faithful ways of specifying the implementation-dependent behaviors.
-One is to parameterize the semantics over the implementation dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
-Another is to introduce non-determinism in the semantics.
-We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized. \cmt{(e.g., as shown in Figure~\ref{fig:andn-semantics})} Specifically, we modeled the undefined value as a unique symbol (called \s{undef}) whose value is nondeterministically decided each time within the proper range.
-%These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future, standard-conforming processor)
-
-However, the non-determinism makes it non-trivial to execute (and validate) the semantics.
-For example, in the hardware co-simulation (Section~\ref{sec:Eval}), the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
-To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (i.e., an instance of) the symbolic output. 
-
-Like our work, many existing projects providing \emph{direct} \ISA semantics, detail similar trade-offs, in order to specify the undefined behavior faithfully. For example, Goel \etal~\cite{Goel:ProCoS17} choses to model undefined behavior, using a constraint function which is guaranteed to be unique and non-deterministic. For concrete execution, they used the profiling approach mentioned above. TSL~\cite{TSL:TOPLAS13} recommends different choices for concrete and abstract semantics, for example, keeping the value unchanged, setting to a particular value, or introducing non-determinism.  
-}
-    
-%    In our semantics, we faithfully modeled the undefined value as a unique symbol (called \s{undef}) whose value is nondeterministically decided each time within the proper range.}
-%These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future, standard-conforming processor).
+\SC{In our semantics, we faithfully modeled the undefined value as a unique symbol (called \s{undef}) whose value is nondeterministically decided each time within the proper range.}
+These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future, standard-conforming processor).
 
 
 

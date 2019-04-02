@@ -4,7 +4,7 @@
 {\color{blue}
 
 Here we present the lessons we learned during our semantics development, identifying important aspects to be considered, and clarifying a good practice for developing a large ISA semantics.
-We also elaborate the novel aspects of our semantics development that allows us to achieve our complete and faithful semantics.
+We also elaborate the novel aspects of our semantics development approach that allow us to obtain the complete and faithful semantics with an affordable amount of effort.
 
 \paragraph{Regarding automatic semantics synthesis}
 
@@ -27,7 +27,7 @@ We suggested an early idea for this problem, which we plan to develop and evalua
 %Thus, in a hybrid approach, the semantics of representative instructions are manually written, and their variants are automatically synthesized. We believe that this hybrid approach is in a sweet spot, where the machine's search power and the human reasoning are effectively combined.
 %We plan to apply and evaluate this idea when we specify the semantics of new instruction that will be introduced in the next version of x86-64 ISA.
 
-Most of the previous efforts in formalizing \ISA semantics can be categorized based on whether the underlying approach is fully manual ~\cite{Goel:FMCAD14, TSL:TOPLAS13, Leroy:2009, sail-x86} or fully automatic~\cite{Heule2016a, Roessle:CPP19, Hasabnis:ASPLOS16, Hasabnis:FSE16}. We note that none of these approaches, when used in isolation, sufficiently scale to a complete and faithful semantics, whereas it is the blend of these complementary approaches that we get benefited from each other.
+Most of the previous efforts in formalizing \ISA semantics can be categorized based on whether the underlying approach is fully manual ~\cite{Goel:FMCAD14, TSL:TOPLAS13, Leroy:2009, sail-x86} or fully automatic~\cite{Heule2016a, Roessle:CPP19, Hasabnis:ASPLOS16, Hasabnis:FSE16}. We note that none of these approaches, when used in isolation, sufficiently scale to a complete and faithful semantics, as much as ours that combines these complementary approaches and benefits from each other.
 
 Another important step of the semantics synthesis is post-processing. The generated semantics is often verbose and not necessarily human-readable. The post-processing step is desired to simplify the generated semantics to be succinct, which helps to increase the human-readability as well as to improve the efficiency when being employed in other applications (e.g., the size of SMT formula encoding can be reduced, which can reduce the burden of SMT solvers). For our semantics development, we have written dozens of simplification rules that are fed to the \K framework to simplify the synthesized semantics further (Section~\ref{sec:Approach}). 
 
@@ -43,7 +43,11 @@ However, the non-determinism makes it non-trivial to execute (and validate) the 
 For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
 To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (i.e., an instance of) the symbolic output. 
 
-Like our work, many existing projects providing \emph{direct} \ISA semantics, detail similar trade-offs, in order to specify the undefined behavior faithfully. For example, Goel \etal~\cite{Goel:ProCoS17} chooses to model undefined behavior, using a constraint function which is guaranteed to be unique and non-deterministic. For concrete execution, they used the profiling approach mentioned above. TSL~\cite{TSL:TOPLAS13} recommends different choices for concrete and abstract semantics, for example, keeping the value unchanged, setting to a particular value, or introducing non-determinism. Stoke~\cite{Stoke2013}, however, has been reported to have semantic flaws (Section ~\ref{subsec:compare-stoke}) in modeling the undefined behavior for some instructions.    
+We note that faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
+As mentioned in Section~\ref{subsec:compare-stoke}, however, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{Suppl}.
+On the other hand, most of other existing \emph{direct} \ISA semantics employ an approach similar to the ones described above, faithfully modeling the implementation-dependent behaviors.
+For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profiling approach for concrete execution.
+TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.
 
 \paragraph{Employing multiple semantic engineering frameworks}
 
@@ -51,10 +55,12 @@ We found that employing multiple semantic frameworks is helpful. Specifically, w
 
 In order to use the two frameworks interchangeably, we had to develop a translator that translates the semantics in one framework to another. To convince the correctness of the translation, we employed translation validation, where we verified equivalence between the original and the translated semantics for each instruction using the Z3 SMT solver. 
 
-Employing multiple frameworks, with validated translation, enable us to scale to completeness, faithfulness and applicability to formal analysis using exclusive features to formalize (for example, by using user-friendly specification syntax, out-of-the-box formal analysis tools) and validate (by using testing infrastructure) the semantics.
+Employing multiple frameworks, with the validated translation, allowed us to utilize their exclusive features to efficiently specify (e.g., by using the well-designed specification language of one framework) and validate (e.g., by using the well-developed testing infrastructure of another framework) the semantics, which highly expedited our semantics development process, and thus significantly contributed to the completeness of our semantics.
 %, not to mention the benefit of using exclusive formal analysis tools.}
 %Whereas, other approaches (~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86,Heule2016a}) did not explore this mutual benefit to its full potential.
-Whereas, existing semantics efforts (~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86,Heule2016a}) employed a single framework, not exploring potential of other frameworks, which might have improved completeness and/or faithfulness of their semantics within the same amount of effort.
+Moreover, employing multiple frameworks in general allows us to immediately benefit from all of their formal analysis tools, increasing the applicability of the semantics in various formal reasoning tasks.
+Existing semantics development efforts (e.g., \cite{Goel:FMCAD14,Heule2016a}), however, %(~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86,Heule2016a})
+employ a single framework without utilizing the potential of other frameworks, which otherwise might have improved completeness and/or faithfulness of their semantics with the same amount of effort.
 
 \cmt{
 We note that employing \Strata enables us to explore the near-completeness of its formalism, whereas \K framework provides many out-of-the-box formal analysis tools. The fact that we can use both the frameworks  interchangeably paid us off towards completeness and generality (in terms of using the semantics for formal analyses) of the formalism. On the other hand, other approaches (~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86})  did not explore this mutual benefit to its full potential\footnote{That, for some of these projects,  could be attributed to the fact getting a complete formal semantics is not the primary goal.}.

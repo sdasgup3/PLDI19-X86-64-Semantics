@@ -104,7 +104,7 @@ We found errors in both the \ISA standard document and other existing semantics 
 \item
 \emph{Usability \& portability.}
 \AEC{We illustrate the potential of our semantics to be used for formal analyses such as deductive program verification and program equivalence checking (Section~\ref{sec:Appl}).}
-The \K framework also enables to represent our semantics as SMT theories,
+The \K framework also enables one to represent our semantics as SMT theories,
 % that can be handled by various SMT solvers,
 which allows others to easily reuse our semantics for their own purposes.
 \SC{%
@@ -142,12 +142,12 @@ Our formal semantics is publicly available at~\cite{Suppl}.
 
 \paragraph{Size and Complexity:}
 %
-\SC{The \ISA ISA has a vast number of instructions, partly because of a large number of complex instructions and partly because it keeps most of the legacy and deprecated instructions ($\sim$ \Xmmx{}+) for the sake of backwards compatibility.}
+\SC{The \ISA ISA has a large number of instructions, partly because of a large number of complex instructions and partly because it keeps most of the legacy and deprecated instructions ($\sim$ \Xmmx{}+) for the sake of backwards compatibility.}
 It consists of \totalIntel{} mnemonics, and each mnemonic admits several variants, depending on the types (i.e., register, memory, or constant) and the size (i.e., the bit-width) of operands.
 
 \paragraph{Inconsistent Instruction Variants:}
 %
-Some variants have quite divergent behaviors more than the difference of their type and size. For example, \instr{movsd}, one of the 128-bit SSE instructions, has very different behaviors depending on whether the type of the source operand is register or memory; it clears the higher 64 bits of the target register only when the source type is memory.
+Some variants have divergent behaviors more than the difference of their type and size. For example, \instr{movsd}, one of the 128-bit SSE instructions, has very different behaviors depending on whether the type of the source operand is register or memory; it clears the higher 64 bits of the target register only when the source type is memory.
 Indeed, we revealed bugs in other semantics due to their incorrect generalization of the variants' behavior (Details in Section ~\ref{sec:Approach}, Instruction Variants).
 
 \paragraph{Ambiguous Documentation:}
@@ -167,7 +167,7 @@ Completely formalizing the vast number of instructions with carefully identifyin
 \paragraph{Undefined Behaviors:}
 %
 The \ISA standard also admits undefined behaviors that are implementation-dependent.
-Many instructions (\undefIntel{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} out of \totalIntel{}) have undefined behaviors: their output values of the destination register or the \reg{rflags} register are undefined in certain cases.
+Many instructions (\undefIntel{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} out of \totalIntel{} mnemonics) have undefined behaviors: their output values of the destination register or the \reg{rflags} register are undefined in certain cases.
 % behaviors, for which each processor can choose any behavior.
 % For example, the bit-scan-forward instruction \instr{bsf} that computes the bit index of the least significant set bit in the source operand is not defined when the source operand's value is 0.
 That is, the processor is free to choose any behavior in the undefined case.
@@ -188,22 +188,8 @@ We found, e.g., that Remill~\cite{Remill} updates the flag with 0, whereas Radar
 %
 Identifying and faithfully specifying all of the undefined behaviors, thus, are desirable but challenging.
 
-\SC{
-There are two natural, faithful ways of specifying the implementation-dependent behaviors.
-One is to parameterize the semantics over the implementation dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
-Another is to introduce non-determinism in the semantics.
-We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized. \cmt{(e.g., as shown in Figure~\ref{fig:andn-semantics})} Specifically, we modeled the undefined value as a unique symbol (called \s{undef}) whose value is nondeterministically decided each time within the proper range.
-%These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future, standard-conforming processor)
-
-However, the non-determinism makes it non-trivial to execute (and validate) the semantics.
-For example, in the hardware co-simulation (Section~\ref{sec:Eval}), the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
-To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (i.e., an instance of) the symbolic output. 
-
-Like our work, many existing projects providing \emph{direct} \ISA semantics, detail similar trade-offs, in order to specify the undefined behavior faithfully. For example, Goel \etal~\cite{Goel:ProCoS17} choses to model undefined behavior, using a constraint function which is guaranteed to be unique and non-deterministic. For concrete execution, they used the profiling approach mentioned above. TSL~\cite{TSL:TOPLAS13} recommends different choices for concrete and abstract semantics, for example, keeping the value unchanged, setting to a particular value, or introducing non-determinism.  
-}
-    
-%    In our semantics, we faithfully modeled the undefined value as a unique symbol (called \s{undef}) whose value is nondeterministically decided each time within the proper range.}
-%These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future, standard-conforming processor).
+\SC{In our semantics, we faithfully modeled the undefined value as a unique symbol (called \s{undef}) whose value is nondeterministically decided each time within the proper range.}
+These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future, standard-conforming processor).
 
 
 

@@ -256,7 +256,7 @@ In this section, we demonstrate how this capability can be used to find a  secur
 
 \input{figures/histarbug.tex}
 
-Consider the code snippet of the HiStar~\cite{HiStar:2006} kernel, as shown in Figure~\ref{fig:histar}(a)\footnote{\AEC{For the sake of presentation, we highlighted  (at ~\ref{fig:histar}(b)) only the key computations of the assembly compiled from the source. However, while doing the analysis, we symbolically executed the full unmodified compilation.}}, in which the KLEE~\cite{Cadar:2008} team found a security vulnerability.
+Consider the code snippet of the HiStar~\cite{HiStar:2006} kernel, as shown in Figure~\ref{fig:histar}(a)\footnote{\AEC{For the simplicity of the presentation, in Figure~\ref{fig:histar}(b), we highlight only the key computations of the assembly compiled from the source. However, in our experiment, the full unmodified compilation is used for the symbolic execution.}}, in which the KLEE~\cite{Cadar:2008} team found a security vulnerability.
 The \s{safe\_addptr} function is supposed to compute the sum of two arguments \m{a} and \m{b}, setting the flag argument \m{of} when the arithmetic overflow occurs during the addition.
 That is, one of the functional correctness properties is that ``$\m{*of} = 1$ if $\m{a} + \m{b} > \m{r}$'', where $+$ is the mathematical addition (with no overflow).
 The functional correctness, however, is not satisfied when the source code is compiled to a 32-bit target,

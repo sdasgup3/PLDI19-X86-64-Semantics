@@ -7,13 +7,15 @@ Here we present the lessons we learned during our semantics development, identif
 We also elaborate the novel aspects of our semantics development approach that allow us to obtain the complete and faithful semantics with an affordable amount of effort.
 
 \paragraph{Regarding automatic semantics synthesis}
-
-In Section~\ref{sec:Approach:Overview}, we reported the empirical negative result that a fully automatic synthesis of the whole \ISA semantics is not practically feasible.
+%In Section~\ref{sec:Approach:Overview}, we reported the empirical negative result that a fully automatic synthesis of the whole \ISA semantics is not practically feasible.
+In Section~\ref{sec:Approach:Overview}, we reported the empirical negative result that a fully automatic synthesis of the whole \ISA semantics is difficult to achieve.
 Specifically, in a vast instruction set like \ISA \cmt{computer (CISC) architecture such as x86}, it is common that many instructions can be grouped together where the instructions of each group are similar to each other except for a few differences.
-An automatic synthesis technique would effectively synthesize such instruction variants' semantics, provided that the semantics of its representative instruction is given in advance.\footnote{%
-For certain complex instructions, the size of their group is very small (i.e., they are quite different to each other), and thus the automatic synthesis would not yield a sufficient gain over the effort of specifying the semantics of their representatives, but we found that the number of such isolated instructions of x86-64 is small.}
+%One approach to automatic semantics synthesize is to employ stratification approach~\cite{Heule2016a} to learn the semantics of instruction variants in a group using the representatives of the group.
+An automatic synthesis technique, using the stratification approach~\cite{Heule2016a}, would effectively synthesize such instruction variants' semantics, provided that the semantics of its representative instructions are given in advance.
+\footnote{For certain complex instructions, the size of their group is very small (i.e., they are quite different to each other), and thus the automatic synthesis would not yield a sufficient gain over the effort of specifying the semantics of their representatives, but we found that the number of such isolated instructions of x86-64 is small.}
 The problem is, however, that it is non-trivial to properly partition all the instructions into such groups, providing the representative instruction semantics for each group, \emph{without} a priori knowledge about the semantics of all instructions.
-The stratification approach~\cite{Heule2016a} had been proposed to solve this dilemma, but it turned out to be not sufficient, leaving a substantial part of semantics unspecified.
+%The stratification approach~\cite{Heule2016a} had been proposed to solve this dilemma, but it turned out to be not sufficient, leaving a substantial part of semantics unspecified.
+The vanilla stratification approach~\cite{Heule2016a} turned out to be not sufficient to solve this dilemma, leaving a substantial part of semantics unspecified.
 Thus, we decided to manually provide the information about partition and representatives, for which we had to consult the manual to obtain knowledge about the remaining part of semantics.
 Once we obtained the required knowledge, however, we realized that it would be more straightforward to directly turn the knowledge into the semantics than going through the synthesis process, and thus we ended up manually specifying the remaining part of semantics in this work.
 %

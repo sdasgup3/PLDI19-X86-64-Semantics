@@ -8,9 +8,9 @@
 ### Authors' Comments
 Please find the location of the revised paper with the "highlighted" edits as pointed below:
 - Add a comparison to Sail.
-  - Page 14 ( Under Section 8:Related Work ) &#10148; First column &#10148; Paragraph starting with "Sail"
+  - Section 7:Related Work &#10148; The paragraph starting with "Sail"
 - Better explain the novelty.
-  - Added a new section "Section 8: Lessons Learned" where we present the lessons we learned during our semantics development, identifying important aspects to be considered, and clarifying a good practice for developing a large ISA semantics. We also elaborate the novel aspects of our semantics development approach that allow us to obtain the complete and faithful semantics with an affordable amount of effort.
+  - Added a new section "Section 8: Lessons Learned" where we present the lessons we learned during our semantics development, identifying important aspects to be considered, and clarifying a good practice for developing a large ISA semantics. We also elaborate the novel aspects of our semantics development approach that allow us to obtain the complete and faithful semantics with an affordable amount of effort. The transition from the "Section 7: Related work" to "Section 8: Lessons Learned" is made clear using a paragraph at line 1361.
 
 
 ## Shepherd instruction II: The smallish set of things the PC strongly recommends changing to improve the presentation and results.
@@ -21,7 +21,7 @@ Add the various clarifications, suggestions and explanations discussed in the re
 ### Authors' Comments
 The following is the description of our changes in terms of the reviewers' actual comments and our modification locations in the revised paper. Also, for each modification location, we highlighted the relevant text (with blue) so as to expose the modified text even better.
 
-|Suggestion ( Line numbers are from submitted paper ) | Comments | Corrected line  |
+|Suggestions (Line numbers in this are from submitted paper) | Comments | Correction location in revised paper  |
 |-|-|-|
 | **Reviewer A: Overall Comments** |      | |
 |l121: "that is, 3155 instructions..." -> Unclear here whether these are the number of formalised ones or excluded ones; by cross-checking we understand that this is the number of formalised one. Maybe clarify this by giving the number of deprecated, crypto and concurrency ones respectively. |  Added the individual numbers |Section 1 &#10148; Contributions &#10148; Completeness|

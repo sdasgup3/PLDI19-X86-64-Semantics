@@ -104,7 +104,7 @@ We found errors in both the \ISA standard document and other existing semantics 
 \item
 \emph{Usability \& portability.}
 \AEC{We illustrate the potential of our semantics to be used for formal analyses such as deductive program verification and program equivalence checking (Section~\ref{sec:Appl}).}
-The \K framework also enables to represent our semantics as SMT theories,
+The \K framework also enables one to represent our semantics as SMT theories,
 % that can be handled by various SMT solvers,
 which allows others to easily reuse our semantics for their own purposes.
 \SC{%
@@ -142,12 +142,12 @@ Our formal semantics is publicly available at~\cite{Suppl}.
 
 \paragraph{Size and Complexity:}
 %
-\SC{The \ISA ISA has a vast number of instructions, partly because of a large number of complex instructions and partly because it keeps most of the legacy and deprecated instructions ($\sim$ \Xmmx{}+) for the sake of backwards compatibility.}
+\SC{The \ISA ISA has a large number of instructions, partly because of a large number of complex instructions and partly because it keeps most of the legacy and deprecated instructions ($\sim$ \Xmmx{}+) for the sake of backwards compatibility.}
 It consists of \totalIntel{} mnemonics, and each mnemonic admits several variants, depending on the types (i.e., register, memory, or constant) and the size (i.e., the bit-width) of operands.
 
 \paragraph{Inconsistent Instruction Variants:}
 %
-Some variants have quite divergent behaviors more than the difference of their type and size. For example, \instr{movsd}, one of the 128-bit SSE instructions, has very different behaviors depending on whether the type of the source operand is register or memory; it clears the higher 64 bits of the target register only when the source type is memory.
+Some variants have divergent behaviors more than the difference of their type and size. For example, \instr{movsd}, one of the 128-bit SSE instructions, has very different behaviors depending on whether the type of the source operand is register or memory; it clears the higher 64 bits of the target register only when the source type is memory.
 Indeed, we revealed bugs in other semantics due to their incorrect generalization of the variants' behavior (Details in Section ~\ref{sec:Approach}, Instruction Variants).
 
 \paragraph{Ambiguous Documentation:}
@@ -167,7 +167,7 @@ Completely formalizing the vast number of instructions with carefully identifyin
 \paragraph{Undefined Behaviors:}
 %
 The \ISA standard also admits undefined behaviors that are implementation-dependent.
-Many instructions (\undefIntel{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} out of \totalIntel{}) have undefined behaviors: their output values of the destination register or the \reg{rflags} register are undefined in certain cases.
+Many instructions (\undefIntel{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} out of \totalIntel{} mnemonics) have undefined behaviors: their output values of the destination register or the \reg{rflags} register are undefined in certain cases.
 % behaviors, for which each processor can choose any behavior.
 % For example, the bit-scan-forward instruction \instr{bsf} that computes the bit index of the least significant set bit in the source operand is not defined when the source operand's value is 0.
 That is, the processor is free to choose any behavior in the undefined case.

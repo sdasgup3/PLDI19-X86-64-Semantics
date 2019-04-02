@@ -37,8 +37,8 @@ The following is the description of our changes in terms of the reviewers' actua
 | l817: "a large fraction (81%) of which 817 is also supported by Strata." -> the distinction and relationship between Strata and Stroke is not explained well.| Clarified the distinction |Section 4.2 &#10148; footnote 14 at first line |
 | l1037: "The K verifier takes a minute to verify the sum-to-n" -> a minute sounds a lot for such a simple program!| We clarified our take on this scalability issue. | Section 5.2 &#10148;  footnote 16 at last line of he section |
 | **Reviewer A: Qs to Authors** |      | |
-| have you tried bigger examples than the ones presented here? how well does/would the work scale to bigger examples?| We clarified  take on scalability issue. | Section 5.2 &#10148;  footnote 16 at last line of he section |
-| can you handle system-level (and crypto) instructions with your approach or is it an intrinsic limitation? If it's a limitation, what's the impact of not supporting it for the applicability of the work? | Already covered above |Section 3.1 &#10148; Last paragraph|
+| have you tried bigger examples than the ones presented here? how well does/would the work scale to bigger examples?| We clarified our take on scalability issue. | Section 5.2 &#10148;  footnote 16 at last line of he section |
+| can you handle system-level (and crypto) instructions with your approach or is it an intrinsic limitation? If it's a limitation, what's the impact of not supporting it for the applicability of the work? | Clarified that there is no inherent limitation in supporting such categories |Section 3.1 &#10148; Last paragraph|
 | **Reviewer B: Overall Comments**| ||
 | ACL proof assistant" --> "ACL2 proof assistant" (the "2" is part of the name; it's not a version number)|Corrected| Section 1 &#10148; Existing Semantics of X86-64 &#10148; First paragraph |
 | "may sound a daunting" --> "may sound like a daunting"|Corrected| Section 1 &#10148; Our Approach &#10148; First paragraph|
@@ -52,8 +52,6 @@ The following is the description of our changes in terms of the reviewers' actua
 | By testing on only one hardware platform, how do you know that you have arrived at an architecture-level model as opposed to an implementation-level model? Could your test easily be run on another x86-64 implementation? (If yes, why hasn't it been done?) | We have detailed our test platforms and as mentioned in the rebuttal, we have acknowledged this task as one of our future work. | Section 4.1 &#10148; First paragraph |
 | **Reviewer C: Overall Comments**| ||
 | It was not initially clear that each instruction was validated against 7,000+ test vectors: at first I thought only 7,000 tests total were run.|We clarified this right in the introduction section |Section 1 &#10148; Contributions &#10148; Faithfulness|
-| **Reviewer C: Qs for Authors** || |
-| Could Stoke be extended to use your x86 semantics by translating them through SMT or some similar approach? |Stoke uses an internal representation of SMT formulas (which they call bit-vector formulas created using APIs like SymBitVector & SymBool) which is later converted to SMT formulas. It would be straightforward to port the SMT formulas emitted by K to the bit-vector formula using the above APIs. Also, this porting can easily be validated. We mentioned the feasibility of this translation. | Section 8 &#10148; Employing Multiple Semantic Engineering Frameworks |
 | **Reviewer D: Overall Comments** || |
 | the absence of exception modeling, how does your Usability & portabilitymodel apply to invalid programs, such as those with addressing or alignment issues?| Clarified |Section 6 &#10148; Exceptions|
 | Is alignment considered in memory instructions?| Clarified |Section 3.3 &#10148; Memory State &#10148; footnote 4 in first paragraph|

@@ -10,7 +10,7 @@ Please find the location of the revised paper with the "highlighted" edits as po
 - Add a comparison to Sail.
   - Section 7:Related Work &#10148; The paragraph starting with "Sail"
 - Better explain the novelty.
-  - Added a new section "Section 8: Lessons Learned" where we present the lessons we learned during our semantics development, identifying important aspects to be considered, and clarifying a good practice for developing a large ISA semantics. We also elaborate the novel aspects of our semantics development approach that allow us to obtain the complete and faithful semantics with an affordable amount of effort. The transition from the "Section 7: Related work" to "Section 8: Lessons Learned" is made clear using a paragraph at line 1361.
+  - Added a new section "Section 8: Lessons Learned" where we present the lessons we learned during our semantics development, identifying important aspects to be considered, and clarifying a good practice for developing a large ISA semantics. We also elaborate the novel aspects of our semantics development approach that allow us to obtain the complete and faithful semantics with an affordable amount of effort. The transition from the "Section 7: Related work" to "Section 8: Lessons Learned" is made clear using the second last paragraph of the next page in Section 7.
 
 
 ## Shepherd instruction II: The smallish set of things the PC strongly recommends changing to improve the presentation and results.

@@ -20,7 +20,11 @@ Thus, we decided to manually provide the information about partition and represe
 Once we obtained the required knowledge, however, we realized that it would be more straightforward to directly turn the knowledge into the semantics than going through the synthesis process, and thus we ended up manually specifying the remaining part of semantics in this work.
 %
 This (negative) experience led us to think about a new research problem: how to obtain the prior knowledge about the semantics that is enough to partition instructions and identify their representatives, \emph{without} manually examining the entire manual.
-We suggested an early idea for this problem, which we plan to develop and evaluate further as future work (Section~\ref{sec:conc}).
+This  knowledge does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
+%We suggested an early idea for this problem, which we plan to develop and evaluate further as future work (Section~\ref{sec:conc}).
+
+%As mentioned in Section~\ref{sec:Approach:Overview}, we found that our ideas of extending \Strata do not scale because we need information about the instructions, whose semantics we want to learn, in order to constraint the search space. This lesson suggested a new idea: the information needed to reduce the search space can be automatically extracted from the manual. 
+%This  information does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
 
 %As an alternative, we suggest a hybrid synthesis approach that we believe is practically promising, in particular for complex instruction set computer (CISC) architectures such as x86.
 %
@@ -46,7 +50,7 @@ For example, in the hardware co-simulation, the output of hardware execution may
 To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (i.e., an instance of) the symbolic output. 
 
 We note that faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
-As mentioned in Section~\ref{subsec:compare-stoke}, however, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{Suppl}.
+As mentioned in Section~\ref{subsec:compare-stoke}, however, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{BugStoke986}.
 On the other hand, most of other existing \emph{direct} \ISA semantics employ an approach similar to the ones described above, faithfully modeling the implementation-dependent behaviors.
 For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profiling approach for concrete execution.
 TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.

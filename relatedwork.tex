@@ -71,17 +71,18 @@ Roessle \etal~\cite{Roessle:CPP19} & \xmark & \rating{50} & \cmark \\
 }
 
 \Strata~\cite{Heule2016a} uses program synthesis to generate the instruction
-semantics, as SMT bit-vector formulas, by learning their input/output behavior
-through execution on an actual processor. \Strata's semantics definition for
+semantics, as SMT bit-vector formulas\cmt{, by learning their input/output behavior
+through execution on an actual processor}. \Strata's semantics definition for
 \ISA is incomplete as it does not include semantics of about 40\% of the
-user-level instructions in scope that are not straightforward to automatically learn by the presented algorithm for reasons mainly due to limitations of underlying synthesis engine. Even then,
+user-level instructions in scope that are not straightforward to automatically learn by the presented algorithm for reasons mainly due to limitations of underlying synthesis engine.\cmt{Even then,
 the result that the formal semantics of 60\% of the target \ISA ISA can be learned automatically
 is impressive, and we leverage this result in our work as described in
-section~\ref{sec:harvestsema}.
-The specifications are executable only for non floating-point (FP) instructions.
-The FP operations are represented in the SMT formulas of the definition as
-uninterpreted functions. Finally the specifications are given as SMT formulas
-but have not been demonstrated to be usable in a formal analysis setting out-of-the-box.
+section~\ref{sec:harvestsema}.}
+Moreover, the specifications are executable only for non floating-point (FP) instructions and
+%The FP operations are represented in the SMT formulas of the definition as
+%uninterpreted functions. 
+%Finally the specifications are given as SMT formulas but 
+have not been demonstrated to be usable in a formal analysis setting out-of-the-box.
 
 \SC{A contemporary work by Roessle \etal~\cite{Roessle:CPP19} presents a method to extract the big step semantics of a sequential binary program using the small step instruction semantics extracted mostly from Strata\footnote{There are some minor omissions on immediate instructions with $8$-bit operands for which Strata learns $256$ brute force formulas.} plus some manually drafted support for branching and stack operating instructions. Like Strata, their specification is executable only for the non-floating point instructions. However, the work does not aim for completeness of semantics, which is one of our primary goals.} 
 

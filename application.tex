@@ -129,7 +129,7 @@ The specification has two parts: the top-level specification and the loop invari
 
 % Note that the program behaves incorrectly/unexpectedly if arithmetic overflow occurs during its execution. One challenge in verifying this program is to identify the conditions under which overflow does not occur. 
 
-\begin{figure}[ht]
+\begin{figure}
 \begin{lstlisting}[style=KRULE]
 <regstate>... 
     "RDI" (*$\mapsto$*) 64'N
@@ -191,7 +191,9 @@ The specification has two parts: the top-level specification and the loop invari
 \end{center}
 % \caption{Loop Invariant Rule. X and Y denote concrete code memory addresses corresponding to instructions at loop header (at line 10) and following the loop (at line 25) resp.}
 % \label{fig:loop-invariant}
+\vspace*{-8pt}
 \caption{Specification of \s{sum-to-n} program}
+%\vspace*{-2pt}
 \label{fig:sum-to-n-spec}
 \end{figure}
 
@@ -360,9 +362,7 @@ We asked Z3 to solve the above path condition and it returned a solution (i.e., 
 
 
 \subsection{Translation Validation of Optimizations}
-
-
-\begin{figure}[t]
+\begin{figure}
 \begin{lstlisting}[language=C++,basicstyle=\scriptsize,keywordstyle=\color{blue}]
   int popcnt(uint64_t x) {
     int res = 0;
@@ -370,6 +370,7 @@ We asked Z3 to solve the above path condition and it returned a solution (i.e., 
     return res;
   }
 \end{lstlisting}
+\vspace{-15pt}
 \caption{\s{popcnt} program}
 \label{fig:popcnt}
 \end{figure}

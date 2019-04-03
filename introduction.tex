@@ -39,6 +39,7 @@ A formal semantics of \ISA is required for formal reasoning about binary code, o
 An \emph{executable} semantics is especially powerful because it allows direct testing to gain confidence in the definitions of the semantics, and also because it can allow additional tools based on symbolic execution, like deductive verification and symbolic test generation.
 %
 Completely formalizing the semantics of \ISA, however, is challenging especially due to the complexity and the sheer number of instructions that are informally specified in approximately 3,000-page standard~\cite{IntelManual}.
+%
 
 \paragraph{Existing Semantics for \ISA:}
 %
@@ -75,9 +76,6 @@ We \emph{manually} specified the semantics of the remaining instructions faithfu
 
 
 % \Added{Moreover, an important message of our paper is that complete formal semantics of x86 is possible, and that is not only useful in itself but also to generate formal analysis tools.}
-
-
-
 %($\sim$40\%), obtaining the complete semantics.
 Like closely related previous work~\cite{Goel:FMCAD14,Heule2016a}, we omit the relaxed memory model of \ISA and thus the concurrency-related operations.
 Modelling concurrency is a complex but relatively orthogonal problem in the presence of small-step operational semantics, as shown in prior work~\cite{Sarkar:POPL09,Owens:x86-TSO}, where they have integrated their memory model with a small subset of $32$-bit x86 instruction set.
@@ -110,15 +108,16 @@ which allows others to easily reuse our semantics for their own purposes.
 \SC{%
 Indeed, we have translated our semantics to Stoke~\cite{completing-stock} which can serve as a drop-in replacement of Heule~\etal's semantics~\cite{Heule2016a} and can immediately benefit tools built on Stoke (e.g., \cite{Roessle:CPP19}).
 }
+\cmt{
 \item
 \SC{%
 \emph{Semantics development practice.}
 Reflecting our \ISA semantics development effort, we identify certain important aspects to be considered when specifying a large instruction set architecture semantics, which we believe can be also applied to other large language semantics to a certain extent (Section~\ref{sec:lesson-learned}).
-}
+}}
 \end{itemize}
 %
 % \paragraph{Artifacts}
-Our formal semantics is publicly available at~\cite{Suppl}.
+Our formal semantics is publicly available at~\cite{x86-64-github}.
 
 
 % In this paper, we present the most complete and thoroughly tested formal semantics of \ISA to date.

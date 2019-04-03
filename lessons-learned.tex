@@ -6,9 +6,7 @@
 Here we present the lessons we learned during our semantics development, identifying important aspects to be considered, and clarifying a good practice for developing a large ISA semantics.
 We also elaborate the novel aspects of our semantics development approach that allow us to obtain the complete and faithful semantics with an affordable amount of effort.
 
-\paragraph{Regarding automatic semantics synthesis}
-%In Section~\ref{sec:Approach:Overview}, we reported the empirical negative result that a fully automatic synthesis of the whole \ISA semantics is not practically feasible.
-In Section~\ref{sec:Approach:Overview}, we reported the empirical negative result that a fully automatic synthesis of the whole \ISA semantics is difficult to achieve.
+\paragraph{Regarding automatic semantics synthesis} Section~\ref{sec:Approach:Overview} reports the empirical negative result that a fully automatic synthesis of the whole \ISA semantics is difficult to achieve.
 Specifically, in a vast instruction set like \ISA \cmt{computer (CISC) architecture such as x86}, it is common that many instructions can be grouped together where the instructions of each group are similar to each other except for a few differences.
 %One approach to automatic semantics synthesize is to employ stratification approach~\cite{Heule2016a} to learn the semantics of instruction variants in a group using the representatives of the group.
 An automatic synthesis technique, using the stratification approach~\cite{Heule2016a}, would effectively synthesize such instruction variants' semantics, provided that the semantics of its representative instructions are given in advance.
@@ -20,7 +18,11 @@ Thus, we decided to manually provide the information about partition and represe
 Once we obtained the required knowledge, however, we realized that it would be more straightforward to directly turn the knowledge into the semantics than going through the synthesis process, and thus we ended up manually specifying the remaining part of semantics in this work.
 %
 This (negative) experience led us to think about a new research problem: how to obtain the prior knowledge about the semantics that is enough to partition instructions and identify their representatives, \emph{without} manually examining the entire manual.
-We suggested an early idea for this problem, which we plan to develop and evaluate further as future work (Section~\ref{sec:conc}).
+This  knowledge does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
+%We suggested an early idea for this problem, which we plan to develop and evaluate further as future work (Section~\ref{sec:conc}).
+
+%As mentioned in Section~\ref{sec:Approach:Overview}, we found that our ideas of extending \Strata do not scale because we need information about the instructions, whose semantics we want to learn, in order to constraint the search space. This lesson suggested a new idea: the information needed to reduce the search space can be automatically extracted from the manual. 
+%This  information does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
 
 %As an alternative, we suggest a hybrid synthesis approach that we believe is practically promising, in particular for complex instruction set computer (CISC) architectures such as x86.
 %
@@ -30,8 +32,8 @@ We suggested an early idea for this problem, which we plan to develop and evalua
 %We plan to apply and evaluate this idea when we specify the semantics of new instruction that will be introduced in the next version of x86-64 ISA.
 
 Most of the previous efforts in formalizing \ISA semantics can be categorized based on whether the underlying approach is fully manual ~\cite{Goel:FMCAD14, TSL:TOPLAS13, Leroy:2009, sail-x86} or fully automatic~\cite{Heule2016a, Roessle:CPP19, Hasabnis:ASPLOS16, Hasabnis:FSE16}. We note that none of these approaches, when used in isolation, sufficiently scale to a complete and faithful semantics, as much as ours that combines these complementary approaches and benefits from each other.
-
-Another important step of the semantics synthesis is post-processing. The generated semantics is often verbose and not necessarily human-readable. The post-processing step is desired to simplify the generated semantics to be succinct, which helps to increase the human-readability as well as to improve the efficiency when being employed in other applications (e.g., the size of SMT formula encoding can be reduced, which can reduce the burden of SMT solvers). For our semantics development, we have written dozens of simplification rules that are fed to the \K framework to simplify the synthesized semantics further (Section~\ref{sec:Approach}). 
+\cmt{Another important step of the semantics synthesis is post-processing. The generated semantics is often verbose and not necessarily human-readable. The post-processing step is desired to simplify the generated semantics to be succinct, which helps to increase the human-readability as well as to improve the efficiency when being employed in other applications (e.g., the size of SMT formula encoding can be reduced, which can reduce the burden of SMT solvers). For our semantics development, we have written dozens of simplification rules that are fed to the \K framework to simplify the synthesized semantics further (Section~\ref{sec:Approach}). 
+}
 
 \paragraph{Modeling and executing implementation-dependent behaviors}
 
@@ -46,7 +48,7 @@ For example, in the hardware co-simulation, the output of hardware execution may
 To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (i.e., an instance of) the symbolic output. 
 
 We note that faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
-As mentioned in Section~\ref{subsec:compare-stoke}, however, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{Suppl}.
+As mentioned in Section~\ref{subsec:compare-stoke}, however, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{BugStoke986}.
 On the other hand, most of other existing \emph{direct} \ISA semantics employ an approach similar to the ones described above, faithfully modeling the implementation-dependent behaviors.
 For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profiling approach for concrete execution.
 TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.

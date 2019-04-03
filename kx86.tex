@@ -25,20 +25,21 @@ The \s{regstate} cell contains a  map from registers or flag names to values. \S
 \paragraph{Memory State}
 Our memory model is inspired by previous efforts ~\cite{TSL:TOPLAS13, Ellison}.
 The \s{memstate} cell is a map from $64$-bit addresses to bytes, which specifies the \SC{byte-addressable memory}\footnote{\SC{Byte-addressability allows the model to specify both aligned and unaligned accesses in the same principle.}}, but our implementation is flexible enough to use alternative memory  representations with addressing of $2$-byte or $4$-byte quantities.  Our memory layout is ``flat'', in which all available memory locations can be addressed, but we do have logical partitions\footnote{These abstractions are useful for executing \ISA programs.} of the memory into sections like code, data and stack.  The following is an example snapshot of a memory state,  holding a $4$-bytes integer value $65535$:
-\begin{center}
+\begin{tightcenter}
+    \small
     \newcommand{\bytecell}[2]{\s{byte}({#1},\;\;{#2})}
     $
     \kall{memstate} {
-        %\begin{array}{@{}c@{}}
-        \begin{array}{ll}
-        4 \;\mapsto\; & \bytecell{0}{32'65535}\\
-        5 \;\mapsto\; & \bytecell{1}{32'65535}\\
-        6 \;\mapsto\; & \bytecell{2}{32'65535}\\
-        7 \;\mapsto\; & \bytecell{3}{32'65535}\\
+        \begin{array}{c}
+        %\begin{array}{ll}
+        4 \;\mapsto\;  \bytecell{0}{32'65535} \quad
+        5 \;\mapsto\;  \bytecell{1}{32'65535}\\
+        6 \;\mapsto\;  \bytecell{2}{32'65535} \quad
+        7 \;\mapsto\;  \bytecell{3}{32'65535}\\
         \end{array}
     }
     $
-\end{center}
+\end{tightcenter}
 \SC{Here the memory address $4$ stores the $0^\text{th}$ byte of the bit-vector \bv{32}{65535}, the address 5 stores the $1^\text{st}$ byte, and so on}. When memory is read, requested bytes are aggregated according to the size of the memory access.
 
 
@@ -125,30 +126,29 @@ The example instruction writes the result to a destination register \reg{rax}. A
 %
 %\Comment{Should "R" be "Dest" below in the first regstate rule?}
 %
-\begin{figure}[t]
+\begin{figure}
 \begin{lstlisting}[style=KRULE]
 rule <k>
   exec(andnq memVal(*$_{64}$*), BV(*$_\s{r}$*), R:R64) (*$\Rightarrow$*) (*\textbf{.}*)
 ...</k>
   <regstate>
     "R"  (*$\mapsto$*) _ (*$\Rightarrow$*) ((*$\sim$*)BV(*$_\s{r}$*) & MemVal(*$_{64}$*))
-    // sf and zf are updated based on the result. 
     "SF" (*$\mapsto$*) ((*$\sim$*)BV(*$_\s{r}$*) & MemVal(*$_{64}$*))[63:63]
     "ZF" (*$\mapsto$*) ((*$\sim$*)BV(*$_\s{r}$*) & MemVal(*$_{64}$*)) (*$=$*) 64'0 ? 1'1:1'0
-    // of and cf are cleared. 
     "OF" (*$\mapsto$*) 1'0
     "CF" (*$\mapsto$*) 1'0
-    // af and pf are undefined.
-    "AF" (*$\mapsto$*) undef
-    "PF" (*$\mapsto$*) undef
+    "AF" (*$\mapsto$*) undef // af and
+    "PF" (*$\mapsto$*) undef // pf are undefined.
   ...</regstate>  
 \end{lstlisting}
+\vspace*{-15pt}
 \caption{Example instruction semantics of \instr{andn}}
+%\vspace*{-12pt}
 \label{fig:andn-semantics}
 \end{figure}
 The operator ``[i:j]'' extracts bits i down to j from a bit-vector of size n, yielding another  bit-vector of size i - j + 1, assuming that n $>$ i $\ge$ j $\ge$ 0. The operator ``$\&$'' implements bit-wise ``and'' operation. The rule associated with memory write is similar to that for memory read and is skipped here. 
 
-A \ISA program is modeled as a list of instructions and its semantics is  given by composing the semantics of its constituents. The reader is encouraged to take a look at the instruction semantics (made available as supplemental material~\cite{Suppl}).
+A \ISA program is modeled as a list of instructions and its semantics is  given by composing the semantics of its constituents.
 
 \subsection{Constructing the \ISA Semantics}
 \label{sec:Approach}
@@ -318,6 +318,7 @@ However, we found that certain memory instructions cannot be inferred by simply 
 %
 For example, for \instr{movsd}, one of the 128-bit SSE instructions, its register variant has quite different semantics from the memory variant.
 Below are their pseudo-code semantics:
+\cmt{
 {
 \small
 \begin{center}
@@ -332,6 +333,28 @@ Below are their pseudo-code semantics:
 \end{tabular}
 \end{center}
 }
+}
+
+\medskip
+{    
+    \scriptsize
+    \begin{tabular}{ll}
+        \begin{tabular}[c]{c} 
+            Semantics of Register Variant\\ 
+            (\instr{movsd \%xmm1  , \%xmm})
+        \end{tabular} 
+            & 
+        \begin{tabular}[c]{c}
+            Semantics of Memory Variant\\ 
+            (\instr{movsd  (\%rax) , \%xmm0})
+        \end{tabular} \\ 
+        \midrule 
+        {\tt S1.} XMM0[63:0] $\leftarrow$ XMM1[63:0] & {\tt S1.} XMM0[63:0] $\leftarrow$ MEM\_ADDR[63:0] \\
+        {\tt S2.} XMM0[127:64] (Unmodified)          & {\tt S2.} XMM0[127:64] $\leftarrow$ 0             \\
+        &                                                  
+    \end{tabular}
+}
+
 \noindent As seen, only the memory instruction clears the higher 64 bits of the destination register, which cannot be inferred from the register instruction behavior that does not touch the higher bits at all.
 %
 We found that another 128-bit SSE instruction, \instr{movss}, has the same generalization issue.
@@ -377,7 +400,7 @@ Due to the nature of the stratification, \Strata provides complex formulae for c
 We simplified those complex formulae by either applying some simplification rules or manually translating into simpler ones.
 Then we validated the simplification by checking the equivalence between them using the SMT solver.
 %
-For example, the original \Strata-provided formula for \instr{shrxl \%edx, \%ecx, \%ebx} consists of 8971\cmt{2560} terms (including the operator symbols), but we could simplify it to a formula consisting of only 7 terms.\footnote{Refer to our semantics~\cite{Suppl}, specifically \url{instruction-semanatics/shrxl_r32_r32_r32.k}, for details.}
+For example, the original \Strata-provided formula for \instr{shrxl \%edx, \%ecx, \%ebx} consists of 8971\cmt{2560} terms (including the operator symbols), but we could simplify it to a formula consisting of only 7 terms.
 
 
 

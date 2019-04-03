@@ -1,4 +1,4 @@
-\begin{figure}[t]
+\begin{figure}
 % \centering    
 % \begin{tabular}{l@{\hskip 0.25in}|@{}l}
 \begin{lstlisting}[language=C++, basicstyle=\scriptsize,keywordstyle=\color{blue},breaklines=true,
@@ -6,8 +6,7 @@ breakatwhitespace=false,morekeywords={uintptr_t,uint64_t},commentstyle=\color{gr
 uintptr_t safe_addptr(int *of, uint64_t a, uint64_t b) {
   uintptr_t r = a + b;
   if (r < a) { // "error state" 
-    *of = 1;
-    return r;
+    *of = 1; return r;
   } else {     // "safe state" 
     return r;
   }
@@ -43,8 +42,7 @@ escapeinside={(*}{*)}
   movl %edx, %eax
   sbbl -4(%ebp), %eax
   jnc L2                # true branch: "error state"
-  ...                   # set *of to 1
-  ...                   # set %eax to r
+  ...                   # set *of to 1 and %eax to r
   jmp L3
 L2:                     # else branch: "safe state"
   ...                   # set %eax to r
@@ -58,7 +56,9 @@ L3:
 % \multicolumn{1}{c|}{(a)} & \multicolumn{1}{c}{(b)} \\ 
 % \multicolumn{1}{c|}{\footnotesize C version} & \multicolumn{1}{c}{\footnotesize Assembly version} \\ \hline
 % \end{tabular}
+%\vspace*{-10pt}
 \caption{A security vulnerability in the HiStar kernel}
 \label{fig:histar}
+%\vspace*{-15pt}
 \end{figure}
 

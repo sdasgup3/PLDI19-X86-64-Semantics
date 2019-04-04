@@ -14,14 +14,10 @@ xleftmargin=\parindent
 ]
 uintptr_t safe_addptr(int *of, uint64_t a, uint64_t b) {
   uintptr_t r = a + b;
-  if (r < a) { // "error state" 
-    *of = 1; return r;
-  } else {     // "safe state" 
-    return r;
-  }
-}
+  if (r < a) { *of = 1; return r; }  // "error state" 
+  else { return r; } }               // "safe state" 
 \end{lstlisting}
-\vspace{-10pt}
+\vspace{-5pt}
 \begin{center}
 {\small (a) C source code}
 \end{center}
@@ -43,7 +39,6 @@ escapeinside={(*}{*)}
   # Adress  %ebp - 16 contains 64-bit value 'b'
   # Let a[32:0]: lower 32 bits of 'a' 
   #     b[32:0]: lower 32 bits of 'b'
-  
   movl -8(%ebp), %edx   # a[32:0] moved to %edx
   movl -16(%ebp), %eax  # b[32:0] moved to %eax
   addl %edx, %eax       # r = a[32:0] + b[32:0]
@@ -56,17 +51,16 @@ escapeinside={(*}{*)}
   jmp L3
 L2:                     # else branch: "safe state"
   ...                   # set %eax to r
-L3:
-  ret
+L3: ret
 \end{lstlisting}
-\vspace{-15pt}
+\vspace{-5pt}
 \begin{center}
 {\small (b) \ISA assembly code in a 32-bit target}
 \end{center}
 % \multicolumn{1}{c|}{(a)} & \multicolumn{1}{c}{(b)} \\ 
 % \multicolumn{1}{c|}{\footnotesize C version} & \multicolumn{1}{c}{\footnotesize Assembly version} \\ \hline
 % \end{tabular}
-%\vspace*{-10pt}
+\vspace*{-5pt}
 \caption{A security vulnerability in the HiStar kernel}
 \label{fig:histar}
 %\vspace*{-15pt}

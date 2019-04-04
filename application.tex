@@ -23,7 +23,7 @@ independently of semantics, which could be error prone and/or difficult to maint
 }
 
 %----------------------------------------------------------------------------------------------------------
-\subsection{Validating Processor Hardware and Documentation}
+\subsection{Validating Processor Hardware}
 \label{sec:Appl:Processor}
 %----------------------------------------------------------------------------------------------------------
 
@@ -145,22 +145,18 @@ xleftmargin=\parindent
 <memstate>...
   // -8(%rbp): n
   48 (*$\mapsto$*) (byte(0,_) => byte(0, 32'0))
-  49 (*$\mapsto$*) (byte(0,_) => byte(1, 32'0))
-  50 (*$\mapsto$*) (byte(0,_) => byte(2, 32'0))
+  (*$\cdots$*)
   51 (*$\mapsto$*) (byte(0,_) => byte(3, 32'0))
   // -4(%rbp): s
   52 (*$\mapsto$*) (byte(0,_) => byte(0, (32'(N * (N + 1)) / 2)))
-  53 (*$\mapsto$*) (byte(0,_) => byte(1, (32'(N * (N + 1)) / 2)))
-  54 (*$\mapsto$*) (byte(0,_) => byte(2, (32'(N * (N + 1)) / 2)))
+  (*$\cdots$*)
   55 (*$\mapsto$*) (byte(0,_) => byte(3, (32'(N * (N + 1)) / 2)))
 ...</memstate>
-    requires N >= 0 and N < 2^31
-         and (N * (N + 1)) / 2 < 2^31
+  requires N (*$\ge$*) 0 and N < 2^31 and (N*(N+1))/2 < 2^31
 \end{lstlisting}
+\vspace{-5pt}
 \begin{center}
-\vspace{-5pt}
 {\small (a) Top-level specification}
-\vspace{-5pt}
 \end{center}
 % \caption{Specification of \s{sum-to-n} program}
 % \label{fig:main-rule}
@@ -171,36 +167,30 @@ style=KRULE,
 numbers=left,
 xleftmargin=\parindent
 ]
-<regstate>... 
-    "RIP" (*$\mapsto$*) (L3 => L2)
-...</regstate>
+<regstate>... "RIP" (*$\mapsto$*) (L3 => L2) ...</regstate>
 <memstate>...
   // -8(%rbp): n
   48 (*$\mapsto$*) (byte(0, A) => byte(0, 32'0))
-  49 (*$\mapsto$*) (byte(1, A) => byte(1, 32'0))
-  50 (*$\mapsto$*) (byte(2, A) => byte(2, 32'0))
+  (*$\cdots$*)
   51 (*$\mapsto$*) (byte(3, A) => byte(3, 32'0))
   // -4(%rbp): s
   52 (*$\mapsto$*) (byte(0, B) => byte(0, 32'(B + A * (A + 1) / 2)))
-  53 (*$\mapsto$*) (byte(1, B) => byte(1, 32'(B + A * (A + 1) / 2)))
-  54 (*$\mapsto$*) (byte(2, B) => byte(2, 32'(B + A * (A + 1) / 2)))
+  (*$\cdots$*)
   55 (*$\mapsto$*) (byte(3, B) => byte(3, 32'(B + A * (A + 1) / 2)))
 ...</memstate>
-    requires A >= 0 and A < 2^31
-         and B >= 0 and B < 2^31
-         and B + ((A * (A + 1)) / 2) >= 0  
-         and B + ((A * (A + 1)) / 2) < 2^31
+  requires A >= 0 and A < 2^31 and B >= 0 and B < 2^31
+       and B + ((A * (A + 1)) / 2) >= 0  
+       and B + ((A * (A + 1)) / 2) < 2^31
 \end{lstlisting}
+\vspace{-5pt}
 \begin{center}
-\vspace{-5pt}
 {\small (b) Loop invariant}
-\vspace{-5pt}
 \end{center}
 % \caption{Loop Invariant Rule. X and Y denote concrete code memory addresses corresponding to instructions at loop header (at line 10) and following the loop (at line 25) resp.}
 % \label{fig:loop-invariant}
-\vspace*{-4pt}
+\vspace{-5pt}
 \caption{Specification of \s{sum-to-n} program}
-\vspace{-15pt}
+%\vspace{-15pt}
 \label{fig:sum-to-n-spec}
 \end{figure}
 
@@ -376,10 +366,9 @@ xleftmargin=\parindent
   int popcnt(uint64_t x) {
     int res = 0;
     for (; x > 0; x >>= 1) { res += x & 0x1ull; }
-    return res;
-  }
+    return res; }
 \end{lstlisting}
-%\vspace{-15pt}
+\vspace{-5pt}
 \caption{\s{popcnt} program}
 \label{fig:popcnt}
 \end{figure}

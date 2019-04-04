@@ -1,22 +1,21 @@
 \section{Limitations}\label{sec:limit}
-Our limitations mostly include missing features of the \ISA and execution environment.
+Our limitations mostly include missing features of the \ISA and execution environment, as follows.
 
-\vspace{2pt}
-\noindent\textbf{\emph{Floating Point Operations}}: Our testing shows that we have FP precision issues with instructions implementing the fused-multiply-add operation. \SC{This is because the current \K's floating point library~\cite{MPFRJAVA} implementation lacks support of the FMA capabilities of GNU MPFR library~\cite{GNUMPFR}, which we plan to include in future.}
+\emph{Floating Point Operations.~}
+Our testing shows that we have FP precision issues with instructions implementing the fused-multiply-add operation. \SC{This is because the current \K's floating point library~\cite{MPFRJAVA} implementation lacks support of the FMA capabilities of GNU MPFR library~\cite{GNUMPFR}, which we plan to include in future.}
 %%
 
-\vspace{2pt}
-\noindent\textbf{\emph{Exceptions:}} We do not support exceptions, including the FP exceptions. Moreover, we do not distinguish between quiet and signaling NaN, i.e. all NaNs are quiet in our model. \SC{When the exception condition is encountered, execution proceeds after setting the exception flag.}
+\emph{Exceptions.~}
+We do not support exceptions, including the FP exceptions. Moreover, we do not distinguish between quiet and signaling NaN, i.e. all NaNs are quiet in our model. \SC{When the exception condition is encountered, execution proceeds after setting the exception flag.}
 %%
 
-\vspace{2pt}
-\noindent\textbf{\emph{Concurrency:}} 
+\emph{Concurrency.~}
 Like the closest previous work~\cite{Goel:FMCAD14,Heule2016a}, we do not model concurrent semantics or the relaxed memory model as defined by other previous work \cite{Sarkar:POPL09,Owens:x86-TSO}. Our design, being parameterized on memory model, is amenable to accommodate others', which we plan to achieve in future.
 %Like the closest previous work~\cite{Goel:FMCAD14,Heule2016a}, we do not model concurrent semantics or the relaxed memory model. Other previous work has defined a formal, executable semantics for the x86 memory model \cite{Sarkar:POPL09,Owens:x86-TSO}, and we leave it future work to merge that with our semantics. The design of our model  is parameterized by the memory model and hence amenable to plug-in another one.
 %%
 
-\vspace{2pt}
-\noindent\textbf{\emph{Instruction Decoding:}} The instruction decoding semantics is \emph{not} modeled in the current work. However, we want to note that we have formalized the Intel XED disassembler algorithm, and we are working on formalizing the instruction decoding.
+\emph{Instruction Decoding.~}
+The instruction decoding semantics is \emph{not} modeled in the current work. However, we want to note that we have formalized the Intel XED disassembler algorithm, and we are working on formalizing the instruction decoding.
 %
 %\begin{itemize}
 % \item {\em Floating Point Operations\/}: Our testing shows that we have FP precision issues with instructions implementing the fused-multiply-add operation. \SC{This is because the current \K's floating point library~\cite{MPFRJAVA} implementation lacks support of the FMA capabilities of GNU MPFR library~\cite{GNUMPFR}, which we plan to include in future.}

@@ -11,9 +11,19 @@
 \usepackage{ctable}
 \usepackage{pifont}
 \usepackage{calculator}
+\usepackage[utf8]{inputenc} 
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+% balance
+\usepackage{flushend}
 
-\setlength{\parskip}{0.5pt plus 4pt minus 3pt}
-\setlength{\textfloatsep}{0\baselineskip plus 0.2\baselineskip minus 0.5\baselineskip}
+% opphans
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+
+%\setlength{\parskip}{0.5pt plus 4pt minus 3pt}
+%\setlength{\textfloatsep}{1\baselineskip plus 0.2\baselineskip minus 0.5\baselineskip}
 \newenvironment{tightcenter}{%
     \setlength\topsep{4pt}
     \setlength\parskip{-2pt}
@@ -222,7 +232,7 @@
     showspaces=false,               % show spaces adding particular underscores
     showstringspaces=false,         % underline spaces within strings
     showtabs=false,                 % show tabs within strings adding particular underscores
-    frame=single,           % adds a frame around the code
+    %frame=single,           % adds a frame around the code
     %tabsize=2,          % sets default tabsize to 2 spaces
     captionpos=b,           % sets the caption-position to bottom
     breaklines=true,        % sets automatic line breaking

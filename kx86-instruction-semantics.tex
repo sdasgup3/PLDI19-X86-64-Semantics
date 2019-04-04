@@ -8,14 +8,29 @@ user-level instructions. Section~\ref{sec:IC} details the scope of our work. Sec
 unique mnemonics)}. The entire implementation took 8 man-months, with the lead author having prior experience in binary decompilation and strong familiarity with the \ISA architecture and documentation.
 % (not including extensive time spent on projects related to binary decompilation that gave the lead author relevant experience and strong familiarity with the \ISA architecture and documentation).  
 Below is a summary of the instruction categories that we support:
-\begin{itemize}
-    \item \textbf{General-Purpose Instructions:} These implement data-movement, arithmetic, logic, control-flow, string operations (including repeated- and fast- string operations).
+%\begin{itemize}
+%    \item \textbf{General-Purpose Instructions:} These implement data-movement, arithmetic, logic, control-flow, string operations (including repeated- and fast- string operations).
+%    
+%    \item \textbf{Streaming SIMD Extensions (SSE) Instructions \&   subsequent extensions (SSE-2, SSE-3, SSE-4.1, SSE-4.2):} Instructions in this category operate on integer, string or floating-point values stored in $128$-bit xmm registers. Among other things, the category features instructions related to conversions between integer and floating-point values with selectable rounding mode, and string processing.
+%    
+%    \item \textbf{Advanced Vector Extensions (or AVX) \& subsequent extensions (Fused-Multiply-Add (or FMA) \& AVX2):} These instructions operate on integer or floating-point values stored in $256$-bit ymm registers; a majority of which are promoted from SSE instruction sets. Additionally, the category features enhanced functionalities specific to AVX \& AVX2, like  broadcast/permute, vector shift, and non-contiguous data fetch operations on data elements. 
+%    \item \textbf{$\textbf{16}$-bit Floating Point Conversion (or F16C):} These instructions implement conversions between single-precision ($32$-bit) and half-precision ($16$-bit) floating-point values. 
+%\end{itemize}
+
+\vspace{2pt}
+\looseness=-1
+\noindent \textbf{\emph{General-Purpose:}} These implement data-movement, arithmetic, logic, control-flow, string operations (including fast- and repeated- string operations).
     
-    \item \textbf{Streaming SIMD Extensions (SSE) Instructions \&   subsequent extensions (SSE-2, SSE-3, SSE-4.1, SSE-4.2):} Instructions in this category operate on integer, string or floating-point values stored in $128$-bit xmm registers. Among other things, the category features instructions related to conversions between integer and floating-point values with selectable rounding mode, and string processing.
+\vspace{2pt}
+\noindent \textbf{\emph{Streaming SIMD Extensions (SSE) \& subsequent extensions (SSE-2, SSE-3, SSE-4.1, SSE-4.2):}} Instructions in this category operate on integer, string or floating-point values stored in $128$-bit xmm registers. Among other things, the category features instructions related to conversions between integer and floating-point values with selectable rounding mode, and string processing.
     
-    \item \textbf{Advanced Vector Extensions (or AVX) \& subsequent extensions (Fused-Multiply-Add (or FMA) \& AVX2):} These instructions operate on integer or floating-point values stored in $256$-bit ymm registers; a majority of which are promoted from SSE instruction sets. Additionally, the category features enhanced functionalities specific to AVX \& AVX2, like  broadcast/permute, vector shift, and non-contiguous data fetch operations on data elements. 
-    \item \textbf{$\textbf{16}$-bit Floating Point Conversion (or F16C):} These instructions implement conversions between single-precision ($32$-bit) and half-precision ($16$-bit) floating-point values. 
-\end{itemize}
+\vspace{2pt}
+\noindent \textbf{\emph{Advanced Vector Extensions (AVX) \& subsequent extensions (Fused-Multiply-Add (FMA) \& AVX2):}} These instructions operate on integer or floating point values stored in $256$-bit ymm registers; a majority of which are promoted from SSE instruction sets. Additionally, the category features enhanced functionalities specific to AVX \& AVX2, like  broadcast/permute, vector shift, and non-contiguous data fetch operations on data elements. 
+
+\vspace{2pt}
+\noindent \textbf{\emph{$\textbf{16}$-bit Floating Point Conversion (or F16C):}} These instructions implement conversions between single-precision ($32$-bit) and half-precision ($16$-bit) floating-point values. 
+
+\vspace{2pt}
 
 Instructions which are \emph{not included} in the current scope of work are: 
 (1) System-level instructions, which are related to the operating system, 

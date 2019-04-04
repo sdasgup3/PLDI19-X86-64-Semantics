@@ -41,7 +41,8 @@ An \emph{executable} semantics is especially powerful because it allows direct t
 Completely formalizing the semantics of \ISA, however, is challenging especially due to the complexity and the sheer number of instructions that are informally specified in approximately 3,000-page standard~\cite{IntelManual}.
 %
 
-\paragraph{Existing Semantics for \ISA:}
+\vspace{2pt}
+\noindent\textbf{\emph{Existing Semantics for \ISA:}}
 %
 To date, to the best of our knowledge, despite several explicit attempts~\cite{Heule2016a,Goel:FMCAD14,Goel:ProCoS17} and other related systems~\cite{Leroy:2009,Remill,TSL:TOPLAS13,Hasabnis:ASPLOS16,Hasabnis:FSE16},
 no \emph{complete} formal semantics of \ISA exists that can be used for formal reasoning about x86 binary programs.
@@ -64,7 +65,9 @@ This indirect semantics, however, may not be general enough to be used for diffe
 %
 Refer to Section~\ref{sec:RW} for a more detailed comparison to existing semantics.
 
-\paragraph{Our Approach:}
+%\paragraph{Our Approach:}
+\vspace{2pt}
+\noindent\textbf{\emph{Our Approach:}}
 %
 We present the most complete and thoroughly tested formal semantics of user-level \SC{\ISA assembly instructions}\footnote{\SC{The current work do not include a formal model of the binary instruction decoder. Note that, all future references of \ISA{} ``program(s)'' or ``instructions(s)'', in the context of our model, are meant to refer to the ``assembly language programs(s)'' or ``assembly instruction(s)''.}} to date.
 We employed the \K framework~\cite{k-primer-2013-v32} (Section ~\ref{sec:KF}) as our formalism medium to leverage its capability of deriving various correct-by-construction formal analysis tools directly from the language semantics.
@@ -82,7 +85,9 @@ Modelling concurrency is a complex but relatively orthogonal problem in the pres
 We believe that integrating such a memory model into our instruction semantics is a promising direction toward rigorously reasoning about real-world programs running on modern multiprocessors. We leave it for future work.
 
 
-\paragraph{Contributions:}
+%\paragraph{Contributions:}
+\vspace{2pt}
+\noindent\textbf{\emph{Contributions:}}
 %
 We describe our primary contributions:
 
@@ -139,31 +144,29 @@ Our formal semantics is publicly available at~\cite{x86-64-github}.
 % % and the ambiguity of the informal standard document to consult,
 % the following aspects make it challenging to completely specify the formal semantics of \ISA.
 
-\paragraph{Size and Complexity:}
+\textbf{\emph{Size and Complexity:}}
 %
 \SC{The \ISA ISA has a large number of instructions, partly because of a large number of complex instructions and partly because it keeps most of the legacy and deprecated instructions ($\sim$ \Xmmx{}+) for the sake of backwards compatibility.}
 It consists of \totalIntel{} mnemonics, and each mnemonic admits several variants, depending on the types (i.e., register, memory, or constant) and the size (i.e., the bit-width) of operands.
 
-\paragraph{Inconsistent Instruction Variants:}
+\vspace{2pt}
+\noindent\textbf{\emph{Inconsistent Instruction Variants:}}
 %
 Some variants have divergent behaviors more than the difference of their type and size. For example, \instr{movsd}, one of the 128-bit SSE instructions, has very different behaviors depending on whether the type of the source operand is register or memory; it clears the higher 64 bits of the target register only when the source type is memory.
 Indeed, we revealed bugs in other semantics due to their incorrect generalization of the variants' behavior (Details in Section ~\ref{sec:Approach}, Instruction Variants).
 
-\paragraph{Ambiguous Documentation:}
+\vspace{2pt}
+\noindent\textbf{\emph{Ambiguous Documentation:}}
 %
 The \ISA reference manual informally explains the instruction behaviors, leaving certain details unspecified or ambiguous, which required us to consult with an actual processor implementation to clarify such details.
 %
 Completely formalizing the vast number of instructions with carefully identifying all the corner cases from the informal document, thus, is highly non-trivial.
 % is a huge effort that may not seem to be feasible.
 % , simply because of the sheer number of instructions to be formalized.
-
-
-
 % \ISA has the special register \reg{rflags} that stores the current state of the processor.
 
-
-
-\paragraph{Undefined Behaviors:}
+\vspace{2pt}
+\noindent\textbf{\emph{Undefined Behaviors:}}
 %
 The \ISA standard also admits undefined behaviors that are implementation-dependent.
 Many instructions (\undefIntel{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} out of \totalIntel{} mnemonics) have undefined behaviors: their output values of the destination register or the \reg{rflags} register are undefined in certain cases.

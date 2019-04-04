@@ -18,11 +18,14 @@ The inner \s{k} cell contains a list of computations to be executed. \SC{Below w
 \SC{We omit other auxiliary cells (marked by ``$\cdots$'') for the simplicity of the presentation.}
 }
 
-\paragraph{Register State}
-
+\vspace{2pt}
+%\paragraph{Register State}
+\noindent\textbf{\emph{Register State}}
 The \s{regstate} cell contains a  map from registers or flag names to values. \SC{Note that, all the values or addresses, stored in registers, memory (described next) or flags, are represented as bit-vectors which are depicted in this paper  as \bv{W}{V}, and interpreted as a bit-vector of size \s{W} and value \s{V}.} The register names include the sixteen general purpose registers, \reg{rip}, and the sixteen SIMD registers.  The value mapped to a register name is a $64$-width bit-vector (or a $256$-width one for the SIMD registers). Values for sub-register variants are derived from the register values by extracting the relevant bits. \cmt{In the \s{regstate} map, }We store individual flag names (mapped to a bit-vector value of width $1$) as opposed to a $64$-bit \s{rflags} register. Every access (read/write) of \reg{rflags} retrieves the entries in the \s{regstate} map for the individual flags.
 
-\paragraph{Memory State}
+\vspace{2pt}
+%\paragraph{Memory State}
+\noindent\textbf{\emph{Memory State}}
 Our memory model is inspired by previous efforts ~\cite{TSL:TOPLAS13, Ellison}.
 The \s{memstate} cell is a map from $64$-bit addresses to bytes, which specifies the \SC{byte-addressable memory}\footnote{\SC{Byte-addressability allows the model to specify both aligned and unaligned accesses in the same principle.}}, but our implementation is flexible enough to use alternative memory  representations with addressing of $2$-byte or $4$-byte quantities.  Our memory layout is ``flat'', in which all available memory locations can be addressed, but we do have logical partitions\footnote{These abstractions are useful for executing \ISA programs.} of the memory into sections like code, data and stack.  The following is an example snapshot of a memory state,  holding a $4$-bytes integer value $65535$:
 \begin{tightcenter}
@@ -55,7 +58,7 @@ We will explain the semantics of individual instructions in the next section.
 
 \SC{The execution of an \ISA program begins with initialization of the configuration with the following contents of the \s{k} cell. }
 \begin{lstlisting}[style=KRULE]
-<k> $PGM:Instructions (*$\kra$*) fetch </k>
+           <k> $PGM:Instructions (*$\kra$*) fetch </k>
 \end{lstlisting}
 \SC{The symbol $\kra$ is used to separate the computations in the \s{k} cell and ``\s{:T}'' to represent the type of a term.}
 
@@ -95,7 +98,9 @@ Here we explain how we define the semantics of an instruction in \K using a runn
 
 The semantics of most of the instructions can be modeled broadly in $3$ phases: (1) read the data from source operand(s), which could be a register, memory or constant value; (2) operate on the data based on the mnemonic; and (3) write the result(s) to destination operand(s), which could be a register or memory. An instruction may exercise some or all of the above phases. 
    
-\paragraph{Read from Source Operand(s)}
+%\paragraph{Read from Source Operand(s)}
+\vspace{2pt}
+\noindent\textbf{\emph{Read from Source Operand(s)}}
 Instruction in the running example reads from  register (\reg{rbx}) and memory (\mem{-4}{rsp}) operands. A read from register is modeled as a lookup with register name in the \s{regstate} map and subsequent read of the mapped value or,
 for a sub-register, a portion of it. The semantics of register read can be defined as:  
 \begin{lstlisting}[style=KRULE]
@@ -118,10 +123,14 @@ rule <k>
 \SC{The term to the left of $\Rightarrow$ shows the memory addressing expression, of type \s{Mem}, at the 
 top of \s{k} cell, which gets reduced to an effective memory address (or EA).} The EA for the memory operand used in the running example is (64'-4 + \s{BV$_\s{rsp}$}) and is used to do memory read access. The rule for memory read access is responsible to read a memory value of requested number of bits ($64$-bits for the current example) starting from the EA. 
  
-\paragraph{Operate on Data}
+%\paragraph{Operate on Data}
+\vspace{2pt}
+\noindent\textbf{\emph{Operate on Data}}
 The rules for operating on operands will be different for each instruction based on the mnemonic. For example, the mnemonic \instr{andnq} requires logical-and-not operation to be computed on the operands.
 
-\paragraph{Write to Destination Operand(s)}
+%\paragraph{Write to Destination Operand(s)}
+\vspace{2pt}
+\noindent\textbf{\emph{Write to Destination Operand(s)}}
 The example instruction writes the result to a destination register \reg{rax}. Also, the flags \s{sf} and \s{zf} are updated based on the result; \s{of} and \s{cf}  are cleared, and \s{af} and \s{pf} are undefined. The rule shown in Figure~\ref{fig:andn-semantics} realizes the destination write operation, where \s{memVal$_{64}$} and \s{BV$_\s{r}$} represents the $64$-bit data values evaluated using the respective rules for reading register and memory operands (mentioned above).
 %
 %\Comment{Should "R" be "Dest" below in the first regstate rule?}
@@ -141,7 +150,7 @@ rule <k>
     "PF" (*$\mapsto$*) undef // pf are undefined.
   ...</regstate>  
 \end{lstlisting}
-\vspace*{-15pt}
+%\vspace*{-15pt}
 \caption{Example instruction semantics of \instr{andn}}
 %\vspace*{-12pt}
 \label{fig:andn-semantics}
@@ -157,7 +166,9 @@ A \ISA program is modeled as a list of instructions and its semantics is  given 
 %
 % As mentioned in section~\ref{sec:prelimstrata}, 
 
-\paragraph{Systematic Translation of \Strata Rules to \K}
+%\paragraph{Systematic Translation of \Strata Rules to \K}
+\vspace{2pt}
+\noindent\textbf{\emph{Systematic Translation of \Strata Rules to K}}
 %
 As mentioned in the introduction, we leverage the \Strata~\cite{Heule2016a} semantics to develop our complete semantics, to minimize the overall effort.
 We systematically translated their semantics into \K.
@@ -173,136 +184,11 @@ While translating and validating their semantics, we found various issues that w
 %
 Below we describe the issues we found in \Strata.%, and how we fixed them  as follows.
 
-% as we explain our general methodology of the semantics formalization.
-% Our approach is to borrow this available information and see if we can use it towards faithful modeling of instruction semantics.
-% Modeling the semantics of remaining \currentManual{} (\currentIS{} - \strataWithDupIS{}) instructions are discussed in section~\ref{sec:US}. 
 
-
-
-
-% \paragraph{Challenges in Modeling Semantics of \ISA ISA} 
-
-% Fully modeling the semantics of \ISA ISA is more challenging than it would
-% seem. In order to appreciate the difficulty, we will walk through few examples.
-
-% \paragraph{Status Flags}
-
-% Consider the following \ISA code snippet that features
-% \emph{Logical And Not} instruction \instr{andnq}, the semantic of which is
-% mentioned as a side comment. The following instruction \instr{jz target}, makes a conditional jump to \TS{target} if the result of the previous operation is $0$ (which is manifested by a $0$ value in the \reg{zf} flag), otherwise the
-% control-flow  will reach the following instruction. 
-% \begin{lstlisting}[style=Bash, caption={A code snippet in \ISA Assembly Language },label={lst:CS1}]
-% andnq %rax, %rbx, %rcx  
-%         # %rcx = (~(%rbx) bitwiseAnd %rax)
-%         # %sf, %zf: Updated based 
-%         #           on result %rcx
-%         # %of, %cf: Set to 0
-%         # %af, %pf: Undefined
-
-% jz target
-%         # jump to target 
-%         # if zf == 1
-% ...     # following instruction
-% \end{lstlisting}
-
-% Suppose we want to find inputs value to \reg{rax} and \reg{rbx} which will
-% trigger the control-flow to either directions. We can do a symbolic execution
-% of the code snippet using symbolic input value to \reg{rax} and \reg{rbx} and
-% later using a theoram prover like \Z, we can solve the path condition created
-% at line 8, to get the required concrete inputs.  The operation \emph{Logical
-%   And Not}  sets up to $6$ status flags, and control flow  depends upon the
-%   values of those flags, not directly on the result of the operation. Hence, a
-%   simple model of the first instruction to something like \emph{rcx =
-%     $\sim$(rbx) and rax} does not expose those side effects and hence the
-%     symbolic execution will fail to reason about the program.  The following
-%     shows a correct modeling of the \reg{zf} flag for \instr{andq \%rax, \%rbx,
-%       \%rcx} (in  SMT-LIB 2.0\cite{smtlib}).
-
-% \begin{lstlisting}[style=SMTLIB, caption={A code snippet in \ISA Assembly Language },label={lst:CS2}]
-% /* 
-% ** If the value of ~(%rbx) and %rax is 0, 
-% **  return bit 1 or bit 0 
-% */
-% (ite 
-%     (= 
-%       (bvand 
-%         (bvnot %rbx) 
-%         %rax
-%       ) 
-%       #x0000000000000000
-%     ) #b1 #b0)
-% \end{lstlisting}
-
-% A symbolic execution using the above model of \reg{zf} will provide us with
-% path condition 
-% $
-% \text{(\textbf{=} (\textbf{bvand} \%rax (\textbf{bvnot} \%rbx)) \#x0000000000000000)}
-% $
-% \\
-%  for which the target path is taken, which can then be solved to get a
-%  triggering input value. Similarly solving the negation of the above path
-%  condition will provide input to trigger the other path.
-
-
-
-
-% \paragraph{Undefined Behaviors}
-% % \paragraph{Undefined, Implementation-Dependent Behaviors}
-% 
-% According to the \ISA standard, many instructions (\undefIntel{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} out of \totalIntel{})
-% have undefined, implementation-dependent behaviors: their output values of the destination register or the \reg{rflags} register are undefined in certain cases.
-% In our semantics, we faithfully modeled the undefined value as a unique symbol (say, \s{undef}) whose value is nondeterministically decided within the proper range.
-% These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future processor that conforms to the standard).
-% Regarding the instruction-level testing (Section~\ref{sec:Eval}), we consider the \s{undef} symbol to be matched with any concrete value provided by the hardware, so that we can test the instructions modulo the undefined behaviors.
-% 
-% We found that other semantics do not faithfully model the undefined behaviors, simply following a specific behavior taken by a processor implementation.
-% %
-% For example, the parity flag \reg{pf} is undefined in the logical-and-not instruction \instr{andn}, where the processor implementation is allowed to either update the flag value (to 0 or 1), or keep the previous value.
-% We found that Strata~\cite{Heule2016a} updates the flag based on the result of the \instr{andn} operation, whereas a binary analysis tool Radare~\cite{Radare2}, for example, keeps it unmodified.
-
-
-
-% Vol. 1. APPENDIX A EFLAGS CROSS-REFERENCE
-%%636 = 474 + 162; 162 are all included in 474 
-% There are \undefTotal{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} instructions that places undefined value to a flag register either conditionally based on some condition of the input state (register or memory) or un-conditionally. We ensured to model all those flags by consulting the Intel Manual.
-
-% For conditional undefined cases, we 
-% tested against hardware with
-% input values which does not trigger the
-% condition for undefined-ness.  For the remaining cases; (1) where the input value triggers the condition for undefined-ness 
-% (2) where the instruction places undefined value to output register irrespective of input value, we make sure that the output registers hold \udef token after \K execution.
-
-
-
+%\paragraph{Status Flags}
+\vspace{2pt}
+\noindent\textbf{\emph{Status Flags}}
 %
-% Consider a slightly different code snippet where the conditional jump is based
-% the value of undefined flag\footnote[1]{Even though a compiler does not seem to
-% produce such a code snippet, but we can realize a code injection attack using
-% the code snippet whose purpose is to jump on  a malicious \emph{target} on
-% a specific processor implementation.}, \reg{pf}. 
-% \begin{lstlisting}[style=Bash]
-% andnq %rax, %rbx, %rcx       
-% jp target
-%       # jump to target 
-%       # if pf == 1
-% ...    # following instruction 
-% \end{lstlisting}
-%
-% Some binary analysis tools like Radare~\cite{Radare2} keeps the flag
-% unmodified, whereas Strata~\cite{Heule2016a} chose to compute the parity flag
-% based on the result of the \instr{andn} operation.
-% In effect, these
-% approaches restricts the value of the flag to a concrete value and hence a
-% semantics model based on these approaches prevent exploration of paths feasible
-% in some processor implementation.  Therefore, it is desirable to identify these
-% cases where a register or a flag could be undefined and to encode this
-% information in the model in such a way so as to assist exploration of all
-% resulting execution paths.
-
-
-
-\paragraph{Status Flags}
-
 We found that \Strata omitted to specify the \reg{af} flag behaviors, as the flag is not commonly used.
 However, we faithfully specified the semantics of all the status flags in the \reg{rflags} register, even if some of them are not commonly used, since they may affect the overall program's behavior in some tricky cases, and we do not want to miss any of such details when formally reasoning about the \ISA programs.
 
@@ -311,8 +197,10 @@ However, we faithfully specified the semantics of all the status flags in the \r
 
 
 
-\paragraph{Instruction Variants}
-
+%\paragraph{Instruction Variants}
+\vspace{2pt}
+\noindent\textbf{\emph{Instruction Variants}}
+%
 \Strata essentially provides the semantics of the register instructions, assuming that the semantics of the memory and immediate instruction variants can be obtained by generalizing the register instructions\footnote{Generalization is based on a hypothesis that the memory or immediate variants will behave identically, on their operands, with corresponding register variant.}.
 However, we found that certain memory instructions cannot be inferred by simply generalizing their corresponding register instructions.
 %
@@ -362,8 +250,10 @@ We found that another 128-bit SSE instruction, \instr{movss}, has the same gener
 For the other instructions, we obtained the memory and immediate variants by generalizing the register variants, and validated the generalization by co-simulating the inferred semantics against a processor.
 
 
-\paragraph{Immediate Instruction Variants}
-
+%\paragraph{Immediate Instruction Variants}
+\vspace{2pt}
+\noindent\textbf{\emph{Immediate Instruction Variants}}
+%
 There are 118 immediate instruction variants (over the 8-bit constants) that do not have corresponding register instructions.
 For those immediate instructions, Strata provides the instruction semantics for each individual constant, resulting in 30,208 (= $118 \times 256$) \SC{formulae}\footnote{Indeed, Strata explicitly provides only 19,783 formulae by randomly sampling $\sim$168 constants out of 256, in average, for each immediate instruction, assuming that the remaining 10,425 formulae can be inferred.} for the immediate instructions' semantics.
 We generalized the set of formulae for each immediate instruction into a single semantic rule.
@@ -393,8 +283,10 @@ We validated our generalization by cross-checking the generalized semantics with
 
 %\footnote{Even though \Strata have simplification rules to prevent formula blowup but we found that they are not adequate for many instructions. Hence we added $13$ additional rules.}
  
-\paragraph{Formula Simplification}
-
+%\paragraph{Formula Simplification}
+\vspace{2pt}
+\noindent\textbf{\emph{Formula Simplification}}
+%
 Due to the nature of the stratification, \Strata provides complex formulae for certain instructions.
 %
 We simplified those complex formulae by either applying some simplification rules or manually translating into simpler ones.
@@ -576,5 +468,132 @@ For example, the original \Strata-provided formula for \instr{shrxl \%edx, \%ecx
 % \subsection{Modeling Unsupported Instructions}\label{sec:US}
 % For the remaining \currentManual{} which are not supported by \Strata, we manually defining their semantic directly in \K by consulting the Intel
 % manual~\cite{IntelManual} and testing the model extensively.
+
+
+% as we explain our general methodology of the semantics formalization.
+% Our approach is to borrow this available information and see if we can use it towards faithful modeling of instruction semantics.
+% Modeling the semantics of remaining \currentManual{} (\currentIS{} - \strataWithDupIS{}) instructions are discussed in section~\ref{sec:US}. 
+
+
+
+
+% \paragraph{Challenges in Modeling Semantics of \ISA ISA} 
+
+% Fully modeling the semantics of \ISA ISA is more challenging than it would
+% seem. In order to appreciate the difficulty, we will walk through few examples.
+
+% \paragraph{Status Flags}
+
+% Consider the following \ISA code snippet that features
+% \emph{Logical And Not} instruction \instr{andnq}, the semantic of which is
+% mentioned as a side comment. The following instruction \instr{jz target}, makes a conditional jump to \TS{target} if the result of the previous operation is $0$ (which is manifested by a $0$ value in the \reg{zf} flag), otherwise the
+% control-flow  will reach the following instruction. 
+% \begin{lstlisting}[style=Bash, caption={A code snippet in \ISA Assembly Language },label={lst:CS1}]
+% andnq %rax, %rbx, %rcx  
+%         # %rcx = (~(%rbx) bitwiseAnd %rax)
+%         # %sf, %zf: Updated based 
+%         #           on result %rcx
+%         # %of, %cf: Set to 0
+%         # %af, %pf: Undefined
+
+% jz target
+%         # jump to target 
+%         # if zf == 1
+% ...     # following instruction
+% \end{lstlisting}
+
+% Suppose we want to find inputs value to \reg{rax} and \reg{rbx} which will
+% trigger the control-flow to either directions. We can do a symbolic execution
+% of the code snippet using symbolic input value to \reg{rax} and \reg{rbx} and
+% later using a theoram prover like \Z, we can solve the path condition created
+% at line 8, to get the required concrete inputs.  The operation \emph{Logical
+%   And Not}  sets up to $6$ status flags, and control flow  depends upon the
+%   values of those flags, not directly on the result of the operation. Hence, a
+%   simple model of the first instruction to something like \emph{rcx =
+%     $\sim$(rbx) and rax} does not expose those side effects and hence the
+%     symbolic execution will fail to reason about the program.  The following
+%     shows a correct modeling of the \reg{zf} flag for \instr{andq \%rax, \%rbx,
+%       \%rcx} (in  SMT-LIB 2.0\cite{smtlib}).
+
+% \begin{lstlisting}[style=SMTLIB, caption={A code snippet in \ISA Assembly Language },label={lst:CS2}]
+% /* 
+% ** If the value of ~(%rbx) and %rax is 0, 
+% **  return bit 1 or bit 0 
+% */
+% (ite 
+%     (= 
+%       (bvand 
+%         (bvnot %rbx) 
+%         %rax
+%       ) 
+%       #x0000000000000000
+%     ) #b1 #b0)
+% \end{lstlisting}
+
+% A symbolic execution using the above model of \reg{zf} will provide us with
+% path condition 
+% $
+% \text{(\textbf{=} (\textbf{bvand} \%rax (\textbf{bvnot} \%rbx)) \#x0000000000000000)}
+% $
+% \\
+%  for which the target path is taken, which can then be solved to get a
+%  triggering input value. Similarly solving the negation of the above path
+%  condition will provide input to trigger the other path.
+
+
+
+
+% \paragraph{Undefined Behaviors}
+% % \paragraph{Undefined, Implementation-Dependent Behaviors}
+% 
+% According to the \ISA standard, many instructions (\undefIntel{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} out of \totalIntel{})
+% have undefined, implementation-dependent behaviors: their output values of the destination register or the \reg{rflags} register are undefined in certain cases.
+% In our semantics, we faithfully modeled the undefined value as a unique symbol (say, \s{undef}) whose value is nondeterministically decided within the proper range.
+% These nondeterministic values are enough to capture and formally reason about all possible behaviors of the instructions for different processors (and even any future processor that conforms to the standard).
+% Regarding the instruction-level testing (Section~\ref{sec:Eval}), we consider the \s{undef} symbol to be matched with any concrete value provided by the hardware, so that we can test the instructions modulo the undefined behaviors.
+% 
+% We found that other semantics do not faithfully model the undefined behaviors, simply following a specific behavior taken by a processor implementation.
+% %
+% For example, the parity flag \reg{pf} is undefined in the logical-and-not instruction \instr{andn}, where the processor implementation is allowed to either update the flag value (to 0 or 1), or keep the previous value.
+% We found that Strata~\cite{Heule2016a} updates the flag based on the result of the \instr{andn} operation, whereas a binary analysis tool Radare~\cite{Radare2}, for example, keeps it unmodified.
+
+
+
+% Vol. 1. APPENDIX A EFLAGS CROSS-REFERENCE
+%%636 = 474 + 162; 162 are all included in 474 
+% There are \undefTotal{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} instructions that places undefined value to a flag register either conditionally based on some condition of the input state (register or memory) or un-conditionally. We ensured to model all those flags by consulting the Intel Manual.
+
+% For conditional undefined cases, we 
+% tested against hardware with
+% input values which does not trigger the
+% condition for undefined-ness.  For the remaining cases; (1) where the input value triggers the condition for undefined-ness 
+% (2) where the instruction places undefined value to output register irrespective of input value, we make sure that the output registers hold \udef token after \K execution.
+
+
+
+%
+% Consider a slightly different code snippet where the conditional jump is based
+% the value of undefined flag\footnote[1]{Even though a compiler does not seem to
+% produce such a code snippet, but we can realize a code injection attack using
+% the code snippet whose purpose is to jump on  a malicious \emph{target} on
+% a specific processor implementation.}, \reg{pf}. 
+% \begin{lstlisting}[style=Bash]
+% andnq %rax, %rbx, %rcx       
+% jp target
+%       # jump to target 
+%       # if pf == 1
+% ...    # following instruction 
+% \end{lstlisting}
+%
+% Some binary analysis tools like Radare~\cite{Radare2} keeps the flag
+% unmodified, whereas Strata~\cite{Heule2016a} chose to compute the parity flag
+% based on the result of the \instr{andn} operation.
+% In effect, these
+% approaches restricts the value of the flag to a concrete value and hence a
+% semantics model based on these approaches prevent exploration of paths feasible
+% in some processor implementation.  Therefore, it is desirable to identify these
+% cases where a register or a flag could be undefined and to encode this
+% information in the model in such a way so as to assist exploration of all
+% resulting execution paths.
 
 

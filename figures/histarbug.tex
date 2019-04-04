@@ -1,8 +1,17 @@
 \begin{figure}
 % \centering    
 % \begin{tabular}{l@{\hskip 0.25in}|@{}l}
-\begin{lstlisting}[language=C++, basicstyle=\scriptsize,keywordstyle=\color{blue},breaklines=true,
-breakatwhitespace=false,morekeywords={uintptr_t,uint64_t},commentstyle=\color{gray},]
+\begin{lstlisting}[
+language=C++,
+basicstyle=\scriptsize,
+keywordstyle=\color{blue},
+breaklines=true,
+breakatwhitespace=false,
+morekeywords={uintptr_t,uint64_t},
+commentstyle=\color{gray},
+numbers=left,
+xleftmargin=\parindent
+]
 uintptr_t safe_addptr(int *of, uint64_t a, uint64_t b) {
   uintptr_t r = a + b;
   if (r < a) { // "error state" 
@@ -22,10 +31,11 @@ keywordstyle=\color{blue},
 morekeywords={movl,cmpl, jle, addl, decl, jmp, ret, sbbl, jnc},
 commentstyle=\color{gray},
 basicstyle=\scriptsize,
-numberstyle=\tiny\color{codegray},
+%numberstyle=\tiny\color{codegray},
 breaklines=true,
 breakatwhitespace=false,
-% numbers=left,
+numbers=left,
+xleftmargin=\parindent,
 stepnumber=1,
 escapeinside={(*}{*)}
 ]

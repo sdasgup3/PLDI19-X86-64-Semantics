@@ -129,8 +129,13 @@ The specification has two parts: the top-level specification and the loop invari
 
 % Note that the program behaves incorrectly/unexpectedly if arithmetic overflow occurs during its execution. One challenge in verifying this program is to identify the conditions under which overflow does not occur. 
 
+\setlength{\textfloatsep}{1\baselineskip plus 0.2\baselineskip minus 0.5\baselineskip}
 \begin{figure}
-\begin{lstlisting}[style=KRULE]
+\begin{lstlisting}[
+style=KRULE,
+numbers=left,
+xleftmargin=\parindent
+]
 <regstate>... 
     "RDI" (*$\mapsto$*) 64'N
     "RBP" (*$\mapsto$*) 64'56
@@ -154,16 +159,18 @@ The specification has two parts: the top-level specification and the loop invari
 \end{lstlisting}
 \begin{center}
 \vspace{-5pt}
-{\small (a) Top-level specification
-%\Comment{s is a signed int, so result should be less than $(2^{31} -1)$?  Or make s unsigned in C source.}
-}
+{\small (a) Top-level specification}
 \vspace{-5pt}
 \end{center}
 % \caption{Specification of \s{sum-to-n} program}
 % \label{fig:main-rule}
 % \end{figure}
 % \begin{figure}[t]
-\begin{lstlisting}[style=KRULE]
+\begin{lstlisting}[
+style=KRULE,
+numbers=left,
+xleftmargin=\parindent
+]
 <regstate>... 
     "RIP" (*$\mapsto$*) (L3 => L2)
 ...</regstate>
@@ -191,17 +198,13 @@ The specification has two parts: the top-level specification and the loop invari
 \end{center}
 % \caption{Loop Invariant Rule. X and Y denote concrete code memory addresses corresponding to instructions at loop header (at line 10) and following the loop (at line 25) resp.}
 % \label{fig:loop-invariant}
-\vspace*{-8pt}
+\vspace*{-4pt}
 \caption{Specification of \s{sum-to-n} program}
-%\vspace*{-2pt}
+\vspace{-15pt}
 \label{fig:sum-to-n-spec}
 \end{figure}
 
-
-
-
 % \paragraph{Top-Level Specification}
-
 Figure~\ref{fig:sum-to-n-spec}(a) shows the functional correctness specification of the \s{sum-to-n} program.
 The \s{regstate} cell specifies the relevant registers used in the program, omitting the irrelevant ones denoted by ``...''.
 Specifically, it specifies that \reg{rdi} holds the value $N$ without being updated during the program execution, and \reg{rax} will have the expected return value.
@@ -363,14 +366,20 @@ We asked Z3 to solve the above path condition and it returned a solution (i.e., 
 
 \subsection{Translation Validation of Optimizations}
 \begin{figure}
-\begin{lstlisting}[language=C++,basicstyle=\scriptsize,keywordstyle=\color{blue}]
+\begin{lstlisting}[
+language=C++,
+basicstyle=\scriptsize,
+keywordstyle=\color{blue},
+numbers=left,
+xleftmargin=\parindent
+]
   int popcnt(uint64_t x) {
     int res = 0;
     for (; x > 0; x >>= 1) { res += x & 0x1ull; }
     return res;
   }
 \end{lstlisting}
-\vspace{-15pt}
+%\vspace{-15pt}
 \caption{\s{popcnt} program}
 \label{fig:popcnt}
 \end{figure}

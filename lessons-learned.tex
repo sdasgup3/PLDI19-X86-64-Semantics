@@ -48,7 +48,7 @@ We took the second approach in this work, since the implementation-dependent beh
 
 However, the non-determinism makes it non-trivial to execute (and validate) the semantics.
 For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
-To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (i.e., an instance of) the symbolic output. 
+To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (an instance of) the symbolic output.
 
 We note that faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
 As mentioned in Section~\ref{subsec:compare-stoke}, however, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{BugStoke986}.

@@ -133,8 +133,8 @@ The specification has two parts: the top-level specification and the loop invari
 \begin{figure}
 \begin{lstlisting}[
 style=KRULE,
-numbers=left,
-xleftmargin=\parindent
+%numbers=left,
+%xleftmargin=\parindent
 ]
 <regstate>... 
     "RDI" (*$\mapsto$*) 64'N
@@ -165,8 +165,8 @@ xleftmargin=\parindent
 % \begin{figure}[t]
 \begin{lstlisting}[
 style=KRULE,
-numbers=left,
-xleftmargin=\parindent
+%numbers=left,
+%xleftmargin=\parindent
 ]
 <regstate>... "RIP" (*$\mapsto$*) (L3 => L2) ...</regstate>
 <memstate>...
@@ -359,8 +359,8 @@ We asked Z3 to solve the above path condition and it returned a solution (i.e., 
 language=C++,
 basicstyle=\scriptsize,
 keywordstyle=\color{blue},
-numbers=left,
-xleftmargin=\parindent
+%numbers=left,
+%xleftmargin=\parindent
 ]
   int popcnt(uint64_t x) {
     int res = 0;

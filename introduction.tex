@@ -41,9 +41,8 @@ An \emph{executable} semantics is especially powerful because it allows direct t
 Completely formalizing the semantics of \ISA, however, is challenging especially due to the complexity and the sheer number of instructions that are informally specified in approximately 3,000-page standard~\cite{IntelManual}.
 %
 
-\vspace{2pt}
-\noindent\textbf{\emph{Existing Semantics for \ISA:}}
-%
+\paragraph{Existing Semantics for \ISA}
+
 To date, to the best of our knowledge, despite several explicit attempts~\cite{Heule2016a,Goel:FMCAD14,Goel:ProCoS17} and other related systems~\cite{Leroy:2009,Remill,TSL:TOPLAS13,Hasabnis:ASPLOS16,Hasabnis:FSE16},
 no \emph{complete} formal semantics of \ISA exists that can be used for formal reasoning about x86 binary programs.
 %
@@ -65,10 +64,8 @@ This indirect semantics, however, may not be general enough to be used for diffe
 %
 Refer to Section~\ref{sec:RW} for a more detailed comparison to existing semantics.
 
-%\paragraph{Our Approach:}
-\vspace{2pt}
-\noindent\textbf{\emph{Our Approach:}}
-%
+\paragraph{Our Approach}
+
 We present the most complete and thoroughly tested formal semantics of user-level \SC{\ISA assembly instructions}\footnote{\SC{The current work do not include a formal model of the binary instruction decoder. Note that, all future references of \ISA{} ``program(s)'' or ``instructions(s)'', in the context of our model, are meant to refer to the ``assembly language programs(s)'' or ``assembly instruction(s)''.}} to date.
 We employed the \K framework~\cite{k-primer-2013-v32} (Section ~\ref{sec:KF}) as our formalism medium to leverage its capability of deriving various correct-by-construction formal analysis tools directly from the language semantics.
 We took Heule~\etal~\cite{Heule2016a}'s semantics (Section ~\ref{sec:prelimstrata}) as our starting point to avoid duplicating the formalization effort. % made by the formal semantics research community.
@@ -85,27 +82,23 @@ Modelling concurrency is a complex but relatively orthogonal problem in the pres
 We believe that integrating such a memory model into our instruction semantics is a promising direction toward rigorously reasoning about real-world programs running on modern multiprocessors. We leave it for future work.
 
 
-%\paragraph{Contributions:}
-\vspace{2pt}
-\noindent\textbf{\emph{Contributions:}}
-%
-We describe our primary contributions:
+\paragraph{Contributions}
+
+Below are our primary contributions.
 
 %DSAND: Include Intel counts
-\begin{itemize}
-\item
-\emph{Completeness.}
+\emph{Completeness.~}
 We present the most complete formal semantics of \ISA to date.
 \SC{Specifically, our semantics formalizes all the user-level instructions of the \ISA Haswell ISA (that is,
 \currentIS{} instructions covering \currentIntel{} mnemonics~\cite{IntelManual}), except deprecated ones (\Xmmx{} instructions),
 the AES cryptography extensions (\crypto{} instructions), and the system \& concurrency-specific instructions (\system{} instructions) (Section~\ref{sec:IC})}.
-\item
-\emph{Faithfulness.}
+
+\emph{Faithfulness.~}
 Being executable, the semantics of \SC{\emph{each}} instruction has been thoroughly tested against 7,000+ test cases using the co-simulation method (Section~\ref{sec:Eval}).
 We found errors in both the \ISA standard document and other existing semantics including the baseline semantics (Section~\ref{sec:Eval}).
 %\SC{Note that, the testing of floating point instructions is facilitated by the fact K already has matured library support for floating point theories which we augmented to support modeling such instructions. In Section~\ref{sec:limit}, we reported a precision issue with our floating point library support.}
-\item
-\emph{Usability \& portability.}
+
+\emph{Usability \& portability.~}
 \AEC{We illustrate the potential of our semantics to be used for formal analyses such as deductive program verification and program equivalence checking (Section~\ref{sec:Appl}).}
 The \K framework also enables one to represent our semantics as SMT theories,
 % that can be handled by various SMT solvers,
@@ -114,14 +107,14 @@ which allows others to easily reuse our semantics for their own purposes.
 Indeed, we have translated our semantics to Stoke~\cite{completing-stock} which can serve as a drop-in replacement of Heule~\etal's semantics~\cite{Heule2016a} and can immediately benefit tools built on Stoke (e.g., \cite{Roessle:CPP19}).
 }
 \cmt{
-\item
+
 \SC{%
-\emph{Semantics development practice.}
+\emph{Semantics development practice.~}
 Reflecting our \ISA semantics development effort, we identify certain important aspects to be considered when specifying a large instruction set architecture semantics, which we believe can be also applied to other large language semantics to a certain extent (Section~\ref{sec:lesson-learned}).
 }}
-\end{itemize}
 %
 % \paragraph{Artifacts}
+
 Our formal semantics is publicly available at~\cite{x86-64-github}.
 
 
@@ -144,20 +137,20 @@ Our formal semantics is publicly available at~\cite{x86-64-github}.
 % % and the ambiguity of the informal standard document to consult,
 % the following aspects make it challenging to completely specify the formal semantics of \ISA.
 
-\textbf{\emph{Size and Complexity:}}
-%
+\subparagraph{Size and Complexity}
+
 \SC{The \ISA ISA has a large number of instructions, partly because of a large number of complex instructions and partly because it keeps most of the legacy and deprecated instructions ($\sim$ \Xmmx{}+) for the sake of backwards compatibility.}
 It consists of \totalIntel{} mnemonics, and each mnemonic admits several variants, depending on the types (i.e., register, memory, or constant) and the size (i.e., the bit-width) of operands.
 
-\vspace{2pt}
-\noindent\textbf{\emph{Inconsistent Instruction Variants:}}
-%
+\vspace{-2pt}
+\paragraph{Inconsistent Instruction Variants}
+
 Some variants have divergent behaviors more than the difference of their type and size. For example, \instr{movsd}, one of the 128-bit SSE instructions, has very different behaviors depending on whether the type of the source operand is register or memory; it clears the higher 64 bits of the target register only when the source type is memory.
 Indeed, we revealed bugs in other semantics due to their incorrect generalization of the variants' behavior (Details in Section ~\ref{sec:Approach}, Instruction Variants).
 
-\vspace{2pt}
-\noindent\textbf{\emph{Ambiguous Documentation:}}
-%
+\vspace{-2pt}
+\paragraph{Ambiguous Documentation}
+
 The \ISA reference manual informally explains the instruction behaviors, leaving certain details unspecified or ambiguous, which required us to consult with an actual processor implementation to clarify such details.
 %
 Completely formalizing the vast number of instructions with carefully identifying all the corner cases from the informal document, thus, is highly non-trivial.
@@ -165,14 +158,14 @@ Completely formalizing the vast number of instructions with carefully identifyin
 % , simply because of the sheer number of instructions to be formalized.
 % \ISA has the special register \reg{rflags} that stores the current state of the processor.
 
-\vspace{2pt}
-\noindent\textbf{\emph{Undefined Behaviors:}}
-%
+\vspace{-2pt}
+\paragraph{Undefined Behaviors}
+
 The \ISA standard also admits undefined behaviors that are implementation-dependent.
 Many instructions (\undefIntel{}\footnote{\label{note1}These numbers are obtained by parsing the official manual ``Volume 2: Instruction Set Reference'' and cross checked with projects~\cite{Stoke2013, Felix} investing similar efforts.} out of \totalIntel{} mnemonics) have undefined behaviors: their output values of the destination register or the \reg{rflags} register are undefined in certain cases.
 % behaviors, for which each processor can choose any behavior.
 % For example, the bit-scan-forward instruction \instr{bsf} that computes the bit index of the least significant set bit in the source operand is not defined when the source operand's value is 0.
-That is, the processor is free to choose any behavior in the undefined case.
+That is, the processor is free to choose any behavior in undefined cases.
 % (i.e., no bit 1 appears), however, its output is implementation-dependent.
 % More than \undefPerc{}\% of all instructions admit undefined behaviors!
 %

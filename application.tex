@@ -145,7 +145,8 @@ xleftmargin=\parindent
 <memstate>...
   // -8(%rbp): n
   48 (*$\mapsto$*) (byte(0,_) => byte(0, 32'0))
-  (*$\cdots$*)
+  49 (*$\mapsto$*) (byte(0,_) => byte(1, 32'0))
+  50 (*$\mapsto$*) (byte(0,_) => byte(2, 32'0))
   51 (*$\mapsto$*) (byte(0,_) => byte(3, 32'0))
   // -4(%rbp): s
   52 (*$\mapsto$*) (byte(0,_) => byte(0, (32'(N * (N + 1)) / 2)))
@@ -171,7 +172,8 @@ xleftmargin=\parindent
 <memstate>...
   // -8(%rbp): n
   48 (*$\mapsto$*) (byte(0, A) => byte(0, 32'0))
-  (*$\cdots$*)
+  49 (*$\mapsto$*) (byte(1, A) => byte(1, 32'0))
+  50 (*$\mapsto$*) (byte(2, A) => byte(2, 32'0))
   51 (*$\mapsto$*) (byte(3, A) => byte(3, 32'0))
   // -4(%rbp): s
   52 (*$\mapsto$*) (byte(0, B) => byte(0, 32'(B + A * (A + 1) / 2)))
@@ -218,7 +220,7 @@ Figure~\ref{fig:sum-to-n-spec}(b) shows the loop invariant specification.
 It specifies the behavior of an arbitrary loop iteration.
 That is, assuming the values of \m{n} and \m{s} be $A$ and $B$, resp., in the beginning of an arbitrary loop iteration, it specifies their final values in the end of the entire loop execution, which are 0 and $B + A(A+1)/2$, respectively.
 Note that when $A = N$ and $B = 0$, i.e., the first loop iteration, the loop invariant captures the entire loop behavior.
-
+%
 % The static part of this rule is same as the main claim.  
 % The non-static part specifies the behavior of the program any time it reaches the loop head (line 8, Figure~\ref{fig:sum2n}). The behavior can be  specified informally as:
 % \begin{itemize}
@@ -228,10 +230,7 @@ Note that when $A = N$ and $B = 0$, i.e., the first loop iteration, the loop inv
 %     \item \s{A} and \s{B} are sufficiently low that overflow will not occur during execution.
 % \end{itemize}
 % and  in terms of \K specifications as:
-
-
-
-
+%
 \SC{The \K verifier takes a minute}\footnote{%
 \SC{The application is for illustrative purpose and evaluating its scalability is left to future work. However, we note that the reported verification time would not be a major concern for scalability because of the modularity of deductive verification.}
 } to verify the \m{sum-to-n} assembly code satisfies the functional correctness specification.

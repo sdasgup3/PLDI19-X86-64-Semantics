@@ -1,27 +1,30 @@
 \section{Lessons Learned}
 \label{sec:lesson-learned}
 Here we present the lessons we learned during our semantics development,
-     identifying important aspects to be considered, and clarifying a good
-     practice for developing a large ISA semantics.  We also elaborate the
+     identifying important aspects to be considered, and clarifying best
+     practices for developing a large ISA semantics.  We also discuss the
      novel aspects of our semantics development approach that allow us to
-     obtain the complete and faithful semantics with an affordable amount of
+     obtain a complete and faithful semantics with a practical amount of
      effort.
 
-\paragraph{Regarding automatic semantics synthesis}
+\paragraph{Automatic semantics synthesis}
 
-Section~\ref{sec:Approach:Overview} reports the empirical negative result that a fully automatic synthesis of the whole \ISA semantics is difficult to achieve.
+Most previous efforts in formalizing \ISA semantics can be categorized based on whether the underlying approach is fully manual ~\cite{Goel:FMCAD14, TSL:TOPLAS13, Leroy:2009, sail-x86} or fully automatic~\cite{Heule2016a, Roessle:CPP19, Hasabnis:ASPLOS16, Hasabnis:FSE16}. We note that none of these approaches, when used in isolation, sufficiently scale to a complete and faithful semantics, as much as ours that combines these complementary approaches so that they benefit from each other.
+
+Section~\ref{sec:Approach:Overview} reports the challenges we encountered in achieving fully automatic synthesis of the entire \ISA semantics.
 Specifically, in a vast instruction set like \ISA \cmt{computer (CISC) architecture such as x86}, it is common that many instructions can be grouped together where the instructions of each group are similar to each other except for a few differences.
 %One approach to automatic semantics synthesize is to employ stratification approach~\cite{Heule2016a} to learn the semantics of instruction variants in a group using the representatives of the group.
-An automatic synthesis technique, using the stratification approach~\cite{Heule2016a}, would effectively synthesize such instruction variants' semantics, provided that the semantics of its representative instructions are given in advance.
-\footnote{For certain complex instructions, the size of their group is very small (i.e., they are quite different to each other), and thus the automatic synthesis would not yield a sufficient gain over the effort of specifying the semantics of their representatives, but we found that the number of such isolated instructions of x86-64 is small.}
-The problem is, however, that it is non-trivial to properly partition all the instructions into such groups, providing the representative instruction semantics for each group, \emph{without} a priori knowledge about the semantics of all instructions.
+An automatic synthesis technique leveraging such a group, such as the stratification approach~\cite{Heule2016a}, would effectively synthesize such instruction variants' semantics, provided that the semantics of representative instructions in each group are given in advance.\footnote{For certain complex instructions, the size of their group is very small (i.e., they are quite different to each other), and thus the automatic synthesis would not yield a sufficient gain over the effort of specifying the semantics of their representatives, but we found that the number of such isolated instructions of x86-64 is small.}
+The problem, however, is that it is non-trivial to properly partition all the instructions into such groups, providing the representative instruction semantics for each group, \emph{without} a priori knowledge about the semantics of all instructions.
 %The stratification approach~\cite{Heule2016a} had been proposed to solve this dilemma, but it turned out to be not sufficient, leaving a substantial part of semantics unspecified.
-The vanilla stratification approach~\cite{Heule2016a} turned out to be not sufficient to solve this dilemma, leaving a substantial part of semantics unspecified.
-Thus, we decided to manually provide the information about partition and representatives, for which we had to consult the manual to obtain knowledge about the remaining part of semantics.
-Once we obtained the required knowledge, however, we realized that it would be more straightforward to directly turn the knowledge into the semantics than going through the synthesis process, and thus we ended up manually specifying the remaining part of semantics in this work.
+The vanilla stratification approach~\cite{Heule2016a} turned out to be not sufficient to solve this dilemma, leaving a substantial part of the semantics unspecified.
+Thus, we decided to manually provide the information about the partition and representatives, for which we had to consult the manual to obtain knowledge about the remaining part of semantics.
+Once we obtained the required knowledge, however, we realized that it would be more straightforward to directly turn the knowledge into the semantics than going through the synthesis process, and thus we ended up manually specifying the remaining part of the semantics.
+
+\Comment{Do we really need this research idea? It seems difficult and not clear we'll do it.}
 %
-This (negative) experience led us to think about a new research problem: how to obtain the prior knowledge about the semantics that is enough to partition instructions and identify their representatives, \emph{without} manually examining the entire manual.
-This  knowledge does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
+This (negative) experience led us to think about a new research problem: how to obtain prior knowledge about the semantics sufficient to partition instructions and identify their representatives, \emph{without} manually examining the entire manual.
+This  knowledge does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text information extraction and natural language processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
 %We suggested an early idea for this problem, which we plan to develop and evaluate further as future work (Section~\ref{sec:conc}).
 
 %As mentioned in Section~\ref{sec:Approach:Overview}, we found that our ideas of extending \Strata do not scale because we need information about the instructions, whose semantics we want to learn, in order to constraint the search space. This lesson suggested a new idea: the information needed to reduce the search space can be automatically extracted from the manual. 
@@ -33,8 +36,6 @@ This  knowledge does not need to be precise, and we believe that such rough info
 %
 %Thus, in a hybrid approach, the semantics of representative instructions are manually written, and their variants are automatically synthesized. We believe that this hybrid approach is in a sweet spot, where the machine's search power and the human reasoning are effectively combined.
 %We plan to apply and evaluate this idea when we specify the semantics of new instruction that will be introduced in the next version of x86-64 ISA.
-
-Most of the previous efforts in formalizing \ISA semantics can be categorized based on whether the underlying approach is fully manual ~\cite{Goel:FMCAD14, TSL:TOPLAS13, Leroy:2009, sail-x86} or fully automatic~\cite{Heule2016a, Roessle:CPP19, Hasabnis:ASPLOS16, Hasabnis:FSE16}. We note that none of these approaches, when used in isolation, sufficiently scale to a complete and faithful semantics, as much as ours that combines these complementary approaches and benefits from each other.
 
 Another important step of the semantics synthesis is post-processing. The generated semantics is often verbose and not necessarily human-readable. The post-processing step is desired to simplify the generated semantics to be succinct, which helps to increase the human-readability as well as to improve the efficiency when being employed in other applications (e.g., the size of SMT formula encoding can be reduced, which can reduce the burden of SMT solvers). For our semantics development, we have written dozens of simplification rules that are fed to the \K framework to simplify the synthesized semantics further (Section~\ref{sec:Approach}). 
 

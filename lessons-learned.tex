@@ -21,12 +21,6 @@ The vanilla stratification approach~\cite{Heule2016a} turned out to be not suffi
 Thus, we decided to manually provide the information about the partition and representatives, for which we had to consult the manual to obtain knowledge about the remaining part of semantics.
 Once we obtained the required knowledge, however, we realized that it would be more straightforward to directly turn the knowledge into the semantics than going through the synthesis process, and thus we ended up manually specifying the remaining part of the semantics.
 
-\Comment{Do we really need this research idea? It seems difficult and not clear we'll do it.}
-%
-This (negative) experience led us to think about a new research problem: how to obtain prior knowledge about the semantics sufficient to partition instructions and identify their representatives, \emph{without} manually examining the entire manual.
-This  knowledge does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text information extraction and natural language processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
-%We suggested an early idea for this problem, which we plan to develop and evaluate further as future work (Section~\ref{sec:conc}).
-
 %As mentioned in Section~\ref{sec:Approach:Overview}, we found that our ideas of extending \Strata do not scale because we need information about the instructions, whose semantics we want to learn, in order to constraint the search space. This lesson suggested a new idea: the information needed to reduce the search space can be automatically extracted from the manual. 
 %This  information does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
 
@@ -41,28 +35,32 @@ Another important step of the semantics synthesis is post-processing. The genera
 
 \paragraph{Modeling and executing implementation-dependent behaviors}
 
-Like many other programming languages, the \ISA ISA standard admits implementation-dependent behaviors, that is, each processor implementation can freely choose specific behaviors (Section~\ref{sec:challenges-in-formalizing-x86}).
-There are two natural, faithful ways of specifying the implementation-dependent behaviors.
+The \ISA ISA standard admits \emph{implementation-dependent behaviors} for certain operations on certain input patterns, that is, each processor implementation can freely choose the execution behavior for each such case (Section~\ref{sec:challenges-in-formalizing-x86}).
+There are two natural, faithful ways of specifying implementation-dependent behaviors.
 One is to parameterize the semantics over the implementation dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
-Another is to introduce non-determinism in the semantics.
-We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized (e.g., as shown in Figure~\ref{fig:andn-semantics}).
+Another is to introduce non-determinism in the semantics, which captures a set of different possible behaviors in a single semantics.
+We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized (e.g., as in the example in Figure~\ref{fig:andn-semantics}).
 
-However, the non-determinism makes it non-trivial to execute (and validate) the semantics.
+Faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
+For example, as mentioned in Section~\ref{subsec:compare-stoke}, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{BugStoke986}.
+On the other hand, most of other existing \emph{direct} \ISA semantics employ an approach similar to the ones described above, faithfully modeling the implementation-dependent behaviors.
+For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profile-based approach for concrete execution.
+TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.
+
+\Comment{Say what is the benefit of the non-determinism strategy: why did we pick it if it has this disadvantage?}
+%
+Note that the non-determinism strategy makes it non-trivial to execute (and validate) the semantics.
 For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
 To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (an instance of) the symbolic output.
 
-We note that faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
-As mentioned in Section~\ref{subsec:compare-stoke}, however, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{BugStoke986}.
-On the other hand, most of other existing \emph{direct} \ISA semantics employ an approach similar to the ones described above, faithfully modeling the implementation-dependent behaviors.
-For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profiling approach for concrete execution.
-TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.
-
 \paragraph{Employing multiple semantic engineering frameworks}
 
-We found that employing multiple semantic frameworks is helpful. Specifically, we employed the two semantic frameworks, \K and Stoke, where we enjoyed all of their (executive) benefits that make it easier for us to write and validate the semantics, and utilize the semantics in various applications. For example, we wrote the semantics of certain complicated instructions (e.g., \instr{pcmpestri}, \instr{pcmpestrm}, and \instr{pclmulqdq}) in \K, as \K provides an easy way to specify behaviors with multiple cases, while Stoke would have required us to write a big nested if-then-else expression which is not amenable. For another example, we utilized Stoke to validate most of our instruction semantics as Stoke provides a infrastructure\footnote{Indeed, we contributed to their infrastructure as well~\cite{completing-stock,improving-stoke}.} for the hardware co-simulation, whereas we employed \K to validate the semantics of floating-point instructions as Stoke does not support executing floating-point operations while \K does.
+We found that employing multiple semantic frameworks is helpful. Specifically, we employed the two semantic frameworks, \K and Stoke, where we enjoyed all of their (executive) benefits that make it easier for us to write and validate the semantics, and utilize the semantics in various applications. For example, we wrote the semantics of certain complicated instructions (e.g., \instr{pcmpestri}, \instr{pcmpestrm}, and \instr{pclmulqdq}) in \K, as \K provides an easy way to specify behaviors with multiple cases, while Stoke would have required us to write a big nested if-then-else expression, which is not convenient. As another example of the benefits, we used Stoke to validate most of our instruction semantics (\Comment{CHECK:} including instructions defined in \K but not in Stoke) as Stoke provides an infrastructure\footnote{Indeed, we contributed to their infrastructure as well~\cite{completing-stock,improving-stoke}.} for hardware co-simulation, whereas we employed \K to validate the semantics of floating-point instructions as Stoke does not support executing floating-point operations while \K does.
 
-In order to use the two frameworks interchangeably, we had to develop a translator that translates the semantics in one framework to another. To convince the correctness of the translation, we employed translation validation, where we verified equivalence between the original and the translated semantics for each instruction using the Z3 SMT solver. 
+In order to use the two frameworks interchangeably, we developed a translator between the semantics of the two frameworks. To check the correctness of the translation, we verified equivalence between the original and the translated semantics for each instruction using the Z3 SMT solver.
 
+\Comment{I don't see much added information in the following paragraph: all of this is either obvious or repeats info above.  (In contrast, the info above about using multiple frameworks is awesome and should be even more interesting to readers.). What do we lose if we drop this para?}
+%
 Employing multiple frameworks, with the validated translation, allowed us to utilize their exclusive features to efficiently specify (e.g., by using the well-designed specification language of one framework) and validate (e.g., by using the well-developed testing infrastructure of another framework) the semantics, which highly expedited our semantics development process, and thus significantly contributed to the completeness of our semantics.
 %, not to mention the benefit of using exclusive formal analysis tools.}
 %Whereas, other approaches (~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86,Heule2016a}) did not explore this mutual benefit to its full potential.

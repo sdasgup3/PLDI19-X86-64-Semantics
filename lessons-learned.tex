@@ -48,28 +48,21 @@ On the other hand, most of other existing \emph{direct} \ISA semantics employ an
 For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profile-based approach for concrete execution.
 TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.
 
-%\Comment{Say what is the benefit of the non-determinism strategy: why did we pick it if it has this disadvantage?}
+\Comment{Instead of dropping the paragraph about the extra difficulty of using the non-determinism strategy, you need to discuss the tradeoffs. So describe both the benefits and the drawbacks of the non-determinism strategy. I'm just uncommenting the old text here, for now.}
 %%
-%Note that the non-determinism strategy makes it non-trivial to execute (and validate) the semantics.
-%For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
-%To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (an instance of) the symbolic output.
+Note that the non-determinism strategy makes it non-trivial to execute (and validate) the semantics.
+For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
+To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (an instance of) the symbolic output.
 
 \paragraph{Employing multiple semantic engineering frameworks}
 
 We found that employing multiple semantic frameworks is helpful. Specifically, we employed the two semantic frameworks, \K and Stoke, where we enjoyed all of their (executive) benefits that make it easier for us to write and validate the semantics, and utilize the semantics in various applications. For example, we wrote the semantics of certain complicated instructions (e.g., \instr{pcmpestri}, \instr{pcmpestrm}, and \instr{pclmulqdq}) in \K, as \K provides an easy way to specify behaviors with multiple cases, while Stoke would have required us to write a big nested if-then-else expression, which is not convenient. As another example of the benefits, we used Stoke to validate most of our instruction semantics
-%(\Comment{CHECK:} including instructions defined in \K but not in Stoke) 
 as Stoke provides an infrastructure\footnote{Indeed, we contributed to their infrastructure as well~\cite{completing-stock,improving-stoke}.} for hardware co-simulation, whereas we employed \K to validate the semantics of floating-point instructions as Stoke does not support executing floating-point operations while \K does.
 
 In order to use the two frameworks interchangeably, we developed a translator between the semantics of the two frameworks. To check the correctness of the translation, we verified equivalence between the original and the translated semantics for each instruction using the Z3 SMT solver.
 
-\Comment{I don't see much added information in the following paragraph: all of this is either obvious or repeats info above.  (In contrast, the info above about using multiple frameworks is awesome and should be even more interesting to readers.). What do we lose if we drop this para?}
+To summarize, employing multiple frameworks with validated translation between them improved both the ease of specification (using \K) and ease of validation (using Strata), which expedited our semantics development process and thus significantly contributed to the completeness of our semantics. Moreover, we immediately benefit from all of their formal analysis tools, increasing the applicability of the semantics in various formal reasoning tasks. Existing semantics development efforts (e.g., \cite{Goel:FMCAD14,Heule2016a}) %(~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86,Heule2016a}) 
+use a single framework, and do not obtain these important benefits.
 %
-Employing multiple frameworks, with the validated translation, allowed us to utilize their exclusive features to efficiently specify (e.g., by using the well-designed specification language of one framework) and validate (e.g., by using the well-developed testing infrastructure of another framework) the semantics, which highly expedited our semantics development process, and thus significantly contributed to the completeness of our semantics.
-%, not to mention the benefit of using exclusive formal analysis tools.}
-%Whereas, other approaches (~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86,Heule2016a}) did not explore this mutual benefit to its full potential.
-Moreover, employing multiple frameworks in general allows us to immediately benefit from all of their formal analysis tools, increasing the applicability of the semantics in various formal reasoning tasks.
-Existing semantics development efforts (e.g., \cite{Goel:FMCAD14,Heule2016a}), however, %(~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86,Heule2016a})
-employ a single framework without utilizing the potential of other frameworks, which otherwise might have improved completeness and/or faithfulness of their semantics with the same amount of effort.
-
 %\cmt{
 %We note that employing \Strata enables us to explore the near-completeness of its formalism, whereas \K framework provides many out-of-the-box formal analysis tools. The fact that we can use both the frameworks  interchangeably paid us off towards completeness and generality (in terms of using the semantics for formal analyses) of the formalism. On the other hand, other approaches (~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86})  did not explore this mutual benefit to its full potential\footnote{That, for some of these projects,  could be attributed to the fact getting a complete formal semantics is not the primary goal.}.

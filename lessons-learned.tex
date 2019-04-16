@@ -48,6 +48,7 @@ On the other hand, most of other existing \emph{direct} \ISA semantics employ an
 For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profile-based approach for concrete execution.
 TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.
 
+\Comment{Instead of dropping the paragraph about the extra difficulty of using the non-determinism strategy, you need to discuss the tradeoffs. So describe both the benefits and the drawbacks of the non-determinism strategy. I'm just uncommenting the old text here, for now.}
 %%
 Note that the non-determinism strategy makes it non-trivial to execute (and validate) the semantics.
 For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.

@@ -33,6 +33,6 @@ $(PAPER).pdf: $(TEX) $(BIB) $(FIGS) acmart.cls ACM-Reference-Format.bst
 	pdflatex $(PAPER)
 
 clean:
-	rm -f *.aux *.bbl *.blg *.log *.out *.pdf
+	rm -f *.aux *.bbl *.blg *.log *.out $(PAPER).pdf
 
 

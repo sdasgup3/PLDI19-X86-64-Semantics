@@ -7,6 +7,5 @@ make
 ```
 
 ### Output
-```
-camera-ready.pdf
-```
+  - camera-ready.pdf
+  - Appears-In-Conference-on-Programming-Language-Design-and-Implementation-2019.pdf is a copy of camera-ready.pdf

@@ -1,4 +1,4 @@
-PAPER = main
+PAPER = camera-ready
 
 TEX = $(wildcard *.tex)
 

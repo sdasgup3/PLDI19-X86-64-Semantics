@@ -49,24 +49,21 @@ There are two natural, faithful ways of specifying implementation dependent
 behaviors.  One is to parameterize the semantics over the
 implementation-dependent behaviors, and later instantiate it with a profile
 that describes specific behaviors taken by the processor of interest. This
-approach is desirable for validation the semantics using concrete executions.
+approach is desirable for validating the semantics using concrete execution.
 Another is to introduce non-determinism in the semantics, which captures a set
 of different possible behaviors in a single semantics, which is desirable
-during symbolic interpretaion of the ISA code.  We note that, most of other
+during symbolic interpretation of the ISA code.  We note that most of other
 existing \emph{direct} \ISA semantics employ an approach similar to the ones
 described above, faithfully modeling the implementation-dependent behaviors.
 For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a
 constraint function which is guaranteed to be unique and non-deterministic,
            while they employ the aforementioned profile-based approach for
            concrete execution.  TSL~\cite{TSL:TOPLAS13} makes both approaches
-           available, from which their users can choose.  In our semantics, we
-           faithfully modeled the undefined value as a unique symbol (called
-               undef) whose value is non- deterministically decided each time
-           within the proper range.
+           available, from which their users can choose.
 
 In our semantics, we faithfully modeled the undefined value as a unique symbol
 (called undef) whose value is non- deterministically decided each time within
-the proper range. For the hardware co-simulation, we concretely executed the
+the proper range. For validating the semantics, we concretely executed the
 semantics while the non-deterministic behaviors are represented symbolically
 using the undef symbol and then we checked if the hardware output is matched by
 (an instance of) the simulated output.

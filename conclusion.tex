@@ -1,11 +1,15 @@
 %\section{Conclusion and Future Work}\label{sec:conc}
 \section{Conclusion}\label{sec:conc}
 We have presented the most complete formal semantics of \ISA user-level instructions
-to date, which has been thoroughly tested, \AEC{with illustration of potential applications.}
+to date, and have thoroughly tested it using synthesized test inputs and the GCC torture tests.
 %in different formal analyses such as symbolic execution, deductive verification, and translation validation.
-Moreover, the \K framework enables us to represent a semantics as SMT theories,
+We have also illustrated several potential uses of the semantics.
+Using the \K framework for our specification automatically provides several formal analysis tools from the specification, which greatly simplified these applications.
+The \K framework also enables us to represent a semantics as SMT theories,
 which other projects can
 leverage for their own purposes.
+We describe several practical lessons we have learned from our experience in developing the semantics, which could be useful for future formal specifications of processor ISAs.
+
 
 %As mentioned in Section~\ref{sec:Approach:Overview}, we found that our ideas of extending \Strata do not scale because we need information about the instructions, whose semantics we want to learn, in order to constraint the search space. This lesson suggested a new idea: the information needed to reduce the search space can be automatically extracted from the manual. This  information does not need to be precise, and we believe that such rough information can be automatically extracted from the manual using text processing.  We plan to explore this idea while defining the semantics of unspecified and/or new instructions.
 

@@ -54,13 +54,13 @@ erroneous output state bits.
 Second, since our method can symbolically execute instructions, it can be used 
 to generate input tests that have high coverage. While such analyses have been 
 done at the detailed RTL level \cite{liu2014, liu2011, mishra18}, we are 
-unaware of similar tools at the \ISA ISA level\footnote{It is worth mentioning the work by Martignoni et al. ~\cite{Martignoni:ASPLOS2012} about test-case generation for $32$-bit x86 ISA.}. The most significant advantage of 
+unaware of similar tools at the \ISA ISA level\footnote{It is worth mentioning the work by Martignoni et al. ~\cite{Martignoni:ASPLOS2012} about test-case generation for $32$-bit x86 ISA. \Comment{NEED TO SAY A FEW WORDS ABOUT WHAT THEY DO, AND IF POSSIBLE ALSO WHETHER IT HAS LIMITATIONS!}}. The most significant advantage of 
 such symbolic execution is the ability to detect corner case or hard to detect 
 bugs~\cite{liu2014,Fonseca:Eurosys2017}.  (This is analogous to finding security vulnerabilities 
 due to corner-case software bugs, illustrated in 
 Section~\ref{sec:Appl:Security}, but applied to the hardware implementation instead of software.)  We expect that ISA level symbolic analysis will 
 uncover such subtle and complex bugs due to the higher level of abstraction 
-and better design perspective than the RTL analyses.
+and greater scalability (in terms of execution lengths) than the RTL analyses \Comment{I don't know what "better design perspective" meant? Also, greater scalability seems like a big advantage, right?}
 
 A closely related challenge is checking the accuracy of ISA specifications, including reference manuals.
 %

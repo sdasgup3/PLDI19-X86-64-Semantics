@@ -24,10 +24,10 @@
 
 There have been many projects that host a formal semantics of \ISA either as
 their main contribution or as part of their infrastructure.
-This section summarizes such previous work and compares it to our formal semantics based on three directions that reflect the primary contributions of our work: the completeness of the definition in terms of supported user-level instructions, the faithfulness of the definition in
+This section summarizes such previous work and compares it to our formal semantics based on three directions that reflect the primary contributions of our work: completeness, in terms of supported user-level instructions; faithfulness, in
 terms of whether it is executable and hence can be evaluated with real code
-execution, and the generality of the definition in terms of its applicability to
-formal reasoning analyses. 
+execution; and generality, in terms of its applicability to
+formal reasoning techniques.
 
 \cmt{
 \begin{table}
@@ -71,37 +71,31 @@ Roessle \etal~\cite{Roessle:CPP19} & \xmark & \rating{50} & \cmark \\
 }
 
 \Strata~\cite{Heule2016a} uses program synthesis to generate the instruction
-semantics, as SMT bit-vector formulas\cmt{, by learning their input/output behavior
-through execution on an actual processor}. \Strata's semantics definition for
-\ISA is incomplete as it does not include semantics of about 40\% of the
-user-level instructions in scope that are not straightforward to automatically learn by the presented algorithm for reasons mainly due to limitations of underlying synthesis engine.\cmt{Even then,
-the result that the formal semantics of 60\% of the target \ISA ISA can be learned automatically
-is impressive, and we leverage this result in our work as described in
-section~\ref{sec:harvestsema}.}
-Moreover, the specifications are executable only for non floating-point (FP) instructions and
+semantics of X86-64 as SMT bit-vector formulas\cmt{, by learning their input/output behavior
+through execution on an actual processor}. Automatically learning the formal semantics of 60\% of the target \ISA ISA
+is impressive, and we leverage this result in our work.  However, the other 40\% of the
+user-level instructions are not straightforward to automatically learn by their algorithm, mainly due to limitations of the underlying synthesis engine.  Moreover, the specifications are executable only for non floating-point (FP) instructions.
 %The FP operations are represented in the SMT formulas of the definition as
 %uninterpreted functions. 
 %Finally the specifications are given as SMT formulas but 
-have not been demonstrated to be usable in a formal analysis setting out-of-the-box.
+% have not been demonstrated to be usable in a formal analysis setting out-of-the-box.
 
-\SC{A contemporary work by Roessle \etal~\cite{Roessle:CPP19} presents a method to extract the big step semantics of a sequential binary program using the small step instruction semantics extracted mostly from Strata\footnote{There are some minor omissions on immediate instructions with $8$-bit operands for which Strata learns $256$ brute force formulas.} plus some manually drafted support for branching and stack operating instructions. Like Strata, their specification is executable only for the non-floating point instructions. However, the work does not aim for completeness of semantics, which is one of our primary goals.} 
+\SC{A contemporary work by Roessle \etal~\cite{Roessle:CPP19} presents a method to extract the big step semantics of a sequential binary program using the small step instruction semantics extracted mostly from Strata\footnote{There are some minor omissions on immediate instructions with $8$-bit operands for which Strata learns $256$ brute force formulas.} plus some manually drafted support for branching instructions and stack operations. Like Strata, their specification is executable only for the non-floating point instructions. Moreover, their work does not aim for completeness of semantics, one of our primary goals.}
 
-Goel \etal~\cite{Goel:FMCAD14} use the ACL2 theorem prover~\cite{ACL2:Kaufmann2000} to model the \ISA ISA and has support for
-\goelPerc{} of all user level instructions~\cite{GoelList}. They have specifications of a selection
-of user-level instructions, some system-level instructions, paging, and
-segmentation. This list is far from a complete semantic definition of \ISA,
-however it is still the state-of-the-art in terms of formal analysis applied
-directly to \ISA code. It is also an executable definition as demonstrated in
+Goel \etal~\cite{Goel:FMCAD14} use the ACL2 theorem prover~\cite{ACL2:Kaufmann2000} to model the \ISA ISA and they support
+\goelPerc{} of all user-level instructions~\cite{GoelList}, plus some system-level instructions, paging, and
+segmentation.  This list is far from a complete semantic definition of \ISA,
+but it is still the state-of-the-art in terms of formal analysis applied
+directly to \ISA code. It is also an executable definition as demonstrated by
 its use for simulations. In our work we do not leverage this definition, since
-we found a more complete definition such as \Strata to be a better starting
-point towards completeness.
+\Strata has defined many more instructions.
 
 The CompCert verified compiler~\cite{Leroy:2009} includes semantics
 definitions for all intermediate and target languages used within the compiler,
-including a definition for x86 assembly. The definition is specified in Coq~\cite{Coq}, and has been used in a formal
-setting for proving the correctness of the CompCert's compilation step to assembly,
+including a definition for 32-bit x86 assembly. The definition is specified in Coq~\cite{Coq}, and has been used in a formal
+setting for proving the correctness of CompCert's compilation step to assembly,
 as well as outside CompCert, e.g., in proofs relating to the certified concurrent
-OS kernel CeriKOS~\cite{Gu:2016}. However, this definition focuses on the
+OS kernel CertiKOS~\cite{Gu:2016}. However, this definition focuses on the
 32-bit x86 instruction set, which is a subset of the \ISA instruction 
 set.
 Moreover, it is part of the trust base for CompCert and it is not clear
@@ -112,37 +106,36 @@ TSL~\cite{TSL:TOPLAS13} is a system that can auto-generate tools for
 various machine code analyses given a semantics definition of the machine
 language written in the TSL specification. Such a semantics
 definition for the integer instructions (i.e., no floating-point instructions) of the $32$-bit x86 instruction set is given
-as part of the project. It is used for the generation of
+as part of the project. It is used to generate
 various tools, including a machine code synthesizer~\cite{Srinivasan2015}.
-This definition, to the best of our knowledge, have not been used
-for formal specification proofs, i.e., to prove whether a given x86
+This definition, to our knowledge, has not been used
+for formal verification proofs, i.e., to prove whether a given x86
 program meets its specification.
 
-Our semantics, like all of the aforementioned works, uses a sequential consistency memory model, omitting weaker memory models.
+Our semantics, like all the other work cited above, uses a sequential consistency memory model, and not weaker memory models.
 Existing efforts to specify weaker memory models for \ISA such as Owens et al.~\cite{Owens:x86-TSO} and Sarkar et al.~\cite{Sarkar:POPL09}, however, suffer from their limited support for instruction semantics (i.e., they consider only a small subset of 32-bit x86 instruction set).
 We believe that integrating these two complementary efforts is a promising direction toward rigorously reasoning about real-world programs running on modern multiprocessors (e.g., using the Sail framework as we will describe below).
 
 \SC{%
-Sail is another language semantics framework, tailored for describing an instruction-set architecture semantics.  Sail has been used to specify the semantics of ARMv8-A, RISC-V, and CHERI-MIPS~\cite{sail-popl2019}, as well as the semantics of a small subset of x86~\cite{sail-x86}.  Sail is similar to the K framework we employed, but K is for more general-purpose than Sail.  Also, the Sail x86 semantics is much more limited than ours.  It describes the semantics of a fragment of 32-bit user-mode x86 instructions, while ours covers also the 64-bit counterpart as well as the floating-point instructions.
+Sail is another language semantics framework, tailored for describing an instruction-set architecture semantics.  Sail has been used to specify the semantics of ARMv8-A, RISC-V, and CHERI-MIPS~\cite{sail-popl2019}, as well as the semantics of a small subset of x86~\cite{sail-x86}.  Sail is similar to the K framework we employed, but K is far more general-purpose than Sail.  Also, the Sail x86 semantics is much more limited than ours.  It describes the semantics of a fragment of 32-bit user-mode x86 instructions, while ours covers also the 64-bit counterpart as well as the floating-point instructions.
 %
 Sail, however, allows us to integrate a semantic definition with their relaxed memory models~\cite{rmem, Pulte:2017} for concurrency semantics.  We believe that (automatically) translating our semantics into Sail\footnote{Indeed, the Sail ARMv8-A semantics is automatically generated from the ARM-internal specification of ARMv8-A~\cite{Reid2017} written in the ARM's architecture specification language, ASL~\cite{asl}, by using the ASL-to-Sail translator~\cite{sail-popl2019}.} is a promising direction to obtain concurrency semantics and thus enable concurrency reasoning for x86 programs, which we leave as future work.
 }
 
-\SC{On the other hand, the key differentiator of our effort compared to the aforementioned existing work is that our semantics achieves (A) completeness of supported  user-level instructions, (B) faithfulness, and (C) applicability to formal reasoning analyses, at the same time. In Section~\ref{sec:lesson-learned}, we will elaborate our novel approaches that allow us to achieve the unique combination.}
+\SC{Overall, the key differentiator of our effort compared to the existing work cite above is that our semantics achieves (A) completeness of supported  user-level instructions, (B) faithfulness, and (C) applicability to formal reasoning analyses. In Section~\ref{sec:lesson-learned}, we elaborate on our novel approaches that allow us to achieve this unique combination.}
 
 There are various binary analysis projects that target \ISA binaries
 and lift them to a higher-level representation more suitable for the
 specific analysis. These include Angr~\cite{Angr} using the VEX IR of Valgrind~\cite{Valgrind:ENTCS03}, the QEMU~\cite{QEMU:USENIX05} emulator
 using the TCG IR, the software fault isolation tool RockSalt~\cite{Roclsalt:PLDI12} using its own RTL DSL, the disassembler and binary analyzer Radare2~\cite{Radare2} using the ESIL IR~\cite{ESIL}, the binary analysis
 tool BAP~\cite{BAP:CAV11} using the BIL IR, and  the static binary translator Remill~\cite{McSema:Recon14} using LLVM IR~\cite{LLVM:CGO04}.
-We refer these semantics as \emph{indirect} as they give the semantics of the \ISA binary via the translation to their IR, as opposed to the \emph{direct} semantics such as ours.
+We refer to these semantics as \emph{indirect} because they give the semantics of the \ISA binary via the translation to their IR, as opposed to a \emph{direct} semantics such as ours and the others cited earlier.
 % because in all these cases the lifted IR, that is being analyzed, is rigorously defined as opposed to providing \emph{direct} semantics to the binary.
-Note that the direct semantics has its own value.
+A direct semantics has significant advantages over an indirect semantics.
 For example, without the direct semantics of \ISA, we cannot even formulate the correctness of a translator from \ISA to the IR.
 Analogously, many programming languages (C, C++, Java, etc.) have been given direct semantics, instead of indirect semantics by translation to other languages, for formal reasoning at the desired language granularity. 
 
 % Even though tools like BAP and Angr can do some formal reasoning owing to their capability of symbolically executing the IR semantics, but they are not designed with the goal of full-fledged formal reasoning.
-
 
 
 
@@ -161,7 +154,7 @@ RockSalt's DSL uses an infinite register file instead of the finite
 \ISA register file.
 }
 
-Hasabnis \etal~\cite{Hasabnis:ASPLOS16, Hasabnis:FSE16} also present an indirect semantics of \ISA, but in contract to other indirect semantics, they use machine learning~\cite{Hasabnis:ASPLOS16} and symbolic 
+Hasabnis \etal~\cite{Hasabnis:ASPLOS16, Hasabnis:FSE16} also present an indirect semantics of \ISA, but in contrast to other indirect semantics, they use machine learning~\cite{Hasabnis:ASPLOS16} and symbolic 
 execution~\cite{Hasabnis:FSE16} to automatically learn the translation of \ISA instructions to their IR, by extracting knowledge from the hard-coded  translation logic of compilers such as GCC.
 However, as they admitted~\cite{Hasabnis:FSE16}, their semantics omits some important details of \ISA semantics (e.g., the effect of various instructions on CPU flags), and thus is not sufficient to serve as a solid foundation for rigorous formal analyses of \ISA binary.
 

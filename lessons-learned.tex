@@ -40,6 +40,7 @@ There are two natural, faithful ways of specifying implementation-dependent beha
 One is to parameterize the semantics over the implementation dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
 Another is to introduce non-determinism in the semantics, which captures a set of different possible behaviors in a single semantics.
 We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized (e.g., as in the example in Figure~\ref{fig:andn-semantics}).
+For hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically and then we checked if the hardware output is matched by (an instance of) the symbolic output.
 
 Faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
 For example, as mentioned in Section~\ref{subsec:compare-stoke}, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{BugStoke986}.
@@ -47,15 +48,17 @@ On the other hand, most of other existing \emph{direct} \ISA semantics employ an
 For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profile-based approach for concrete execution.
 TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.
 
-\Comment{Say what is the benefit of the non-determinism strategy: why did we pick it if it has this disadvantage?}
-%
-Note that the non-determinism strategy makes it non-trivial to execute (and validate) the semantics.
-For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
-To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (an instance of) the symbolic output.
+%\Comment{Say what is the benefit of the non-determinism strategy: why did we pick it if it has this disadvantage?}
+%%
+%Note that the non-determinism strategy makes it non-trivial to execute (and validate) the semantics.
+%For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
+%To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (an instance of) the symbolic output.
 
 \paragraph{Employing multiple semantic engineering frameworks}
 
-We found that employing multiple semantic frameworks is helpful. Specifically, we employed the two semantic frameworks, \K and Stoke, where we enjoyed all of their (executive) benefits that make it easier for us to write and validate the semantics, and utilize the semantics in various applications. For example, we wrote the semantics of certain complicated instructions (e.g., \instr{pcmpestri}, \instr{pcmpestrm}, and \instr{pclmulqdq}) in \K, as \K provides an easy way to specify behaviors with multiple cases, while Stoke would have required us to write a big nested if-then-else expression, which is not convenient. As another example of the benefits, we used Stoke to validate most of our instruction semantics (\Comment{CHECK:} including instructions defined in \K but not in Stoke) as Stoke provides an infrastructure\footnote{Indeed, we contributed to their infrastructure as well~\cite{completing-stock,improving-stoke}.} for hardware co-simulation, whereas we employed \K to validate the semantics of floating-point instructions as Stoke does not support executing floating-point operations while \K does.
+We found that employing multiple semantic frameworks is helpful. Specifically, we employed the two semantic frameworks, \K and Stoke, where we enjoyed all of their (executive) benefits that make it easier for us to write and validate the semantics, and utilize the semantics in various applications. For example, we wrote the semantics of certain complicated instructions (e.g., \instr{pcmpestri}, \instr{pcmpestrm}, and \instr{pclmulqdq}) in \K, as \K provides an easy way to specify behaviors with multiple cases, while Stoke would have required us to write a big nested if-then-else expression, which is not convenient. As another example of the benefits, we used Stoke to validate most of our instruction semantics
+%(\Comment{CHECK:} including instructions defined in \K but not in Stoke) 
+as Stoke provides an infrastructure\footnote{Indeed, we contributed to their infrastructure as well~\cite{completing-stock,improving-stoke}.} for hardware co-simulation, whereas we employed \K to validate the semantics of floating-point instructions as Stoke does not support executing floating-point operations while \K does.
 
 In order to use the two frameworks interchangeably, we developed a translator between the semantics of the two frameworks. To check the correctness of the translation, we verified equivalence between the original and the translated semantics for each instruction using the Z3 SMT solver.
 

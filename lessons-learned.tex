@@ -37,9 +37,9 @@ Another important step of the semantics synthesis is post-processing. The genera
 
 The \ISA ISA standard admits \emph{implementation-dependent behaviors} for certain operations on certain input patterns, that is, each processor implementation can freely choose the execution behavior for each such case (Section~\ref{sec:challenges-in-formalizing-x86}).
 There are two natural, faithful ways of specifying implementation-dependent behaviors.
-One is to parameterize the semantics over the implementation dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
+One is to parameterize the semantics over the implementation-dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
 Another is to introduce non-determinism in the semantics, which captures a set of different possible behaviors in a single semantics.
-We took the second approach in this work, since the implementation-dependent behaviors of x86 are quite limited and mostly localized (e.g., as in the example in Figure~\ref{fig:andn-semantics}).
+We took the second approach in this work since the implementation-dependent behaviors of x86 are quite limited and mostly localized (e.g., as in the example in Figure~\ref{fig:andn-semantics}).
 For hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically and then we checked if the hardware output is matched by (an instance of) the symbolic output.
 
 Faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
@@ -62,7 +62,7 @@ as Stoke provides an infrastructure\footnote{Indeed, we contributed to their inf
 In order to use the two frameworks interchangeably, we developed a translator between the semantics of the two frameworks. To check the correctness of the translation, we verified equivalence between the original and the translated semantics for each instruction using the Z3 SMT solver.
 
 To summarize, employing multiple frameworks with validated translation between them improved both the ease of specification (using \K) and ease of validation (using Strata), which expedited our semantics development process and thus significantly contributed to the completeness of our semantics. Moreover, we immediately benefit from all of their formal analysis tools, increasing the applicability of the semantics in various formal reasoning tasks. Existing semantics development efforts (e.g., \cite{Goel:FMCAD14,Heule2016a}) %(~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86,Heule2016a}) 
-use a single framework, and do not obtain these important benefits.
+use a single framework and do not obtain these important benefits.
 %
 %\cmt{
 %We note that employing \Strata enables us to explore the near-completeness of its formalism, whereas \K framework provides many out-of-the-box formal analysis tools. The fact that we can use both the frameworks  interchangeably paid us off towards completeness and generality (in terms of using the semantics for formal analyses) of the formalism. On the other hand, other approaches (~\cite{Goel:FMCAD14,TSL:TOPLAS13,Leroy:2009,sail-x86})  did not explore this mutual benefit to its full potential\footnote{That, for some of these projects,  could be attributed to the fact getting a complete formal semantics is not the primary goal.}.

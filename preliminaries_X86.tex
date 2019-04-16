@@ -10,7 +10,7 @@ We briefly explain some details of the architecture.
 The lower $32$-, $16$- and $8$-bit portions of the register are referenced by the sub-register variants, e.g., \reg{eax}, \reg{ax}, and \reg{al} for \reg{rax}, respectively.
 % \cmt{All these registers are used for storing integer values.}
 The Haswell \ISA ISA additionally has sixteen 256-bit SIMD registers (\reg{ymm0}--\reg{ymm15}) along with the lower 128-bit sub-register variants (\reg{xmm0}--\reg{xmm15}).
-% \cmt{, which are used for floating point and packed operations.}
+% \cmt{, which are used for floating-point and packed operations.}
 
 The \reg{rflags} register stores the current state of the processor.
 Specifically, for example, the status flags such as the carry flag (\s{cf}), the parity flag (\s{pf}), the adjust flag (\s{af}), the zero flag (\s{zf}), and the sign flag (\s{sf}) are stored in \reg{rflags}.

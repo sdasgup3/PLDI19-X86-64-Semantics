@@ -74,25 +74,25 @@ Roessle \etal~\cite{Roessle:CPP19} & \xmark & \rating{50} & \cmark \\
 semantics of X86-64 as SMT bit-vector formulas\cmt{, by learning their input/output behavior
 through execution on an actual processor}. Automatically learning the formal semantics of 60\% of the target \ISA ISA
 is impressive, and we leverage this result in our work.  However, the other 40\% of the
-user-level instructions are not straightforward to automatically learn by their algorithm, mainly due to limitations of the underlying synthesis engine.  Moreover, the specifications are executable only for non floating-point (FP) instructions.
+user-level instructions are not straightforward to automatically learn by their algorithm, mainly due to limitations of the underlying synthesis engine.  Moreover, the specifications are executable only for non-floating-point (FP) instructions.
 %The FP operations are represented in the SMT formulas of the definition as
 %uninterpreted functions. 
 %Finally the specifications are given as SMT formulas but 
 % have not been demonstrated to be usable in a formal analysis setting out-of-the-box.
 
-\SC{A contemporary work by Roessle \etal~\cite{Roessle:CPP19} presents a method to extract the big step semantics of a sequential binary program using the small step instruction semantics extracted mostly from Strata\footnote{There are some minor omissions on immediate instructions with $8$-bit operands for which Strata learns $256$ brute force formulas.} plus some manually drafted support for branching instructions and stack operations. Like Strata, their specification is executable only for the non-floating point instructions. Moreover, their work does not aim for completeness of semantics, one of our primary goals.}
+\SC{A contemporary work by Roessle \etal~\cite{Roessle:CPP19} presents a method to extract the big step semantics of a sequential binary program using the small step instruction semantics extracted mostly from Strata\footnote{There are some minor omissions on immediate instructions with $8$-bit operands for which Strata learns $256$ brute force formulas.} plus some manually drafted support for branching instructions and stack operations. Like Strata, their specification is executable only for the non-floating-point instructions. Moreover, their work does not aim for completeness of semantics, one of our primary goals.}
 
 Goel \etal~\cite{Goel:FMCAD14} use the ACL2 theorem prover~\cite{ACL2:Kaufmann2000} to model the \ISA ISA and they support
 \goelPerc{} of all user-level instructions~\cite{GoelList}, plus some system-level instructions, paging, and
 segmentation.  This list is far from a complete semantic definition of \ISA,
 but it is still the state-of-the-art in terms of formal analysis applied
 directly to \ISA code. It is also an executable definition as demonstrated by
-its use for simulations. In our work we do not leverage this definition, since
+its use for simulations. In our work, we do not leverage this definition, since
 \Strata has defined many more instructions.
 
 The CompCert verified compiler~\cite{Leroy:2009} includes semantics
 definitions for all intermediate and target languages used within the compiler,
-including a definition for 32-bit x86 assembly. The definition is specified in Coq~\cite{Coq}, and has been used in a formal
+including a definition for 32-bit x86 assembly. The definition is specified in Coq~\cite{Coq} and has been used in a formal
 setting for proving the correctness of CompCert's compilation step to assembly,
 as well as outside CompCert, e.g., in proofs relating to the certified concurrent
 OS kernel CertiKOS~\cite{Gu:2016}. However, this definition focuses on the
@@ -122,7 +122,7 @@ Sail is another language semantics framework, tailored for describing an instruc
 Sail, however, allows us to integrate a semantic definition with their relaxed memory models~\cite{rmem, Pulte:2017} for concurrency semantics.  We believe that (automatically) translating our semantics into Sail\footnote{Indeed, the Sail ARMv8-A semantics is automatically generated from the ARM-internal specification of ARMv8-A~\cite{Reid2017} written in the ARM's architecture specification language, ASL~\cite{asl}, by using the ASL-to-Sail translator~\cite{sail-popl2019}.} is a promising direction to obtain concurrency semantics and thus enable concurrency reasoning for x86 programs, which we leave as future work.
 }
 
-\SC{Overall, the key differentiator of our effort compared to the existing work cite above is that our semantics achieves (A) completeness of supported  user-level instructions, (B) faithfulness, and (C) applicability to formal reasoning analyses. In Section~\ref{sec:lesson-learned}, we elaborate on our novel approaches that allow us to achieve this unique combination.}
+\SC{Overall, the key differentiator of our effort compared to the existing work, as cited above, is that our semantics achieves (A) completeness of supported  user-level instructions, (B) faithfulness, and (C) applicability to formal reasoning analyses. In Section~\ref{sec:lesson-learned}, we elaborate on our novel approaches that allow us to achieve this unique combination.}
 
 There are various binary analysis projects that target \ISA binaries
 and lift them to a higher-level representation more suitable for the

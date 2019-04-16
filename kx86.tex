@@ -366,11 +366,11 @@ For example, the original \Strata-provided formula for \instr{shrxl} \instr{\%ed
     % implies that the formulas learned later  in the process might become very complex; even beyond the simplifications rules that \Strata apply later. For example, the \Strata formula for \instr{shrxl \%edx, \%ecx, \%ebx} contain around
     % $8971$\cmt{$2560$} terms (including the operator symbols) after simplification. 
     
-    % Another interesting observation about \Strata learned artifacts is: For a non-floating point instruction \s{I}, \Strata might learn an instruction sequence containing floating point instruction(s). This might be possible because the instruction sequence happens to agree with \s{I} on a set of test inputs.  Now a symbolic execution on that instruction sequence might  yield a formula containing  those floating point operations expressed as \uif{}. Note that this will happen only when the simplification rules are not able to
-    % eliminate the redundant floating point operation. For example, the \Strata
-    % formula for \instr{vpbroadcastb \%xmm1 \%ymm2} contain  instances of uninterpreted function, \s{add\_double(0, A)} (representing addition of two double precision floating point values),
+    % Another interesting observation about \Strata learned artifacts is: For a non-floating-point instruction \s{I}, \Strata might learn an instruction sequence containing floating-point instruction(s). This might be possible because the instruction sequence happens to agree with \s{I} on a set of test inputs.  Now a symbolic execution on that instruction sequence might  yield a formula containing  those floating-point operations expressed as \uif{}. Note that this will happen only when the simplification rules are not able to
+    % eliminate the redundant floating-point operation. For example, the \Strata
+    % formula for \instr{vpbroadcastb \%xmm1 \%ymm2} contain  instances of uninterpreted function, \s{add\_double(0, A)} (representing addition of two double precision floating-point values),
     %  whereas the instruction semantics itself has nothing to
-    % do with floating point operations. Naive simplification rules  like $\s{add\_double(0, A)}$ $\equiv$ \s{A} cannot eliminate such redundant \uif{}   unless we apply
+    % do with floating-point operations. Naive simplification rules  like $\s{add\_double(0, A)}$ $\equiv$ \s{A} cannot eliminate such redundant \uif{}   unless we apply
     % some additional heuristics to make sure that \s{A} is not $-0.0$.
     
     % In all cases, we aim to have simpler and more intuitive formula specifications.

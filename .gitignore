@@ -4,3 +4,5 @@
 *.out
 *.bbl
 main.pdf
+*.texshop
+*.synctex.gz

@@ -35,34 +35,70 @@ Another important step of the semantics synthesis is post-processing. The genera
 
 \paragraph{Modeling and executing implementation-dependent behaviors}
 
-The \ISA ISA standard admits \emph{implementation-dependent behaviors} for certain operations on certain input patterns, that is, each processor implementation can freely choose the execution behavior for each such case (Section~\ref{sec:challenges-in-formalizing-x86}).
-There are two natural, faithful ways of specifying implementation-dependent behaviors.
-One is to parameterize the semantics over the implementation-dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
-Another is to introduce non-determinism in the semantics, which captures a set of different possible behaviors in a single semantics.
-We took the second approach in this work since the implementation-dependent behaviors of x86 are quite limited and mostly localized (e.g., as in the example in Figure~\ref{fig:andn-semantics}).
+The \ISA ISA standard admits \emph{implementation-dependent behaviors} for
+certain operations on certain input patterns, that is, each processor
+implementation can freely choose the execution behavior for each such case
+(Section~\ref{sec:challenges-in-formalizing-x86}).
+%
+Faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the
+semantics.  For example, as mentioned in Section~\ref{subsec:compare-stoke},
+  Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing
+  certain errors in their semantics that we revealed~\cite{BugStoke986}.
 
-However, the non-determinism makes it non-trivial to execute (and validate) the
-semantics.  For example, during hardware co-simulation, the output of hardware
-execution may vary depending on the underlying processors, while the
-non-deterministic semantics execution will randomly choose certain behavior,
-  which may be different from the specific behavior implemented in a processor.
-  To mitigate this issue, for the hardware co-simulation, we symbolically
-  executed the semantics where the non-deterministic behaviors are represented
-  symbolically, so that the symbolic output captures all possible behaviors,
-  and then we checked if the hardware output is matched by (an instance of) the
-  symbolic output.
+There are two natural, faithful ways of specifying implementation dependent
+behaviors.  One is to parameterize the semantics over the
+implementation-dependent behaviors, and later instantiate it with a profile
+that describes specific behaviors taken by the processor of interest. This
+approach is desirable for validation the semantics using concrete executions.
+Another is to introduce non-determinism in the semantics, which captures a set
+of different possible behaviors in a single semantics, which is desirable
+during symbolic interpretaion of the ISA code.  We note that, most of other
+existing \emph{direct} \ISA semantics employ an approach similar to the ones
+described above, faithfully modeling the implementation-dependent behaviors.
+For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a
+constraint function which is guaranteed to be unique and non-deterministic,
+           while they employ the aforementioned profile-based approach for
+           concrete execution.  TSL~\cite{TSL:TOPLAS13} makes both approaches
+           available, from which their users can choose.  In our semantics, we
+           faithfully modeled the undefined value as a unique symbol (called
+               undef) whose value is non- deterministically decided each time
+           within the proper range.
 
-Faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
-For example, as mentioned in Section~\ref{subsec:compare-stoke}, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{BugStoke986}.
-On the other hand, most of other existing \emph{direct} \ISA semantics employ an approach similar to the ones described above, faithfully modeling the implementation-dependent behaviors.
-For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profile-based approach for concrete execution.
-TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.
+In our semantics, we faithfully modeled the undefined value as a unique symbol
+(called undef) whose value is non- deterministically decided each time within
+the proper range. For the hardware co-simulation, we concretely executed the
+semantics while the non-deterministic behaviors are represented symbolically
+using the undef symbol and then we checked if the hardware output is matched by
+(an instance of) the simulated output.
 
-%\Comment{Instead of dropping the paragraph about the extra difficulty of using the non-determinism strategy, you need to discuss the tradeoffs. So describe both the benefits and the drawbacks of the non-determinism strategy. I'm just uncommenting the old text here, for now.}
-%%
-%Note that the non-determinism strategy makes it non-trivial to execute (and validate) the semantics.
-%For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
-%To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (an instance of) the symbolic output.
+%The \ISA ISA standard admits \emph{implementation-dependent behaviors} for certain operations on certain input patterns, that is, each processor implementation can freely choose the execution behavior for each such case (Section~\ref{sec:challenges-in-formalizing-x86}).
+%There are two natural, faithful ways of specifying implementation-dependent behaviors.
+%One is to parameterize the semantics over the implementation-dependent behaviors, and later instantiate it with a profile that describes specific behaviors taken by the processor of interest.
+%Another is to introduce non-determinism in the semantics, which captures a set of different possible behaviors in a single semantics.
+%We took the second approach in this work since the implementation-dependent behaviors of x86 are quite limited and mostly localized (e.g., as in the example in Figure~\ref{fig:andn-semantics}).
+%
+%However, the non-determinism makes it non-trivial to execute (and validate) the
+%semantics.  For example, during hardware co-simulation, the output of hardware
+%execution may vary depending on the underlying processors, while the
+%non-deterministic semantics execution will randomly choose certain behavior,
+%  which may be different from the specific behavior implemented in a processor.
+%  To mitigate this issue, for the hardware co-simulation, we symbolically
+%  executed the semantics where the non-deterministic behaviors are represented
+%  symbolically, so that the symbolic output captures all possible behaviors,
+%  and then we checked if the hardware output is matched by (an instance of) the
+%  symbolic output.
+%
+%Faithfully modeling the implementation-dependent behaviors is necessary for the correctness of the semantics.
+%For example, as mentioned in Section~\ref{subsec:compare-stoke}, Stoke~\cite{Stoke2013} does not faithfully model such behaviors, causing certain errors in their semantics that we revealed~\cite{BugStoke986}.
+%On the other hand, most of other existing \emph{direct} \ISA semantics employ an approach similar to the ones described above, faithfully modeling the implementation-dependent behaviors.
+%For example, Goel \etal~\cite{Goel:ProCoS17} models such behaviors using a constraint function which is guaranteed to be unique and non-deterministic, while they employ the aforementioned profile-based approach for concrete execution.
+%TSL~\cite{TSL:TOPLAS13} makes both approaches available, from which their users can choose.
+%
+%%\Comment{Instead of dropping the paragraph about the extra difficulty of using the non-determinism strategy, you need to discuss the tradeoffs. So describe both the benefits and the drawbacks of the non-determinism strategy. I'm just uncommenting the old text here, for now.}
+%%%
+%%Note that the non-determinism strategy makes it non-trivial to execute (and validate) the semantics.
+%%For example, in the hardware co-simulation, the output of hardware execution may vary depending on the underlying processors, while the non-deterministic semantics execution will randomly choose certain behavior, which may be different from the specific behavior implemented in a processor.
+%%To mitigate this issue, for the hardware co-simulation, we symbolically executed the semantics where the non-deterministic behaviors are represented symbolically, so that the symbolic output captures all possible behaviors, and then we checked if the hardware output is matched by (an instance of) the symbolic output.
 
 \paragraph{Employing multiple semantic engineering frameworks}
 

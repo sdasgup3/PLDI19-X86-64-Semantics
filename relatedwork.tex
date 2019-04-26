@@ -80,7 +80,7 @@ user-level instructions are not straightforward to automatically learn by their 
 %Finally the specifications are given as SMT formulas but 
 % have not been demonstrated to be usable in a formal analysis setting out-of-the-box.
 
-\SC{A contemporary work by Roessle \etal~\cite{Roessle:CPP19} presents a method to extract the big step semantics of a sequential binary program using the small step instruction semantics extracted mostly from Strata\footnote{There are some minor omissions on immediate instructions with $8$-bit operands for which Strata learns $256$ brute force formulas.} plus some manually drafted support for branching instructions and stack operations. Like Strata, their specification is executable only for the non-floating-point instructions. Moreover, their work does not aim for completeness of semantics, one of our primary goals.}
+\SC{A contemporary work by Roessle \etal~\cite{Roessle:CPP19} presents a method to extract the big step semantics of a binary program using the small step instruction semantics extracted mostly from Strata\footnote{There are some minor omissions on immediate instructions with $8$-bit operands for which Strata learns $256$ brute force formulas.} plus some manually drafted support for branching instructions and stack operations. Like Strata, their specification is executable only for the non-floating-point instructions. Moreover, their work does not aim for completeness of semantics, one of our primary goals.}
 
 Goel \etal~\cite{Goel:FMCAD14} use the ACL2 theorem prover~\cite{ACL2:Kaufmann2000} to model the \ISA ISA and they support
 \goelPerc{} of all user-level instructions~\cite{GoelList}, plus some system-level instructions, paging, and

@@ -15,7 +15,8 @@ commentstyle=\color{gray},
 uintptr_t safe_addptr(int *of, uint64_t a, uint64_t b) {
   uintptr_t r = a + b;
   if (r < a) { *of = 1; return r; }  // "error state" 
-  else { return r; } }               // "safe state" 
+  else { return r; }                 // "safe state" 
+}
 \end{lstlisting}
 \vspace{-5pt}
 \begin{center}
@@ -51,7 +52,8 @@ escapeinside={(*}{*)}
   jmp L3
 L2:                     # else branch: "safe state"
   ...                   # set %eax to r
-L3: ret
+L3:
+  ret
 \end{lstlisting}
 \vspace{-5pt}
 \begin{center}
